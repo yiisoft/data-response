@@ -21,6 +21,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
         "yiisoft/http": "1.0.x-dev",
         "yiisoft/serializer": "^3.0@dev",
         "yiisoft/string": "^3.0@dev"
@@ -29,8 +30,7 @@
         "infection/infection": "^0.16.3",
         "phan/phan": "^3.0.2",
         "phpunit/phpunit": "^9.2",
-        "nyholm/psr7": "^1.0",
-        "yiisoft/router": "^3.0@dev"
+        "nyholm/psr7": "^1.0"
     },
     "autoload": {
         "psr-4": {
