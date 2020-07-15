@@ -1,18 +1,20 @@
 {
-    "name": "yiisoft/_____",
+    "name": "yiisoft/data-response",
     "type": "library",
-    "description": "_____",
+    "description": "Allows responding with data that is automatically converted into PSR-7 response",
     "keywords": [
-        "_____"
+        "data",
+        "psr-7",
+        "response"
     ],
     "homepage": "https://www.yiiframework.com/",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/_____/issues?state=open",
+        "issues": "https://github.com/yiisoft/data-response/issues?state=open",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/_____"
+        "source": "https://github.com/yiisoft/data-response"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -26,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Yiisoft\\_____\\": "src"
+            "Yiisoft\\DataResponse\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\_____\\Tests\\": "tests"
+            "Yiisoft\\DataResponse\\Tests\\": "tests"
         }
     },
     "extra": {
