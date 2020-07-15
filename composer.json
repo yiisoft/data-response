@@ -24,7 +24,7 @@
         "psr/http-server-middleware": "^1.0",
         "yiisoft/http": "1.0.x-dev",
         "yiisoft/serializer": "^3.0@dev",
-        "yiisoft/string": "^3.0@dev"
+        "yiisoft/strings": "^3.0@dev"
     },
     "require-dev": {
         "infection/infection": "^0.16.3",
