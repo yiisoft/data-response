@@ -11,7 +11,7 @@ use Psr\Http\Message\StreamInterface;
 /**
  * A wrapper around PSR-7 response that is assigned raw data to be formatted later using a formatter.
  *
- * For example, `['name' => 'Dmitriy']` to be formatted to JSON using {@see \Yiisoft\Yii\Web\Data\Formatter\JsonDataResponseFormatter}
+ * For example, `['name' => 'Dmitriy']` to be formatted to JSON using {@see \Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter}
  * when {@see DataResponse::getBody()} is called.
  */
 final class DataResponse implements ResponseInterface
