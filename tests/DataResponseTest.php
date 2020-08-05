@@ -40,12 +40,12 @@ class DataResponseTest extends TestCase
     public function testSetResponseFormatter(): void
     {
         $factory = new Psr17Factory();
-        $dataResponse = new DataResponse(['test' => 1], Status::OK, '', $factory);
+        $dataResponse = new DataResponse('test', Status::OK, '', $factory);
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
         $this->assertTrue($dataResponse->hasResponseFormatter());
-        $this->assertSame('{"test":1}', $dataResponse->getBody()->getContents());
+        $this->assertSame('"test"', $dataResponse->getBody()->getContents());
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
     }
 
