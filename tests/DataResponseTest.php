@@ -40,7 +40,7 @@ class DataResponseTest extends TestCase
     public function testSetResponseFormatter(): void
     {
         $factory = new Psr17Factory();
-        $dataResponse = new DataResponse(['test'=>1], Status::OK, '', $factory);
+        $dataResponse = new DataResponse(['test' => 1], Status::OK, '', $factory);
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
