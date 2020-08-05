@@ -9,7 +9,7 @@ use Yiisoft\Http\Status;
 
 final class DataResponseFactory implements DataResponseFactoryInterface
 {
-    protected ResponseFactoryInterface $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(ResponseFactoryInterface $responseFactory)
     {
