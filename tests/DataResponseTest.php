@@ -1,10 +1,11 @@
 <?php
 
-namespace Yiisoft\Yii\Web\Tests\Data;
+namespace Yiisoft\DataResponse\Tests;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\Http\Status;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\DataResponse;
@@ -59,5 +60,15 @@ class DataResponseTest extends TestCase
         $this->assertTrue($dataResponse->hasResponseFormatter());
         $this->assertSame('null', $dataResponse->getBody()->getContents());
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
+    }
+
+    public function testSetResponseLoopFormatter(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Loop has been detected. Formatted response cannot be DataResponse.');
+
+        $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
+        $dataResponse = $dataResponse->withResponseFormatter(new LoopDataResponseFormatter());
+        $dataResponse->getBody()->rewind();
     }
 }
