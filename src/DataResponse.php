@@ -169,7 +169,7 @@ final class DataResponse implements ResponseInterface
     {
         $response = $this->responseFormatter->format($this);
         if ($response instanceof self) {
-            throw new \RuntimeException('Loop has been detected. Formatted response cannot be DataResponse.');
+            throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DateResponse.');
         }
 
         return $response;
