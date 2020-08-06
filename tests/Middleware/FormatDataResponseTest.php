@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Yii\Web\Tests\Data\Middleware;
+namespace Yiisoft\DataResponse\Tests\Middleware;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;

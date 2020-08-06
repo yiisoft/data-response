@@ -37,7 +37,7 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->responseFormatter !== null) {
-            $this->response = $this->responseFormatter->format($this);
+            $this->response = $this->formatResponse();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -163,5 +163,15 @@ final class DataResponse implements ResponseInterface
             $this->data = ($this->data)();
         }
         return is_object($this->data) ? clone $this->data : $this->data;
+    }
+
+    private function formatResponse(): ResponseInterface
+    {
+        $response = $this->responseFormatter->format($this);
+        if ($response instanceof self) {
+            throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DateResponse.');
+        }
+
+        return $response;
     }
 }

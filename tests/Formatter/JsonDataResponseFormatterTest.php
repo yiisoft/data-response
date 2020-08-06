@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Yii\Web\Tests\Data\Formatter;
+namespace Yiisoft\DataResponse\Tests\Formatter;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
