@@ -28,8 +28,8 @@
     },
     "require-dev": {
         "infection/infection": "^0.16.3",
-        "phan/phan": "^3.0.2",
-        "phpunit/phpunit": "^9.2",
+        "phan/phan": "^3.0",
+        "phpunit/phpunit": "^9.3",
         "nyholm/psr7": "^1.0"
     },
     "autoload": {
