@@ -49,6 +49,16 @@ class HtmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
     }
 
+    public function testFormatterDataWithNull(): void
+    {
+        $dataResponse = $this->createFactory()->createResponse();
+        $result = (new HtmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame('', $result->getBody()->getContents());
+        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
+    }
+
     private function createFactory(): DataResponseFactory
     {
         return new DataResponseFactory(new Psr17Factory());
