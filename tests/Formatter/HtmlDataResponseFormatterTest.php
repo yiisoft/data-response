@@ -41,6 +41,14 @@ class HtmlDataResponseFormatterTest extends TestCase
         $this->assertSame('text/plain; charset=UTF-8', $result->getHeaderLine('Content-Type'));
     }
 
+    public function testFormatterWithIncorrectType(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $dataResponse = $this->createFactory()->createResponse(['test']);
+        $result = (new HtmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+    }
+
     private function createFactory(): DataResponseFactory
     {
         return new DataResponseFactory(new Psr17Factory());

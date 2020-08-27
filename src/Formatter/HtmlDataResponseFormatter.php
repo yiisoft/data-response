@@ -24,6 +24,10 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();
+        if (!is_scalar($data)) {
+            throw new \RuntimeException('Data must be a scalar value.');
+        }
+
         $response = $dataResponse->getResponse();
         $response->getBody()->write((string)$data);
 
