@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\HasContentType;
 use Yiisoft\Http\Header;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {
+    use HasContentType;
+
     /**
      * @var string the Content-Type header for the response
      */
@@ -34,13 +37,6 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $formatter = clone $this;
         $formatter->encoding = $encoding;
-        return $formatter;
-    }
-
-    public function withContentType(string $contentType): self
-    {
-        $formatter = clone $this;
-        $this->contentType = $contentType;
         return $formatter;
     }
 }

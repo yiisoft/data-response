@@ -9,6 +9,7 @@ use DOMElement;
 use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\HasContentType;
 use Yiisoft\Http\Header;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\DataResponse\DataResponse;
@@ -16,6 +17,7 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
+    use HasContentType;
     /**
      * @var string the Content-Type header for the response
      */
@@ -106,13 +108,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $formatter = clone $this;
         $formatter->useObjectTags = $useObjectTags;
-        return $formatter;
-    }
-
-    public function withContentType(string $contentType): self
-    {
-        $formatter = clone $this;
-        $formatter->contentType = $contentType;
         return $formatter;
     }
 
