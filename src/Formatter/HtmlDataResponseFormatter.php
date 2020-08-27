@@ -40,7 +40,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     public function withContentType(string $contentType): self
     {
         $formatter = clone $this;
-        $this->contentType = $contentType;
+        $formatter->contentType = $contentType;
         return $formatter;
     }
 }
