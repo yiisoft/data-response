@@ -12,7 +12,7 @@ use Yiisoft\DataResponse\DataResponse;
 
 class XmlDataResponseFormatterTest extends TestCase
 {
-    public function testFormatter(): void
+    public function testCorrectFormat(): void
     {
         $dataResponse = $this->createResponse('test');
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
@@ -25,7 +25,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterEncoding(): void
+    public function testWithEncoding(): void
     {
         $dataResponse = $this->createResponse('test');
         $result = (new XmlDataResponseFormatter())->withEncoding('ISO-8859-1')->format($dataResponse);
@@ -38,7 +38,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; ISO-8859-1'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterVersion(): void
+    public function testWithVersion(): void
     {
         $dataResponse = $this->createResponse('test');
         $result = (new XmlDataResponseFormatter())->withVersion('1.1')->format($dataResponse);
@@ -51,7 +51,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterRootTag(): void
+    public function testWithRootTag(): void
     {
         $dataResponse = $this->createResponse('test');
         $result = (new XmlDataResponseFormatter())->withRootTag('exampleRootTag')->format($dataResponse);
@@ -64,7 +64,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterItemTagWhenNameIsEmptyOrInvalid(): void
+    public function testItemTagWhenNameIsEmptyOrInvalid(): void
     {
         $data = [
             'test',
@@ -82,7 +82,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterWithObjectTags(): void
+    public function testWithObjectTags(): void
     {
         $data = new \stdClass();
         $data->attribute = 'test';
@@ -98,7 +98,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterWithoutObjectTags(): void
+    public function testWithoutObjectTags(): void
     {
         $data = new \stdClass();
         $data->attribute = 'test';
@@ -114,7 +114,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterWithContentType(): void
+    public function testWithContentType(): void
     {
         $dataResponse = $this->createResponse('test');
         $result = (new XmlDataResponseFormatter())->withContentType('text/xml')->format($dataResponse);
@@ -127,7 +127,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(['text/xml; UTF-8'], $result->getHeader('Content-Type'));
     }
 
-    public function testFormatterWithUseTraversable(): void
+    public function testWithUseTraversable(): void
     {
         $data = new \ArrayObject(
             [
@@ -146,7 +146,7 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testFormatterScalarValues(): void
+    public function testScalarValues(): void
     {
         $dataResponse = $this->createResponse([true, false, 100.2]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
@@ -158,7 +158,7 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testFormatterObjectValues(): void
+    public function testObjectValues(): void
     {
         $dataResponse = $this->createResponse([100 => new \stdClass()]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
@@ -170,7 +170,7 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testFormatterArrayValues(): void
+    public function testArrayValues(): void
     {
         $dataResponse = $this->createResponse([[100 => new \stdClass()]]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
@@ -182,7 +182,7 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testFormatterWithEmptyRootTag(): void
+    public function testWithEmptyRootTag(): void
     {
         $dataResponse = $this->createResponse(['test' => 1]);
         $result = (new XmlDataResponseFormatter())->withRootTag('')->format($dataResponse);
