@@ -24,8 +24,8 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();
-        if (!is_scalar($data) && !is_null($data)) {
-            throw new \RuntimeException('Data must be a scalar value or null.');
+        if (!is_scalar($data) && !is_null($data) && !$this->isStringableObject($data)) {
+            throw new \RuntimeException('Data must be a scalar value or null or stringable object.');
         }
 
         $response = $dataResponse->getResponse();
@@ -46,5 +46,10 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
         $formatter = clone $this;
         $formatter->contentType = $contentType;
         return $formatter;
+    }
+
+    private function isStringableObject($value): bool
+    {
+        return is_object($value) && method_exists($value, '__toString');
     }
 }
