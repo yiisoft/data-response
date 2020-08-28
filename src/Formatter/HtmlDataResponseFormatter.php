@@ -25,7 +25,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $data = $dataResponse->getData();
         if (!is_scalar($data) && !is_null($data) && !$this->isStringableObject($data)) {
-            throw new \RuntimeException('Data must be a scalar value or null or stringable object.');
+            throw new \RuntimeException('Data must be a scalar value or null or a stringable object.');
         }
 
         $response = $dataResponse->getResponse();
