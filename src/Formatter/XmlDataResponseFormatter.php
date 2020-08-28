@@ -71,44 +71,44 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
     public function withVersion(string $version): self
     {
-        $formatter = clone $this;
-        $formatter->version = $version;
-        return $formatter;
+        $new = clone $this;
+        $new->version = $version;
+        return $new;
     }
 
     public function withEncoding(string $encoding): self
     {
-        $formatter = clone $this;
-        $formatter->encoding = $encoding;
-        return $formatter;
+        $new = clone $this;
+        $new->encoding = $encoding;
+        return $new;
     }
 
     public function withRootTag(string $rootTag): self
     {
-        $formatter = clone $this;
-        $formatter->rootTag = $rootTag;
-        return $formatter;
+        $new = clone $this;
+        $new->rootTag = $rootTag;
+        return $new;
     }
 
     public function withItemTag(string $itemTag): self
     {
-        $formatter = clone $this;
-        $formatter->itemTag = $itemTag;
-        return $formatter;
+        $new = clone $this;
+        $new->itemTag = $itemTag;
+        return $new;
     }
 
     public function withUseTraversableAsArray(bool $useTraversableAsArray): self
     {
-        $formatter = clone $this;
-        $formatter->useTraversableAsArray = $useTraversableAsArray;
-        return $formatter;
+        $new = clone $this;
+        $new->useTraversableAsArray = $useTraversableAsArray;
+        return $new;
     }
 
     public function withUseObjectTags(bool $useObjectTags): self
     {
-        $formatter = clone $this;
-        $formatter->useObjectTags = $useObjectTags;
-        return $formatter;
+        $new = clone $this;
+        $new->useObjectTags = $useObjectTags;
+        return $new;
     }
 
     /**

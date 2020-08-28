@@ -33,8 +33,8 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 
     public function withOptions(int $options): self
     {
-        $formatter = clone $this;
-        $formatter->options = $options;
-        return $formatter;
+        $new = clone $this;
+        $new->options = $options;
+        return $new;
     }
 }

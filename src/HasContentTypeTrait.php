@@ -8,8 +8,8 @@ trait HasContentTypeTrait
 {
     public function withContentType(string $contentType): self
     {
-        $clone = clone $this;
-        $clone->contentType = $contentType;
-        return $clone;
+        $new = clone $this;
+        $new->contentType = $contentType;
+        return $new;
     }
 }

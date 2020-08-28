@@ -91,60 +91,60 @@ final class DataResponse implements ResponseInterface
 
     public function withAddedHeader($name, $value): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withAddedHeader($name, $value);
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withAddedHeader($name, $value);
+        return $new;
     }
 
     public function withBody(StreamInterface $body): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withBody($body);
-        $response->dataStream = $body;
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withBody($body);
+        $new->dataStream = $body;
+        return $new;
     }
 
     public function withHeader($name, $value): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withHeader($name, $value);
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withHeader($name, $value);
+        return $new;
     }
 
     public function withoutHeader($name): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withoutHeader($name);
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withoutHeader($name);
+        return $new;
     }
 
     public function withProtocolVersion($version): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withProtocolVersion($version);
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withProtocolVersion($version);
+        return $new;
     }
 
     public function withStatus($code, $reasonPhrase = ''): self
     {
-        $response = clone $this;
-        $response->response = $this->response->withStatus($code, $reasonPhrase);
-        return $response;
+        $new = clone $this;
+        $new->response = $this->response->withStatus($code, $reasonPhrase);
+        return $new;
     }
 
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
-        $response = clone $this;
-        $response->responseFormatter = $responseFormatter;
-        return $response;
+        $new = clone $this;
+        $new->responseFormatter = $responseFormatter;
+        return $new;
     }
 
     public function withData($data): self
     {
-        $response = clone $this;
-        $response->data = $data;
+        $new = clone $this;
+        $new->data = $data;
 
-        return $response;
+        return $new;
     }
 
     public function hasResponseFormatter(): bool

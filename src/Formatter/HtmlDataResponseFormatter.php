@@ -39,9 +39,9 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 
     public function withEncoding(string $encoding): self
     {
-        $formatter = clone $this;
-        $formatter->encoding = $encoding;
-        return $formatter;
+        $new = clone $this;
+        $new->encoding = $encoding;
+        return $new;
     }
 
     private function isStringableObject($value): bool
