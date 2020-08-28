@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse;
 
-trait HasContentType
+trait HasContentTypeTrait
 {
     public function withContentType(string $contentType): self
     {

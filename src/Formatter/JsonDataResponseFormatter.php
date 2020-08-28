@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\HasContentType;
+use Yiisoft\DataResponse\HasContentTypeTrait;
 use Yiisoft\Http\Header;
 use Yiisoft\Serializer\JsonSerializer;
 use Yiisoft\DataResponse\DataResponse;
@@ -13,7 +13,7 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
-    use HasContentType;
+    use HasContentTypeTrait;
     /**
      * @var string the Content-Type header for the response
      */
