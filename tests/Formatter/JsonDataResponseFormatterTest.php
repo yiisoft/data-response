@@ -12,7 +12,7 @@ use Yiisoft\Http\Header;
 
 class JsonDataResponseFormatterTest extends TestCase
 {
-    public function testFormatter(): void
+    public function testCorrectFormat(): void
     {
         $dataResponse = $this->createFactory()->createResponse(['test' => 'test']);
         $result = (new JsonDataResponseFormatter())->format($dataResponse);
@@ -22,7 +22,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
-    public function testFormatterWithContentType(): void
+    public function testWithContentType(): void
     {
         $dataResponse = $this->createFactory()->createResponse(['test' => 'test']);
         $result = (new JsonDataResponseFormatter())->withContentType('application/xml')->format($dataResponse);
@@ -32,7 +32,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/xml'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
-    public function testFormatterWithOptions(): void
+    public function testWithOptions(): void
     {
         $dataResponse = $this->createFactory()->createResponse(['test']);
         $result = (new JsonDataResponseFormatter())->withOptions(JSON_FORCE_OBJECT)->format($dataResponse);
