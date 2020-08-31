@@ -11,6 +11,7 @@ use DOMText;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\HasContentTypeTrait;
 use Yiisoft\Http\Header;
+use Yiisoft\Strings\NumericHelper;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
@@ -135,7 +136,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             }
         } elseif (is_object($data)) {
             if ($this->useObjectTags) {
-                $child = new DOMElement(StringHelper::basename(get_class($data)));
+                $child = new DOMElement(StringHelper::baseName(get_class($data)));
                 $element->appendChild($child);
             } else {
                 $child = $element;
@@ -165,7 +166,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             return 'false';
         }
         if (is_float($value)) {
-            return StringHelper::floatToString($value);
+            return NumericHelper::normalize($value);
         }
         return (string)$value;
     }
