@@ -113,7 +113,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     }
 
     /**
-     * @param DOMElement $element
+     * @param DOMElement|DOMDocument $element
      * @param mixed $data
      */
     private function buildXml($element, $data): void
