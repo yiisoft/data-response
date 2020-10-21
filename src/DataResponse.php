@@ -170,7 +170,7 @@ final class DataResponse implements ResponseInterface
         if ($this->responseFormatter !== null) {
             $response = $this->responseFormatter->format($this);
             if ($response instanceof self) {
-                throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DateResponse.');
+                throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
             }
 
             return $response;
