@@ -66,7 +66,7 @@ class DataResponseTest extends TestCase
     public function testSetResponseLoopFormatter(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DataResponseFormatterInterface should not return instance of DateResponse.');
+        $this->expectExceptionMessage('DataResponseFormatterInterface should not return instance of DataResponse.');
 
         $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
         $dataResponse = $dataResponse->withResponseFormatter(new LoopDataResponseFormatter());
