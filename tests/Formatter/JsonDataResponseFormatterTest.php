@@ -42,6 +42,16 @@ class JsonDataResponseFormatterTest extends TestCase
         $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
+    public function testWithEmptyResponse(): void
+    {
+        $dataResponse = $this->createFactory()->createResponse();
+        $result = (new JsonDataResponseFormatter())->withOptions(JSON_FORCE_OBJECT)->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame('', $result->getBody()->getContents());
+        $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
+    }
+
     private function createFactory(): DataResponseFactory
     {
         return new DataResponseFactory(new Psr17Factory());

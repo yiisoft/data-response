@@ -59,7 +59,7 @@ class DataResponseTest extends TestCase
         $dataResponse->getBody()->rewind();
 
         $this->assertTrue($dataResponse->hasResponseFormatter());
-        $this->assertSame('null', $dataResponse->getBody()->getContents());
+        $this->assertSame('', $dataResponse->getBody()->getContents());
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
     }
 
@@ -201,6 +201,24 @@ class DataResponseTest extends TestCase
 
         $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
+    }
+
+    public function testHasData(): void
+    {
+        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+        $dataResponse->getBody()->rewind();
+
+        $this->assertTrue($dataResponse->hasData());
+    }
+
+    public function testHasDataWithEmptyData(): void
+    {
+        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+        $dataResponse->getBody()->rewind();
+
+        $this->assertFalse($dataResponse->hasData());
     }
 
     private function createFactory(): DataResponseFactory
