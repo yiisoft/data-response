@@ -167,7 +167,7 @@ final class DataResponse implements ResponseInterface
 
     public function hasData(): bool
     {
-        return $this->getData() !== null;
+        return $this->data !== null;
     }
 
     /**
