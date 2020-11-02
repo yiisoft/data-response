@@ -14,6 +14,7 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
     use HasContentTypeTrait;
+
     /**
      * @var string the Content-Type header for the response
      */
@@ -23,8 +24,12 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
+        $content = '';
         $jsonSerializer = new JsonSerializer($this->options);
-        $content = $jsonSerializer->serialize($dataResponse->getData());
+        if ($dataResponse->hasData()) {
+            $content = $jsonSerializer->serialize($dataResponse->getData());
+        }
+
         $response = $dataResponse->getResponse();
         $response->getBody()->write($content);
 
