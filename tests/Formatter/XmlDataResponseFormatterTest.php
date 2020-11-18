@@ -6,9 +6,13 @@ namespace Yiisoft\DataResponse\Tests\Formatter;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\DataResponse;
+
+use function preg_replace;
+use function sprintf;
 
 class XmlDataResponseFormatterTest extends TestCase
 {
@@ -19,7 +23,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>test</response>\n",
+            $this->xml('<response>test</response>'),
             $result->getBody()->getContents()
         );
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
@@ -27,25 +31,27 @@ class XmlDataResponseFormatterTest extends TestCase
 
     public function testWithEncoding(): void
     {
+        $encoding = 'ISO-8859-1';
         $dataResponse = $this->createResponse('test');
-        $result = (new XmlDataResponseFormatter())->withEncoding('ISO-8859-1')->format($dataResponse);
+        $result = (new XmlDataResponseFormatter())->withEncoding($encoding)->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<response>test</response>\n",
+            $this->xml('<response>test</response>', '1.0', $encoding),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; ISO-8859-1'], $result->getHeader('Content-Type'));
+        $this->assertSame(["application/xml; {$encoding}"], $result->getHeader('Content-Type'));
     }
 
     public function testWithVersion(): void
     {
+        $version = '1.1';
         $dataResponse = $this->createResponse('test');
-        $result = (new XmlDataResponseFormatter())->withVersion('1.1')->format($dataResponse);
+        $result = (new XmlDataResponseFormatter())->withVersion($version)->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.1\" encoding=\"UTF-8\"?>\n<response>test</response>\n",
+            $this->xml('<response>test</response>', $version),
             $result->getBody()->getContents()
         );
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
@@ -58,57 +64,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<exampleRootTag>test</exampleRootTag>\n",
-            $result->getBody()->getContents()
-        );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
-    }
-
-    public function testItemTagWhenNameIsEmptyOrInvalid(): void
-    {
-        $data = [
-            'test',
-            'validName' => 'test',
-            '1_invalidName' => 'test'
-        ];
-        $dataResponse = $this->createResponse($data);
-        $result = (new XmlDataResponseFormatter())->withItemTag('customItemTag')->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><customItemTag>test</customItemTag><validName>test</validName><customItemTag>test</customItemTag></response>\n",
-            $result->getBody()->getContents()
-        );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
-    }
-
-    public function testWithObjectTags(): void
-    {
-        $data = new \stdClass();
-        $data->attribute = 'test';
-
-        $dataResponse = $this->createResponse($data);
-        $result = (new XmlDataResponseFormatter())->withUseObjectTags(true)->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><stdClass><attribute>test</attribute></stdClass></response>\n",
-            $result->getBody()->getContents()
-        );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
-    }
-
-    public function testWithoutObjectTags(): void
-    {
-        $data = new \stdClass();
-        $data->attribute = 'test';
-
-        $dataResponse = $this->createResponse($data);
-        $result = (new XmlDataResponseFormatter())->withUseObjectTags(false)->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><attribute>test</attribute></response>\n",
+            $this->xml('<exampleRootTag>test</exampleRootTag>'),
             $result->getBody()->getContents()
         );
         $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
@@ -121,29 +77,10 @@ class XmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>test</response>\n",
+            $this->xml('<response>test</response>'),
             $result->getBody()->getContents()
         );
         $this->assertSame(['text/xml; UTF-8'], $result->getHeader('Content-Type'));
-    }
-
-    public function testWithUseTraversable(): void
-    {
-        $data = new \ArrayObject(
-            [
-                'test',
-                'test1'
-            ]
-        );
-
-        $dataResponse = $this->createResponse($data);
-        $result = (new XmlDataResponseFormatter())->withUseTraversableAsArray(false)->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><ArrayObject><item>test</item><item>test1</item></ArrayObject></response>\n",
-            $result->getBody()->getContents()
-        );
     }
 
     public function testScalarValues(): void
@@ -153,43 +90,126 @@ class XmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><item>true</item><item>false</item><item>100.2</item></response>\n",
-            $result->getBody()->getContents()
-        );
-    }
-
-    public function testObjectValues(): void
-    {
-        $dataResponse = $this->createResponse([100 => new \stdClass()]);
-        $result = (new XmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><stdClass/></response>\n",
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <item key="0">true</item>
+                        <item key="1">false</item>
+                        <item key="2">100.2</item>
+                    </response>
+                EOF
+            ),
             $result->getBody()->getContents()
         );
     }
 
     public function testArrayValues(): void
     {
-        $dataResponse = $this->createResponse([[100 => new \stdClass()]]);
+        $dataResponse = $this->createResponse([
+            [100 => [], '200' => null],
+            [1, 1.1, 'foo' => 'bar', true, false]
+        ]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><item><stdClass/></item></response>\n",
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <item key="0">
+                            <item key="100"/>
+                            <item key="200"/>
+                        </item>
+                        <item key="1">
+                            <item key="0">1</item>
+                            <item key="1">1.1</item>
+                            <foo>bar</foo>
+                            <item key="2">true</item>
+                            <item key="3">false</item>
+                        </item>
+                    </response>
+                EOF
+            ),
             $result->getBody()->getContents()
         );
     }
 
-    public function testWithEmptyRootTag(): void
+    public function testEmptyObjectValues(): void
     {
-        $dataResponse = $this->createResponse(['test' => 1]);
-        $result = (new XmlDataResponseFormatter())->withRootTag('')->format($dataResponse);
+        $dataResponse = $this->createResponse(['object' => new stdClass()]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test>1</test>\n",
+            $this->xml('<response><object/></response>'),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testObjectValues(): void
+    {
+        $object = $this->createDummyObject('foo', 99, 1.1, [1, 'foo' => 'bar']);
+        $dataResponse = $this->createResponse($object);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <string>{$object->getString()}</string>
+                        <int>{$object->getInt()}</int>
+                        <float>{$object->getFloat()}</float>
+                        <array>
+                            <item key="0">1</item>
+                            <foo>bar</foo>
+                        </array>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testArrayObjectValues(): void
+    {
+        $objects = [
+            $object1 = $this->createDummyObject('foo', 99, 1.1, ['foo', 1.1]),
+            $object2 = $this->createDummyObject('bar', 10, 2.2, [1, 2, 3]),
+            $object3 = $this->createDummyObject('baz', 0, 3.3, ['bar' => 'baz']),
+        ];
+        $dataResponse = $this->createResponse($objects);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <item key="0">
+                            <string>{$object1->getString()}</string>
+                            <int>{$object1->getInt()}</int>
+                            <float>{$object1->getFloat()}</float>
+                            <array>foo</array>
+                            <array>1.1</array>
+                        </item>
+                        <item key="1">
+                            <string>{$object2->getString()}</string>
+                            <int>{$object2->getInt()}</int>
+                            <float>{$object2->getFloat()}</float>
+                            <array>1</array>
+                            <array>2</array>
+                            <array>3</array>
+                        </item>
+                        <item key="2">
+                            <string>{$object3->getString()}</string>
+                            <int>{$object3->getInt()}</int>
+                            <float>{$object3->getFloat()}</float>
+                            <array><bar>baz</bar></array>
+                        </item>
+                    </response>
+                EOF
+            ),
             $result->getBody()->getContents()
         );
     }
@@ -197,5 +217,49 @@ class XmlDataResponseFormatterTest extends TestCase
     private function createResponse($data): DataResponse
     {
         return (new DataResponseFactory(new Psr17Factory()))->createResponse($data);
+    }
+
+    private function xml(string $data, string $version = '1.0', string $encoding = 'UTF-8'): string
+    {
+        $startLine = sprintf('<?xml version="%s" encoding="%s"?>', $version, $encoding);
+        return $startLine . "\n" . preg_replace('/(?!item)\s(?!key)/', '', $data) . "\n";
+    }
+
+    private function createDummyObject(string $string, int $int, float $float, array $array): object
+    {
+        return new class ($string, $int, $float, $array) {
+            private string $string;
+            private int $int;
+            private float $float;
+            private array $array;
+
+            public function __construct(string $string, int $int, float $float, array $array)
+            {
+                $this->string = $string;
+                $this->int = $int;
+                $this->float = $float;
+                $this->array = $array;
+            }
+
+            public function getString(): string
+            {
+                return $this->string;
+            }
+
+            public function getInt(): int
+            {
+                return $this->int;
+            }
+
+            public function getFloat(): float
+            {
+                return $this->float;
+            }
+
+            public function getArray(): array
+            {
+                return $this->array;
+            }
+        };
     }
 }

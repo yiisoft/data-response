@@ -4,68 +4,53 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Formatter;
 
-use DOMDocument;
-use DOMElement;
-use DOMException;
-use DOMText;
 use Psr\Http\Message\ResponseInterface;
+use Traversable;
 use Yiisoft\DataResponse\HasContentTypeTrait;
 use Yiisoft\Http\Header;
+use Yiisoft\Serializer\XmlSerializer;
 use Yiisoft\Strings\NumericHelper;
-use Yiisoft\Strings\StringHelper;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
+
+use function is_array;
+use function is_float;
+use function is_scalar;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
     use HasContentTypeTrait;
+
     /**
-     * @var string the Content-Type header for the response
+     * @var string The Content-Type header for the response.
      */
     private string $contentType = 'application/xml';
+
     /**
-     * @var string the XML version
+     * @var string The XML version.
      */
     private string $version = '1.0';
+
     /**
-     * @var string the XML encoding.
+     * @var string The XML encoding.
      */
     private string $encoding = 'UTF-8';
+
     /**
-     * @var string the name of the root element. If set to false, null or is empty then no root tag should be added.
+     * @var string The name of the root element. If set to false, null or is empty then no root tag should be added.
      */
     private string $rootTag = 'response';
-    /**
-     * @var string the name of the elements that represent the array elements with numeric keys.
-     */
-    private string $itemTag = 'item';
-    /**
-     * @var bool whether to interpret objects implementing the [[\Traversable]] interface as arrays.
-     * Defaults to `true`.
-     */
-    private bool $useTraversableAsArray = true;
-    /**
-     * @var bool if object tags should be added
-     */
-    private bool $useObjectTags = true;
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        $content = '';
-        $data = $dataResponse->getData();
-        if ($data !== null) {
-            $dom = new DOMDocument($this->version, $this->encoding);
-            if (!empty($this->rootTag)) {
-                $root = new DOMElement($this->rootTag);
-                $dom->appendChild($root);
-                $this->buildXml($root, $data);
-            } else {
-                $this->buildXml($dom, $data);
-            }
-            $content = $dom->saveXML();
+        $serializer = new XmlSerializer($this->rootTag, $this->version, $this->encoding);
+
+        if ($dataResponse->hasData()) {
+            $content = $serializer->serialize($this->formatData($dataResponse->getData()));
         }
+
         $response = $dataResponse->getResponse();
-        $response->getBody()->write($content);
+        $response->getBody()->write($content ?? '');
 
         return $response->withHeader(Header::CONTENT_TYPE, $this->contentType . '; ' . $this->encoding);
     }
@@ -91,70 +76,39 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         return $new;
     }
 
-    public function withItemTag(string $itemTag): self
-    {
-        $new = clone $this;
-        $new->itemTag = $itemTag;
-        return $new;
-    }
-
-    public function withUseTraversableAsArray(bool $useTraversableAsArray): self
-    {
-        $new = clone $this;
-        $new->useTraversableAsArray = $useTraversableAsArray;
-        return $new;
-    }
-
-    public function withUseObjectTags(bool $useObjectTags): self
-    {
-        $new = clone $this;
-        $new->useObjectTags = $useObjectTags;
-        return $new;
-    }
-
     /**
-     * @param DOMElement|DOMDocument $element
-     * @param mixed $data
-     */
-    private function buildXml($element, $data): void
-    {
-        if (is_array($data) ||
-            ($this->useTraversableAsArray && $data instanceof \Traversable)
-        ) {
-            foreach ($data as $name => $value) {
-                if (is_int($name) && is_object($value)) {
-                    $this->buildXml($element, $value);
-                } elseif (is_array($value) || is_object($value)) {
-                    $child = new DOMElement($this->getValidXmlElementName($name));
-                    $element->appendChild($child);
-                    $this->buildXml($child, $value);
-                } else {
-                    $child = new DOMElement($this->getValidXmlElementName($name));
-                    $element->appendChild($child);
-                    $child->appendChild(new DOMText($this->formatScalarValue($value)));
-                }
-            }
-        } elseif (is_object($data)) {
-            if ($this->useObjectTags) {
-                $child = new DOMElement(StringHelper::baseName(get_class($data)));
-                $element->appendChild($child);
-            } else {
-                $child = $element;
-            }
-            $array = [];
-            foreach ($data as $name => $value) {
-                $array[$name] = $value;
-            }
-            $this->buildXml($child, $array);
-        } else {
-            $element->appendChild(new DOMText($this->formatScalarValue($data)));
-        }
-    }
-
-    /**
-     * Formats scalar value to use in XML text node.
+     * Pre-formats the data before serialization.
      *
-     * @param int|string|bool|float $value a scalar value.
+     * @param mixed $data to format.
+     * @return mixed formatted data.
+     */
+    private function formatData($data)
+    {
+        if (is_scalar($data)) {
+            return $this->formatScalarValue($data);
+        }
+
+        if (!is_array($data) && !($data instanceof Traversable)) {
+            return $data;
+        }
+
+        $formattedData = [];
+
+        foreach ($data as $key => $value) {
+            if (is_scalar($value)) {
+                $formattedData[$key] = $this->formatScalarValue($value);
+            }
+
+            $formattedData[$key] = $this->formatData($value);
+        }
+
+        return $formattedData;
+    }
+
+    /**
+     * Formats scalar value to use in XML node.
+     *
+     * @param int|string|bool|float $value to format.
      * @return string string representation of the value.
      */
     private function formatScalarValue($value): string
@@ -162,47 +116,15 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         if ($value === true) {
             return 'true';
         }
+
         if ($value === false) {
             return 'false';
         }
+
         if (is_float($value)) {
             return NumericHelper::normalize($value);
         }
-        return (string)$value;
-    }
 
-    /**
-     * Returns element name ready to be used in DOMElement if
-     * name is not empty, is not int and is valid.
-     *
-     * Falls back to [[itemTag]] otherwise.
-     *
-     * @param mixed $name
-     * @return string
-     */
-    private function getValidXmlElementName($name): string
-    {
-        if (empty($name) || is_int($name) || !$this->isValidXmlName($name)) {
-            return $this->itemTag;
-        }
-
-        return $name;
-    }
-
-    /**
-     * Checks if name is valid to be used in XML.
-     *
-     * @param mixed $name
-     * @return bool
-     * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
-     */
-    private function isValidXmlName($name): bool
-    {
-        try {
-            new DOMElement($name);
-        } catch (DOMException $e) {
-            return false;
-        }
-        return true;
+        return (string) $value;
     }
 }
