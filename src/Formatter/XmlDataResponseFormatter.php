@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Formatter;
 
-use Psr\Http\Message\ResponseInterface;
-use Traversable;
-use Yiisoft\DataResponse\HasContentTypeTrait;
-use Yiisoft\Http\Header;
-use Yiisoft\Serializer\XmlSerializer;
-use Yiisoft\Strings\NumericHelper;
-use Yiisoft\DataResponse\DataResponse;
-use Yiisoft\DataResponse\DataResponseFormatterInterface;
-
 use function is_array;
 use function is_float;
 use function is_scalar;
+use Psr\Http\Message\ResponseInterface;
+use Traversable;
+use Yiisoft\DataResponse\DataResponse;
+use Yiisoft\DataResponse\DataResponseFormatterInterface;
+use Yiisoft\DataResponse\HasContentTypeTrait;
+
+use Yiisoft\Http\Header;
+use Yiisoft\Serializer\XmlSerializer;
+use Yiisoft\Strings\NumericHelper;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -80,6 +80,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * Pre-formats the data before serialization.
      *
      * @param mixed $data to format.
+     *
      * @return mixed formatted data.
      */
     private function formatData($data)
@@ -108,7 +109,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     /**
      * Formats scalar value to use in XML node.
      *
-     * @param int|string|bool|float $value to format.
+     * @param bool|float|int|string $value to format.
+     *
      * @return string string representation of the value.
      */
     private function formatScalarValue($value): string

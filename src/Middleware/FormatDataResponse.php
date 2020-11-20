@@ -8,8 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\DataResponse;
+use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 class FormatDataResponse implements MiddlewareInterface
 {

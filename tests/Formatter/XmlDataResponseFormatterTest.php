@@ -6,13 +6,13 @@ namespace Yiisoft\DataResponse\Tests\Formatter;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use stdClass;
-use Yiisoft\DataResponse\DataResponseFactory;
-use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
-use Yiisoft\DataResponse\DataResponse;
-
 use function preg_replace;
 use function sprintf;
+use stdClass;
+use Yiisoft\DataResponse\DataResponse;
+
+use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 
 class XmlDataResponseFormatterTest extends TestCase
 {
@@ -107,7 +107,7 @@ class XmlDataResponseFormatterTest extends TestCase
     {
         $dataResponse = $this->createResponse([
             [100 => [], '200' => null],
-            [1, 1.1, 'foo' => 'bar', true, false]
+            [1, 1.1, 'foo' => 'bar', true, false],
         ]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
@@ -227,7 +227,7 @@ class XmlDataResponseFormatterTest extends TestCase
 
     private function createDummyObject(string $string, int $int, float $float, array $array): object
     {
-        return new class ($string, $int, $float, $array) {
+        return new class($string, $int, $float, $array) {
             private string $string;
             private int $int;
             private float $float;

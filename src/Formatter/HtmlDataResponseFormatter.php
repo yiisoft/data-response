@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\HasContentTypeTrait;
-use Yiisoft\Http\Header;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
+use Yiisoft\DataResponse\HasContentTypeTrait;
+use Yiisoft\Http\Header;
 
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -27,7 +27,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();
-        if (!is_scalar($data) && !is_null($data) && !$this->isStringableObject($data)) {
+        if (!is_scalar($data) && null !== $data && !$this->isStringableObject($data)) {
             throw new \RuntimeException('Data must be a scalar value or null or a stringable object.');
         }
 

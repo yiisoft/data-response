@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\DataResponse;
+use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\HasContentTypeTrait;
 use Yiisoft\Http\Header;
 use Yiisoft\Serializer\JsonSerializer;
-use Yiisoft\DataResponse\DataResponse;
-use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {

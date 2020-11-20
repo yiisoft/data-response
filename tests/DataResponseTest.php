@@ -8,12 +8,12 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
-use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
-use Yiisoft\DataResponse\DataResponse;
 
 class DataResponseTest extends TestCase
 {
@@ -199,7 +199,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse('test');
         $this->assertEquals('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
+        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
     }
 
