@@ -19,6 +19,50 @@ The package allows responding with data that is automatically converted into PSR
 
 ## General usage
 
+```php
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Yiisoft\DataResponse\DataResponseFactory;
+
+$factory = new DataResponseFactory(new Psr17Factory());
+$dataResponse = $factory->createResponse('test');
+$dataResponse->getBody()->rewind();
+
+echo $dataResponse->getBody()->getContents(); //test
+```
+
+### Usage formatters
+
+```php
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+
+$factory = new DataResponseFactory(new Psr17Factory());
+$dataResponse = $factory->createResponse('test');
+$dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+$dataResponse->getBody()->rewind();
+
+echo $dataResponse->getHeader('Content-Type'); //application/json
+echo $dataResponse->getBody()->getContents(); //"test"
+```
+
+Formatters are available:
+* HtmlDataResponseFormatter
+* JsonDataResponseFormatter
+* XmlDataResponseFormatter
+
+### Usage middlewares
+Middleware meet the PSR-15 standards.
+
+```php
+
+use Yiisoft\DataResponse\Middleware\FormatDataResponse;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+
+$middleware = (new FormatDataResponse(new JsonDataResponseFormatter()));
+//$middleware->process($request, $handler);
+```
+
 ### Unit testing
 
 The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
