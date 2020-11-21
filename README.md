@@ -57,8 +57,9 @@ The following formatters are available:
 * JsonDataResponseFormatter
 * XmlDataResponseFormatter
 
-### Usage middlewares
-Middleware meet the PSR-15 standards.
+### Middleware
+
+The package provides a PSR-15 middleware that is able to format a data response.
 
 ```php
 
