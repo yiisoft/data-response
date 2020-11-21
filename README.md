@@ -19,6 +19,57 @@ The package allows responding with data that is automatically converted into PSR
 
 ## General usage
 
+The package provides `DataResponseFactory` class that, given a PSR-17 response factory, is able to create data response. In this example we use `nyholm/psr7` pacakge but any PSR-17 response factory would do.
+
+Data response contains raw data to be processed later.
+
+```php
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Yiisoft\DataResponse\DataResponseFactory;
+
+$factory = new DataResponseFactory(new Psr17Factory());
+$dataResponse = $factory->createResponse('test');
+$dataResponse->getBody()->rewind();
+
+echo $dataResponse->getBody()->getContents(); //test
+```
+
+### Formatters
+
+Formatter purpose if to format data response. In the following example we format data as JSON.
+
+```php
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+
+$factory = new DataResponseFactory(new Psr17Factory());
+$dataResponse = $factory->createResponse('test');
+$dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+$dataResponse->getBody()->rewind();
+
+echo $dataResponse->getHeader('Content-Type'); //application/json
+echo $dataResponse->getBody()->getContents(); //"test"
+```
+
+The following formatters are available:
+* HtmlDataResponseFormatter
+* JsonDataResponseFormatter
+* XmlDataResponseFormatter
+
+### Middleware
+
+The package provides a PSR-15 middleware that is able to format a data response.
+
+```php
+
+use Yiisoft\DataResponse\Middleware\FormatDataResponse;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+
+$middleware = (new FormatDataResponse(new JsonDataResponseFormatter()));
+//$middleware->process($request, $handler);
+```
+
 ### Unit testing
 
 The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
