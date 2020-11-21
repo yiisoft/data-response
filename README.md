@@ -30,7 +30,9 @@ $dataResponse->getBody()->rewind();
 echo $dataResponse->getBody()->getContents(); //test
 ```
 
-### Usage formatters
+### Formatters
+
+Formatter purpose if to format data response. In the following example we format data as JSON.
 
 ```php
 use Nyholm\Psr7\Factory\Psr17Factory;
