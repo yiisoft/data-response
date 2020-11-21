@@ -46,7 +46,7 @@ echo $dataResponse->getHeader('Content-Type'); //application/json
 echo $dataResponse->getBody()->getContents(); //"test"
 ```
 
-Formatters are available:
+The following formatters are available:
 * HtmlDataResponseFormatter
 * JsonDataResponseFormatter
 * XmlDataResponseFormatter
