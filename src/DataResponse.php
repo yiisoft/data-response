@@ -37,7 +37,6 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
-            $this->response = $this->formatResponse();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -136,6 +135,8 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
+        $new->response = $new->formatResponse();
+
         return $new;
     }
 
