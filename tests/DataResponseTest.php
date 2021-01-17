@@ -71,6 +71,7 @@ class DataResponseTest extends TestCase
 
         $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
         $dataResponse = $dataResponse->withResponseFormatter(new LoopDataResponseFormatter());
+        $dataResponse->getBody()->rewind();
     }
 
     public function testSetEmptyDataWithoutFormatter(): void
@@ -99,7 +100,7 @@ class DataResponseTest extends TestCase
         $this->assertEquals(['application/json'], $dataResponse->getHeader(Header::CONTENT_TYPE));
     }
 
-    public function testGetHeader_overridingSequence(): void
+    public function testGetHeaderOverridingSequence(): void
     {
         $dataResponse = $this->createFactory()->createResponse('test');
 
@@ -118,7 +119,7 @@ class DataResponseTest extends TestCase
         $this->assertEquals('application/json', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
     }
 
-    public function testGetHeaderLine_overringSequence(): void
+    public function testGetHeaderLineOverringSequence(): void
     {
         $dataResponse = $this->createFactory()->createResponse();
 

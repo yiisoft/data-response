@@ -18,6 +18,8 @@ final class DataResponse implements ResponseInterface
 {
     private ResponseInterface $response;
 
+    private bool $hasFormattedResponse = false;
+
     private $data;
 
     private ?StreamInterface $dataStream = null;
@@ -37,6 +39,7 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
+            $this->ensureResponseIsFormatted();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -55,16 +58,19 @@ final class DataResponse implements ResponseInterface
 
     public function getHeader($name): array
     {
+        $this->ensureResponseIsFormatted();
         return $this->response->getHeader($name);
     }
 
     public function getHeaderLine($name): string
     {
+        $this->ensureResponseIsFormatted();
         return $this->response->getHeaderLine($name);
     }
 
     public function getHeaders(): array
     {
+        $this->ensureResponseIsFormatted();
         return $this->response->getHeaders();
     }
 
@@ -85,11 +91,13 @@ final class DataResponse implements ResponseInterface
 
     public function hasHeader($name): bool
     {
+        $this->ensureResponseIsFormatted();
         return $this->response->hasHeader($name);
     }
 
     public function withAddedHeader($name, $value): self
     {
+        $this->ensureResponseIsFormatted();
         $new = clone $this;
         $new->response = $this->response->withAddedHeader($name, $value);
         return $new;
@@ -105,6 +113,7 @@ final class DataResponse implements ResponseInterface
 
     public function withHeader($name, $value): self
     {
+        $this->ensureResponseIsFormatted();
         $new = clone $this;
         $new->response = $this->response->withHeader($name, $value);
         return $new;
@@ -112,6 +121,7 @@ final class DataResponse implements ResponseInterface
 
     public function withoutHeader($name): self
     {
+        $this->ensureResponseIsFormatted();
         $new = clone $this;
         $new->response = $this->response->withoutHeader($name);
         return $new;
@@ -135,8 +145,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
-        $new->response = $new->formatResponse();
-
+        $new->hasFormattedResponse = false;
         return $new;
     }
 
@@ -181,7 +190,16 @@ final class DataResponse implements ResponseInterface
         if ($response instanceof self) {
             throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
         }
+        $this->hasFormattedResponse = true;
 
         return $response;
+    }
+
+    private function ensureResponseIsFormatted(): void
+    {
+        if (! $this->hasResponseFormatter() || $this->hasFormattedResponse) {
+            return;
+        }
+        $this->response = $this->formatResponse();
     }
 }
