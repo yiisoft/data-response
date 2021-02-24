@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
@@ -41,6 +42,16 @@ class DataResponseTest extends TestCase
         $this->assertSame('test-changed', $dataResponse->getBody()->getContents());
     }
 
+    public function testChangeResponseDataWithFormatter(): void
+    {
+        $dataResponse = $this->createFactory()->createResponse('test-value');
+        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+        $dataResponse = $dataResponse->withData('new-test-value');
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('"new-test-value"', $dataResponse->getBody()->getContents());
+    }
+
     public function testSetResponseFormatter(): void
     {
         $dataResponse = $this->createFactory()->createResponse('test');
@@ -50,6 +61,16 @@ class DataResponseTest extends TestCase
         $this->assertTrue($dataResponse->hasResponseFormatter());
         $this->assertSame('"test"', $dataResponse->getBody()->getContents());
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
+    }
+
+    public function testAlreadySetResponseFormatter(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('DataResponseFormatterInterface is already installed.');
+
+        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+        $dataResponse->withResponseFormatter(new XmlDataResponseFormatter());
     }
 
     public function testSetEmptyResponseFormatter(): void
@@ -95,7 +116,6 @@ class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->getBody()->rewind();
 
         $this->assertEquals(['application/json'], $dataResponse->getHeader(Header::CONTENT_TYPE));
     }
@@ -104,7 +124,6 @@ class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->getBody()->rewind();
 
         $this->assertEquals('application/json', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
     }
@@ -113,7 +132,6 @@ class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->getBody()->rewind();
 
         $this->assertEquals([Header::CONTENT_TYPE => ['application/json']], $dataResponse->getHeaders());
     }
@@ -122,7 +140,6 @@ class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->getBody()->rewind();
 
         $this->assertTrue($dataResponse->hasHeader(Header::CONTENT_TYPE));
         $this->assertFalse($dataResponse->hasHeader(Header::ACCEPT_LANGUAGE));
@@ -132,7 +149,6 @@ class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->getBody()->rewind();
         $dataResponse = $dataResponse->withoutHeader(Header::CONTENT_TYPE);
         $this->assertFalse($dataResponse->hasHeader(Header::CONTENT_TYPE));
     }
@@ -142,8 +158,6 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse()
             ->withHeader(Header::CONTENT_TYPE, 'application/json');
 
-        $dataResponse->getBody()->rewind();
-
         $this->assertEquals(['Content-Type' => ['application/json']], $dataResponse->getHeaders());
     }
 
@@ -152,8 +166,6 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse()
             ->withHeader(Header::CONTENT_TYPE, 'application/json')
             ->withAddedHeader(Header::CONTENT_TYPE, 'application/xml');
-
-        $dataResponse->getBody()->rewind();
 
         $this->assertEquals(['Content-Type' => ['application/json', 'application/xml']], $dataResponse->getHeaders());
     }
@@ -193,6 +205,7 @@ class DataResponseTest extends TestCase
         $dataResponse->getBody()->rewind();
         $this->assertEquals('test', $dataResponse->getBody()->getContents());
     }
+
 
     public function testGetData(): void
     {

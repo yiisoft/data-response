@@ -37,7 +37,6 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
-            $this->response = $this->formatResponse();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -134,8 +133,13 @@ final class DataResponse implements ResponseInterface
 
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
+        if ($this->hasResponseFormatter()) {
+            throw new \RuntimeException('DataResponseFormatterInterface is already installed.');
+        }
+
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
+        $new->response = $new->formatResponse();
         return $new;
     }
 
@@ -143,6 +147,11 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->data = $data;
+
+        if ($new->hasResponseFormatter()) {
+            $new->clearResponseBody();
+            $new->response = $new->formatResponse();
+        }
 
         return $new;
     }
@@ -182,5 +191,11 @@ final class DataResponse implements ResponseInterface
         }
 
         return $response;
+    }
+
+    private function clearResponseBody(): void
+    {
+        $this->response->getBody()->rewind();
+        $this->response->getBody()->write('');
     }
 }
