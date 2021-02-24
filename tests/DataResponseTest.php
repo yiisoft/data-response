@@ -205,7 +205,7 @@ class DataResponseTest extends TestCase
         $dataResponse->getBody()->rewind();
         $this->assertEquals('test', $dataResponse->getBody()->getContents());
     }
-    
+
     public function testGetData(): void
     {
         $dataResponse = $this->createFactory()->createResponse('test');
