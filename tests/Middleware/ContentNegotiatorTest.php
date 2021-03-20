@@ -16,13 +16,14 @@ use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
+use Yiisoft\Http\Header;
 
 class ContentNegotiatorTest extends TestCase
 {
     public function testAcceptHtml(): void
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
-        $request = new ServerRequest('GET', '/', ['Accept' => 'text/html']);
+        $request = new ServerRequest('GET', '/', [Header::ACCEPT => 'text/html']);
         $response = $middleware->process($request, $this->getHandler('<div>Hello</div>'));
         $response->getBody()->rewind();
         $content = $response->getBody()->getContents();
@@ -30,13 +31,13 @@ class ContentNegotiatorTest extends TestCase
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
         $this->assertSame('<div>Hello</div>', $content);
-        $this->assertSame('text/html; charset=UTF-8', $response->getHeader('Content-Type')[0]);
+        $this->assertSame('text/html; charset=UTF-8', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
     public function testAcceptXml(): void
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
-        $request = new ServerRequest('GET', '/', ['Accept' => 'application/xml']);
+        $request = new ServerRequest('GET', '/', [Header::ACCEPT => 'application/xml']);
         $response = $middleware->process($request, $this->getHandler('Hello'));
         $response->getBody()->rewind();
         $content = $response->getBody()->getContents();
@@ -44,13 +45,13 @@ class ContentNegotiatorTest extends TestCase
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
         $this->assertSame($this->xml('<response>Hello</response>'), $content);
-        $this->assertSame('application/xml; UTF-8', $response->getHeader('Content-Type')[0]);
+        $this->assertSame('application/xml; UTF-8', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
     public function testAcceptJson(): void
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
-        $request = new ServerRequest('GET', '/', ['Accept' => 'application/json']);
+        $request = new ServerRequest('GET', '/', [Header::ACCEPT => 'application/json']);
         $response = $middleware->process($request, $this->getHandler(['test' => 'Hello']));
         $response->getBody()->rewind();
         $content = $response->getBody()->getContents();
@@ -58,7 +59,7 @@ class ContentNegotiatorTest extends TestCase
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
         $this->assertSame('{"test":"Hello"}', $content);
-        $this->assertSame('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertSame('application/json', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
     public function testWrongContentFormattersInConstructor()

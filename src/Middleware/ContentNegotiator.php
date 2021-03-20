@@ -10,6 +10,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
+use Yiisoft\Http\Header;
 
 /**
  * ContentNegotiator supports response format negotiation.
@@ -39,7 +40,7 @@ final class ContentNegotiator implements MiddlewareInterface
     {
         $response = $handler->handle($request);
         if ($response instanceof DataResponse && !$response->hasResponseFormatter()) {
-            $accepted = $request->getHeader('accept');
+            $accepted = $request->getHeader(Header::ACCEPT);
 
             foreach ($accepted as $accept) {
                 foreach ($this->contentFormatters as $contentType => $formatter) {
