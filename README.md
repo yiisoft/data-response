@@ -73,26 +73,25 @@ $middleware = (new FormatDataResponse(new JsonDataResponseFormatter()));
 Also the package provides PSR-15 middleware for content negotiation
 
 ```php
-
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
 
 $middleware = new ContentNegotiator([
-                  'text/html' => new HtmlDataResponseFormatter(),
-                  'application/xml' => new XmlDataResponseFormatter(),
-                  'application/json' => new JsonDataResponseFormatter(),
-              ]);
+    'text/html' => new HtmlDataResponseFormatter(),
+    'application/xml' => new XmlDataResponseFormatter(),
+    'application/json' => new JsonDataResponseFormatter(),
+]);
 ```
 
 You can override middlewares with method `withContentFormatters`
 
 ```php
 $middleware->withContentFormatters([
-                 'application/xml' => new XmlDataResponseFormatter(),
-                 'application/json' => new JsonDataResponseFormatter(),
-             ]);
+    'application/xml' => new XmlDataResponseFormatter(),
+    'application/json' => new JsonDataResponseFormatter(),
+]);
 ```
 
 ### Unit testing
