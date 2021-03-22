@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\HasContentTypeTrait;
@@ -28,7 +29,8 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $data = $dataResponse->getData();
         if (!is_scalar($data) && null !== $data && !$this->isStringableObject($data)) {
-            throw new \RuntimeException('Data must be a scalar value or null or a stringable object.');
+            $type = is_object($data) ? get_class($data) : gettype($data);
+            throw new RuntimeException(sprintf('Data must be a scalar value or null or a stringable object, %s given.', $type));
         }
 
         $response = $dataResponse->getResponse();
