@@ -12,6 +12,7 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 
@@ -219,6 +220,13 @@ class DataResponseTest extends TestCase
         $dataResponse->getBody()->rewind();
 
         $this->assertFalse($dataResponse->hasData());
+    }
+
+    public function testSetResponseRecursiveFormatter(): void
+    {
+        $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
+        $dataResponse = $dataResponse->withResponseFormatter(new RecursiveDataResponseFormatter());
+        $dataResponse->getBody()->rewind();
     }
 
     private function createFactory(): DataResponseFactory
