@@ -149,6 +149,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->data = $data;
+        $new->formatted = false;
 
         return $new;
     }
