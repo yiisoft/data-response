@@ -51,7 +51,7 @@
             "source-directory": "config"
         },
         "config-plugin": {
-            "web": "config/web.php"
+            "web": "web.php"
         }
     },
     "config": {
