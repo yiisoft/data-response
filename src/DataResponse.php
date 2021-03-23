@@ -24,6 +24,8 @@ final class DataResponse implements ResponseInterface
 
     private ?DataResponseFormatterInterface $responseFormatter = null;
 
+    private bool $formatted = false;
+
     public function __construct($data, int $code, string $reasonPhrase, ResponseFactoryInterface $responseFactory)
     {
         $this->response = $responseFactory->createResponse($code, $reasonPhrase);
@@ -37,7 +39,11 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
-            $this->response = $this->formatResponse();
+            if ($this->formatted === false) {
+                $this->formatted = true;
+                $this->response = $this->formatResponse();
+            }
+
             return $this->dataStream = $this->response->getBody();
         }
 

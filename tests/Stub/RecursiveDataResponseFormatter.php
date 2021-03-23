@@ -14,6 +14,6 @@ final class RecursiveDataResponseFormatter implements DataResponseFormatterInter
     {
         $dataResponse->getBody()->getContents();
 
-        return $dataResponse;
+        return $dataResponse->getResponse();
     }
 }
