@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
-use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
@@ -61,16 +60,6 @@ class DataResponseTest extends TestCase
         $this->assertTrue($dataResponse->hasResponseFormatter());
         $this->assertSame('"test"', $dataResponse->getBody()->getContents());
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
-    }
-
-    public function testAlreadySetResponseFormatter(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DataResponseFormatterInterface is already installed.');
-
-        $dataResponse = $this->createFactory()->createResponse('test');
-        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-        $dataResponse->withResponseFormatter(new XmlDataResponseFormatter());
     }
 
     public function testSetEmptyResponseFormatter(): void
@@ -134,6 +123,8 @@ class DataResponseTest extends TestCase
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
         $this->assertEquals([Header::CONTENT_TYPE => ['application/json']], $dataResponse->getHeaders());
+
+        $dataResponse->getBody();
     }
 
     public function testHasHeader(): void
@@ -211,7 +202,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse('test');
         $this->assertEquals('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
+        $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
     }
 

@@ -24,6 +24,8 @@ final class DataResponse implements ResponseInterface
 
     private ?DataResponseFormatterInterface $responseFormatter = null;
 
+    private bool $formatted = false;
+
     public function __construct($data, int $code, string $reasonPhrase, ResponseFactoryInterface $responseFactory)
     {
         $this->response = $responseFactory->createResponse($code, $reasonPhrase);
@@ -37,6 +39,7 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
+            $this->response = $this->formatResponse();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -55,36 +58,43 @@ final class DataResponse implements ResponseInterface
 
     public function getHeader($name): array
     {
+        $this->response = $this->formatResponse();
         return $this->response->getHeader($name);
     }
 
     public function getHeaderLine($name): string
     {
+        $this->response = $this->formatResponse();
         return $this->response->getHeaderLine($name);
     }
 
     public function getHeaders(): array
     {
+        $this->response = $this->formatResponse();
         return $this->response->getHeaders();
     }
 
     public function getProtocolVersion(): string
     {
+        $this->response = $this->formatResponse();
         return $this->response->getProtocolVersion();
     }
 
     public function getReasonPhrase(): string
     {
+        $this->response = $this->formatResponse();
         return $this->response->getReasonPhrase();
     }
 
     public function getStatusCode(): int
     {
+        $this->response = $this->formatResponse();
         return $this->response->getStatusCode();
     }
 
     public function hasHeader($name): bool
     {
+        $this->response = $this->formatResponse();
         return $this->response->hasHeader($name);
     }
 
@@ -92,6 +102,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withAddedHeader($name, $value);
+        $new->formatted = false;
         return $new;
     }
 
@@ -100,6 +111,7 @@ final class DataResponse implements ResponseInterface
         $new = clone $this;
         $new->response = $this->response->withBody($body);
         $new->dataStream = $body;
+        $new->formatted = false;
         return $new;
     }
 
@@ -107,6 +119,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withHeader($name, $value);
+        $new->formatted = false;
         return $new;
     }
 
@@ -121,6 +134,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withProtocolVersion($version);
+        $new->formatted = false;
         return $new;
     }
 
@@ -128,18 +142,16 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withStatus($code, $reasonPhrase);
+        $new->formatted = false;
         return $new;
     }
 
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
-        if ($this->hasResponseFormatter()) {
-            throw new \RuntimeException('DataResponseFormatterInterface is already installed.');
-        }
-
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
         $new->response = $new->formatResponse();
+
         return $new;
     }
 
@@ -147,11 +159,8 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->data = $data;
-
-        if ($new->hasResponseFormatter()) {
-            $new->clearResponseBody();
-            $new->response = $new->formatResponse();
-        }
+        $new->clearResponseBody();
+        $new->formatted = false;
 
         return $new;
     }
@@ -185,7 +194,13 @@ final class DataResponse implements ResponseInterface
      */
     private function formatResponse(): ResponseInterface
     {
+        if ($this->formatted === true || !$this->hasResponseFormatter()) {
+            return $this->response;
+        }
+
         $response = $this->responseFormatter->format($this);
+        $this->formatted = true;
+
         if ($response instanceof self) {
             throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
         }
