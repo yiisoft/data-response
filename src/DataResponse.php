@@ -194,7 +194,7 @@ final class DataResponse implements ResponseInterface
      */
     private function formatResponse(): ResponseInterface
     {
-        if ($this->formatted === true || !$this->hasResponseFormatter()) {
+        if (!$this->needFormatResponse()) {
             return $this->response;
         }
 
@@ -212,5 +212,10 @@ final class DataResponse implements ResponseInterface
     {
         $this->response->getBody()->rewind();
         $this->response->getBody()->write('');
+    }
+
+    private function needFormatResponse(): bool
+    {
+        return $this->formatted === false && $this->hasResponseFormatter();
     }
 }
