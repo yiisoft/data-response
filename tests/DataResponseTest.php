@@ -123,8 +123,6 @@ class DataResponseTest extends TestCase
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
         $this->assertEquals([Header::CONTENT_TYPE => ['application/json']], $dataResponse->getHeaders());
-
-        $dataResponse->getBody();
     }
 
     public function testHasHeader(): void
