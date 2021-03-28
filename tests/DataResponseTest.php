@@ -200,7 +200,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse('test');
         $this->assertEquals('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
+        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
     }
 
