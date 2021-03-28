@@ -228,6 +228,7 @@ class DataResponseTest extends TestCase
         $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
         $dataResponse = $dataResponse->withResponseFormatter(new RecursiveDataResponseFormatter());
         $dataResponse->getBody()->rewind();
+        $this->assertTrue(true);
     }
 
     private function createFactory(): DataResponseFactory

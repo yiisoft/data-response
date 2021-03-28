@@ -198,8 +198,8 @@ final class DataResponse implements ResponseInterface
             return $this->response;
         }
 
-        $response = $this->responseFormatter->format($this);
         $this->formatted = true;
+        $response = $this->responseFormatter->format($this);
 
         if ($response instanceof self) {
             throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
