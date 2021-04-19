@@ -62,19 +62,38 @@ class ContentNegotiatorTest extends TestCase
         $this->assertSame('application/json', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
-    public function testWrongContentFormattersInConstructor()
+    public function testNotExistsFormatter(): void
+    {
+        $middleware = new ContentNegotiator($this->getContentFormatters());
+        $request = new ServerRequest('GET', '/', [Header::ACCEPT => 'text/plain']);
+        $response = $middleware->process($request, $this->getHandler('Hello World!'));
+        $response->getBody()->rewind();
+        $content = $response->getBody()->getContents();
+
+        $this->assertInstanceOf(DataResponse::class, $response);
+        $this->assertFalse($response->hasResponseFormatter());
+        $this->assertSame('Hello World!', $content);
+    }
+
+    public function testWrongContentFormattersInConstructor(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectErrorMessage('Invalid formatter type.');
         new ContentNegotiator($this->getWrongContentFormatters());
     }
 
-    public function testWrongContentFormattersInSetter()
+    public function testWrongContentFormattersInSetter(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectErrorMessage('Invalid formatter type.');
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $middleware->withContentFormatters($this->getWrongContentFormatters());
+    }
+
+    public function testImmutability(): void
+    {
+        $middleware = new ContentNegotiator([]);
+        $this->assertNotSame($middleware, $middleware->withContentFormatters([]));
     }
 
     private function getHandler($data): RequestHandlerInterface

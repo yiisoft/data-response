@@ -7,6 +7,9 @@ namespace Yiisoft\DataResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+
+use function is_string;
 
 /**
  * A wrapper around PSR-7 response that is assigned raw data to be formatted later using a formatter.
@@ -53,7 +56,7 @@ final class DataResponse implements ResponseInterface
             return $this->dataStream = $this->response->getBody();
         }
 
-        throw new \RuntimeException('Data must be a string value.');
+        throw new RuntimeException('Data must be a string value.');
     }
 
     public function getHeader($name): array
@@ -202,7 +205,7 @@ final class DataResponse implements ResponseInterface
         $response = $this->responseFormatter->format($this);
 
         if ($response instanceof self) {
-            throw new \RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
+            throw new RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
         }
 
         return $response;
