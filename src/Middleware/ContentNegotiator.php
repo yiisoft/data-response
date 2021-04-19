@@ -12,6 +12,7 @@ use RuntimeException;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\Http\Header;
+
 use function is_string;
 
 /**
