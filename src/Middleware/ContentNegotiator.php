@@ -8,9 +8,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\Http\Header;
+use function is_string;
 
 /**
  * ContentNegotiator supports response format negotiation.
@@ -58,7 +60,7 @@ final class ContentNegotiator implements MiddlewareInterface
     {
         foreach ($contentFormatters as $contentType => $formatter) {
             if (!(is_string($contentType) && $formatter instanceof DataResponseFormatterInterface)) {
-                throw new \RuntimeException('Invalid formatter type.');
+                throw new RuntimeException('Invalid formatter type.');
             }
         }
     }
