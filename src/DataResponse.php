@@ -129,7 +129,8 @@ final class DataResponse implements ResponseInterface
     public function withoutHeader($name): self
     {
         $new = clone $this;
-        $new->response = $this->response->withoutHeader($name);
+        $new->response = $new->formatResponse();
+        $new->response = $new->response->withoutHeader($name);
         return $new;
     }
 
@@ -153,7 +154,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
-        $new->response = $new->formatResponse();
+        $new->formatted = false;
 
         return $new;
     }

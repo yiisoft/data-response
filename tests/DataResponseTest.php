@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
 use Yiisoft\Http\Header;
@@ -201,7 +202,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse('test');
         $this->assertEquals('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
+        $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
     }
 
@@ -229,6 +230,17 @@ class DataResponseTest extends TestCase
         $dataResponse = $dataResponse->withResponseFormatter(new RecursiveDataResponseFormatter());
         $dataResponse->getBody()->rewind();
         $this->assertTrue(true);
+    }
+
+    public function testMy(): void
+    {
+        $formatter = new FakeDataResponseFormatter();
+        $dataResponse = $this->createFactory()->createResponse('');
+        $dataResponse = $dataResponse->withResponseFormatter($formatter);
+        $dataResponse = $dataResponse->withData(['test']);
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame(1, $formatter->getTriggeredCount());
     }
 
     private function createFactory(): DataResponseFactory
