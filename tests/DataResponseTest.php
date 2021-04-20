@@ -202,7 +202,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse('test');
         $this->assertEquals('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn() => 'test2');
+        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
         $this->assertEquals('test2', $dataResponse->getData());
     }
 
@@ -232,7 +232,7 @@ class DataResponseTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testMy(): void
+    public function testDuplicateFormatting(): void
     {
         $formatter = new FakeDataResponseFormatter();
         $dataResponse = $this->createFactory()->createResponse('');
