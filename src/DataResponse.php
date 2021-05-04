@@ -61,6 +61,7 @@ final class DataResponse implements ResponseInterface
 
     /**
      * @param string $name
+     *
      * @return array<array-key, string>
      */
     public function getHeader($name): array
@@ -117,6 +118,7 @@ final class DataResponse implements ResponseInterface
     /**
      * @param string $name
      * @param string|string[] $value
+     *
      * @return static
      */
     public function withAddedHeader($name, $value): self
@@ -142,6 +144,7 @@ final class DataResponse implements ResponseInterface
     /**
      * @param string $name
      * @param string|string[] $value
+     *
      * @return static
      */
     public function withHeader($name, $value): self
@@ -154,6 +157,7 @@ final class DataResponse implements ResponseInterface
 
     /**
      * @param string $name
+     *
      * @return static
      */
     public function withoutHeader($name): self
@@ -166,6 +170,7 @@ final class DataResponse implements ResponseInterface
 
     /**
      * @param string $version
+     *
      * @return static
      */
     public function withProtocolVersion($version): self
@@ -179,6 +184,7 @@ final class DataResponse implements ResponseInterface
     /**
      * @param int $code
      * @param string $reasonPhrase
+     *
      * @return static
      */
     public function withStatus($code, $reasonPhrase = ''): self
