@@ -59,18 +59,29 @@ final class DataResponse implements ResponseInterface
         throw new RuntimeException('Data must be a string value.');
     }
 
+    /**
+     * @param string $name
+     *
+     * @return array<array-key, string>
+     */
     public function getHeader($name): array
     {
         $this->response = $this->formatResponse();
         return $this->response->getHeader($name);
     }
 
+    /**
+     * @param string $name
+     */
     public function getHeaderLine($name): string
     {
         $this->response = $this->formatResponse();
         return $this->response->getHeaderLine($name);
     }
 
+    /**
+     * @return string[][]
+     */
     public function getHeaders(): array
     {
         $this->response = $this->formatResponse();
@@ -95,12 +106,21 @@ final class DataResponse implements ResponseInterface
         return $this->response->getStatusCode();
     }
 
+    /**
+     * @param string $name
+     */
     public function hasHeader($name): bool
     {
         $this->response = $this->formatResponse();
         return $this->response->hasHeader($name);
     }
 
+    /**
+     * @param string $name
+     * @param string|string[] $value
+     *
+     * @return static
+     */
     public function withAddedHeader($name, $value): self
     {
         $new = clone $this;
@@ -109,6 +129,9 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @return static
+     */
     public function withBody(StreamInterface $body): self
     {
         $new = clone $this;
@@ -118,6 +141,12 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @param string $name
+     * @param string|string[] $value
+     *
+     * @return static
+     */
     public function withHeader($name, $value): self
     {
         $new = clone $this;
@@ -126,6 +155,11 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return static
+     */
     public function withoutHeader($name): self
     {
         $new = clone $this;
@@ -134,6 +168,11 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @param string $version
+     *
+     * @return static
+     */
     public function withProtocolVersion($version): self
     {
         $new = clone $this;
@@ -142,6 +181,12 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @param int $code
+     * @param string $reasonPhrase
+     *
+     * @return static
+     */
     public function withStatus($code, $reasonPhrase = ''): self
     {
         $new = clone $this;
@@ -150,6 +195,9 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @return static
+     */
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
         $new = clone $this;
@@ -159,6 +207,9 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
+    /**
+     * @return static
+     */
     public function withData($data): self
     {
         $new = clone $this;
