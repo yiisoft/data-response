@@ -227,7 +227,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
      *
      * @param DOMDocument $dom The root DOM document.
-     * @param int|null|string $tagName The tag name.
+     * @param int|string|null $tagName The tag name.
      *
      * @return DOMElement
      */
@@ -251,7 +251,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * Sets the scalar value to Dom Element instance if the value is not empty.
      *
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
-     * @param bool|float|int|null|string $value
+     * @param bool|float|int|string|null $value
      */
     private function setScalarValueToDomElement($element, $value): void
     {
@@ -265,7 +265,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     /**
      * Formats scalar value to use in XML node.
      *
-     * @param bool|float|int|null|string $value To format.
+     * @param bool|float|int|string|null $value To format.
      *
      * @return string The string representation of the value.
      */

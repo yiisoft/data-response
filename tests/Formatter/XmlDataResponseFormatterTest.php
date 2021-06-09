@@ -186,7 +186,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $dataResponse = $this->createResponse([
             new ArrayObject(['test', null]),
             new ArrayObject([true, false]),
-            new ArrayObject(['array' =>[
+            new ArrayObject(['array' => [
                 new ArrayObject(['test', null]),
                 new ArrayObject([true, false]),
             ]]),
@@ -343,7 +343,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $dataResponse = $this->createResponse([
             'test',
             'validName' => 'test',
-            '1_invalidName' => 'test'
+            '1_invalidName' => 'test',
         ]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
