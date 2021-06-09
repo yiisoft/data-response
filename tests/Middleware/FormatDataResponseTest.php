@@ -33,7 +33,7 @@ class FormatDataResponseTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
-        $this->assertSame(['application/json'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testCorrectProcessWithResponseAsJson(): void
@@ -47,7 +47,7 @@ class FormatDataResponseTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
-        $this->assertSame(['application/json'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testCorrectProcessWithResponseAsHtml(): void
@@ -78,7 +78,7 @@ class FormatDataResponseTest extends TestCase
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response><test>test</test></response>\n",
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     private function getRequestHandler(ResponseInterface $response): RequestHandlerInterface

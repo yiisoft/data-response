@@ -10,8 +10,7 @@ use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
 use Traversable;
-use Yiisoft\DataResponse\HasContentTypeTrait;
-use Yiisoft\Http\Header;
+use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Strings\NumericHelper;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\DataResponse\DataResponse;
@@ -27,7 +26,7 @@ use function strpos;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
-    use HasContentTypeTrait;
+    use ResponseContentTrait;
 
     private const DEFAULT_ITEM_TAG_NAME = 'item';
     private const KEY_ATTRIBUTE_NAME = 'key';
@@ -38,14 +37,14 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     private string $contentType = 'application/xml';
 
     /**
+     * @var string The encoding to the Content-Type header.
+     */
+    private string $encoding = 'UTF-8';
+
+    /**
      * @var string The XML version.
      */
     private string $version = '1.0';
-
-    /**
-     * @var string The XML encoding.
-     */
-    private string $encoding = 'UTF-8';
 
     /**
      * @var string The name of the root element. If an empty value is set, the root tag should not be added.
@@ -72,13 +71,10 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                 $this->buildXml($dom, $dom, $data);
             }
 
-            $content = $dom->saveXML();
+            $content = (string) $dom->saveXML();
         }
 
-        $response = $dataResponse->getResponse();
-        $response->getBody()->write($content ?? '');
-
-        return $response->withHeader(Header::CONTENT_TYPE, $this->contentType . '; ' . $this->encoding);
+        return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
     /**
@@ -92,20 +88,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $new = clone $this;
         $new->version = $version;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the specified encoding.
-     *
-     * @param string $encoding The XML encoding. Default is "UTF-8".
-     *
-     * @return self
-     */
-    public function withEncoding(string $encoding): self
-    {
-        $new = clone $this;
-        $new->encoding = $encoding;
         return $new;
     }
 

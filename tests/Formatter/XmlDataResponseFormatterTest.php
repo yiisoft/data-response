@@ -27,7 +27,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>'),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithEncoding(): void
@@ -41,7 +41,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>', '1.0', $encoding),
             $result->getBody()->getContents()
         );
-        $this->assertSame(["application/xml; {$encoding}"], $result->getHeader('Content-Type'));
+        $this->assertSame(["application/xml; charset={$encoding}"], $result->getHeader('Content-Type'));
     }
 
     public function testWithVersion(): void
@@ -55,7 +55,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>', $version),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithRootTag(): void
@@ -68,7 +68,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<exampleRootTag>test</exampleRootTag>'),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithoutRootTag(): void
@@ -81,7 +81,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<tag>value</tag>'),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithEmptyRootTag(): void
@@ -94,7 +94,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response/>'),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['application/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithContentType(): void
@@ -107,7 +107,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>'),
             $result->getBody()->getContents()
         );
-        $this->assertSame(['text/xml; UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testScalarValues(): void

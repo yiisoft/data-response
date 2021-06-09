@@ -61,7 +61,7 @@ class DataResponseTest extends TestCase
 
         $this->assertTrue($dataResponse->hasResponseFormatter());
         $this->assertSame('"test"', $dataResponse->getBody()->getContents());
-        $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $dataResponse->getHeader('Content-Type'));
     }
 
     public function testSetEmptyResponseFormatter(): void
@@ -72,7 +72,7 @@ class DataResponseTest extends TestCase
 
         $this->assertTrue($dataResponse->hasResponseFormatter());
         $this->assertSame('', $dataResponse->getBody()->getContents());
-        $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $dataResponse->getHeader('Content-Type'));
     }
 
     public function testSetResponseLoopFormatter(): void
@@ -108,7 +108,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals(['application/json'], $dataResponse->getHeader(Header::CONTENT_TYPE));
+        $this->assertEquals(['application/json; charset=UTF-8'], $dataResponse->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testGetHeaderLine(): void
@@ -116,7 +116,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals('application/json', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
+        $this->assertEquals('application/json; charset=UTF-8', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
     }
 
     public function testGetHeaders(): void
@@ -124,7 +124,7 @@ class DataResponseTest extends TestCase
         $dataResponse = $this->createFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals([Header::CONTENT_TYPE => ['application/json']], $dataResponse->getHeaders());
+        $this->assertEquals([Header::CONTENT_TYPE => ['application/json; charset=UTF-8']], $dataResponse->getHeaders());
     }
 
     public function testHasHeader(): void
