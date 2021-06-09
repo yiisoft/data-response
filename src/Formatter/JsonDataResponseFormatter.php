@@ -9,7 +9,7 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\HasContentTypeTrait;
 use Yiisoft\Http\Header;
-use Yiisoft\Serializer\JsonSerializer;
+use Yiisoft\Json\Json;
 
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -24,18 +24,24 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        $content = '';
-        $jsonSerializer = new JsonSerializer($this->options);
         if ($dataResponse->hasData()) {
-            $content = $jsonSerializer->serialize($dataResponse->getData());
+            $content = Json::encode($dataResponse->getData(), $this->options);
         }
 
         $response = $dataResponse->getResponse();
-        $response->getBody()->write($content);
+        $response->getBody()->write($content ?? '');
 
         return $response->withHeader(Header::CONTENT_TYPE, $this->contentType);
     }
 
+    /**
+     * Returns a new instance with the specified encoding options.
+     *
+     * @param int $options The encoding options. For more details please refer to
+     * {@see https://www.php.net/manual/en/function.json-encode.php}.
+     *
+     * @return self
+     */
     public function withOptions(int $options): self
     {
         $new = clone $this;
