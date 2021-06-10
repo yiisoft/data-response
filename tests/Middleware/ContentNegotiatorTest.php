@@ -45,7 +45,7 @@ class ContentNegotiatorTest extends TestCase
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
         $this->assertSame($this->xml('<response>Hello</response>'), $content);
-        $this->assertSame('application/xml; UTF-8', $response->getHeader(Header::CONTENT_TYPE)[0]);
+        $this->assertSame('application/xml; charset=UTF-8', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
     public function testAcceptJson(): void
@@ -59,7 +59,7 @@ class ContentNegotiatorTest extends TestCase
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
         $this->assertSame('{"test":"Hello"}', $content);
-        $this->assertSame('application/json', $response->getHeader(Header::CONTENT_TYPE)[0]);
+        $this->assertSame('application/json; charset=UTF-8', $response->getHeader(Header::CONTENT_TYPE)[0]);
     }
 
     public function testNotExistsFormatter(): void

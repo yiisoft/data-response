@@ -7,19 +7,26 @@ namespace Yiisoft\DataResponse\Formatter;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
-use Yiisoft\DataResponse\HasContentTypeTrait;
-use Yiisoft\Http\Header;
+use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
-    use HasContentTypeTrait;
+    use ResponseContentTrait;
 
     /**
-     * @var string the Content-Type header for the response
+     * @var string The Content-Type header for the response.
      */
     private string $contentType = 'application/json';
 
+    /**
+     * @var string The encoding to the Content-Type header.
+     */
+    private string $encoding = 'UTF-8';
+
+    /**
+     * @var int The encoding options.
+     */
     private int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
     public function format(DataResponse $dataResponse): ResponseInterface
@@ -28,10 +35,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
             $content = Json::encode($dataResponse->getData(), $this->options);
         }
 
-        $response = $dataResponse->getResponse();
-        $response->getBody()->write($content ?? '');
-
-        return $response->withHeader(Header::CONTENT_TYPE, $this->contentType);
+        return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
     /**

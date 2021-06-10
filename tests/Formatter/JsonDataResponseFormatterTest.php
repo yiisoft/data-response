@@ -19,7 +19,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
-        $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithContentType(): void
@@ -29,7 +29,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
-        $this->assertSame(['application/xml'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithOptions(): void
@@ -39,7 +39,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('{"0":"test"}', $result->getBody()->getContents());
-        $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithEmptyResponse(): void
@@ -49,7 +49,7 @@ class JsonDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame('', $result->getBody()->getContents());
-        $this->assertSame(['application/json'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     private function createFactory(): DataResponseFactory
