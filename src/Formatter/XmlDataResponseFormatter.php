@@ -9,10 +9,9 @@ use DOMElement;
 use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
-use Traversable;
+use RuntimeException;
 use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Strings\NumericHelper;
-use Yiisoft\Strings\StringHelper;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
@@ -21,8 +20,7 @@ use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function iterator_to_array;
-use function strpos;
+use function sprintf;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -50,12 +48,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @var string The name of the root element. If an empty value is set, the root tag should not be added.
      */
     private string $rootTag = 'response';
-
-    /**
-     * @var bool If true, the object tags will be formed from the class names,
-     * otherwise the {@see DEFAULT_ITEM_TAG_NAME} value will be used.
-     */
-    private bool $useObjectTags = true;
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
@@ -107,21 +99,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     }
 
     /**
-     * Returns a new instance with the specified value, whether to use class names as tags or not.
-     *
-     * @param bool $useObjectTags If true, the object tags will be formed from the class names,
-     * otherwise the {@see DEFAULT_ITEM_TAG_NAME} value will be used. Default is true.
-     *
-     * @return self
-     */
-    public function withUseObjectTags(bool $useObjectTags): self
-    {
-        $new = clone $this;
-        $new->useObjectTags = $useObjectTags;
-        return $new;
-    }
-
-    /**
      * Builds the data to use in XML.
      *
      * @param DOMDocument $dom The root DOM document.
@@ -134,12 +111,11 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             return;
         }
 
-        if (is_array($data) || $data instanceof Traversable) {
-            $data = $data instanceof Traversable ? iterator_to_array($data) : $data;
+        if (is_array($data)) {
             $dataSize = count($data);
 
             foreach ($data as $name => $value) {
-                if (is_int($name) && is_object($value) && !($value instanceof Traversable)) {
+                if (is_int($name) && is_object($value)) {
                     $this->buildObject($dom, $element, $value, $dataSize > 1 ? $name : null);
                     continue;
                 }
@@ -181,25 +157,22 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private function buildObject(DOMDocument $dom, $element, object $object, int $key = null): void
     {
-        if ($this->useObjectTags) {
-            $class = get_class($object);
-            $class = strpos($class, 'class@anonymous') === false ? StringHelper::baseName($class) : 'AnonymousClass';
+        if (!($object instanceof XmlDataInterface)) {
+            throw new RuntimeException(sprintf(
+                'The "%s" object must implement the "%s" interface.',
+                get_class($object),
+                XmlDataInterface::class,
+            ));
         }
 
-        $child = $this->safeCreateDomElement($dom, $class ?? self::DEFAULT_ITEM_TAG_NAME);
+        $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
 
         if ($key !== null) {
             $child->setAttribute(self::KEY_ATTRIBUTE_NAME, (string) $key);
         }
 
         $element->appendChild($child);
-        $array = [];
-
-        foreach ($object as $property => $value) {
-            $array[$property] = $value;
-        }
-
-        $this->buildXml($dom, $child, $array);
+        $this->buildXml($dom, $child, $object->xmlData());
     }
 
     /**

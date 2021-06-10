@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\Formatter;
 
-use ArrayObject;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use stdClass;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\Formatter\XmlDataInterface;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 
 use function preg_replace;
@@ -162,77 +163,24 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testTraversableValue(): void
-    {
-        $dataResponse = $this->createResponse(new ArrayObject(['test', null]));
-        $result = (new XmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            $this->xml(
-                <<<EOF
-                    <response>
-                        <item key="0">test</item>
-                        <item key="1"/>
-                    </response>
-                EOF
-            ),
-            $result->getBody()->getContents()
-        );
-    }
-
-    public function testTraversableValues(): void
-    {
-        $dataResponse = $this->createResponse([
-            new ArrayObject(['test', null]),
-            new ArrayObject([true, false]),
-            new ArrayObject(['array' => [
-                new ArrayObject(['test', null]),
-                new ArrayObject([true, false]),
-            ]]),
-        ]);
-        $result = (new XmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
-
-        $this->assertSame(
-            $this->xml(
-                <<<EOF
-                    <response>
-                        <item key="0">
-                            <item key="0">test</item>
-                            <item key="1"/>
-                        </item>
-                        <item key="1">
-                            <item key="0">true</item>
-                            <item key="1">false</item>
-                        </item>
-                        <item key="2">
-                            <array>
-                                <item key="0">
-                                    <item key="0">test</item>
-                                    <item key="1"/>
-                                </item>
-                                <item key="1">
-                                    <item key="0">true</item>
-                                    <item key="1">false</item>
-                                </item>
-                            </array>
-                        </item>
-                    </response>
-                EOF
-            ),
-            $result->getBody()->getContents()
-        );
-    }
-
     public function testEmptyObjectValues(): void
     {
-        $dataResponse = $this->createResponse(['object' => new stdClass()]);
+        $dataResponse = $this->createResponse(['object' => new class() implements XmlDataInterface {
+            public function xmlTagName(): string
+            {
+                return 'empty';
+            }
+
+            public function xmlData(): array
+            {
+                return [];
+            }
+        }]);
         $result = (new XmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame(
-            $this->xml('<response><object><stdClass/></object></response>'),
+            $this->xml('<response><object><empty/></object></response>'),
             $result->getBody()->getContents()
         );
     }
@@ -248,7 +196,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml(
                 <<<EOF
                     <response>
-                        <AnonymousClass>
+                        <dummy-class>
                             <string>$object->string</string>
                             <int>$object->int</int>
                             <float>$object->float</float>
@@ -256,7 +204,7 @@ class XmlDataResponseFormatterTest extends TestCase
                                 <item key="0">1</item>
                                 <foo>bar</foo>
                             </array>
-                        </AnonymousClass>
+                        </dummy-class>
                     </response>
                 EOF
             ),
@@ -264,31 +212,13 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
-    public function testObjectValuesWithoutUseObjectTags(): void
+    public function testObjectNotImplementXmlFormatDataInterface(): void
     {
-        $object = $this->createDummyObject('foo', 99, 1.1, [1, 'foo' => 'bar']);
-        $dataResponse = $this->createResponse($object);
-        $result = (new XmlDataResponseFormatter())->withUseObjectTags(false)->format($dataResponse);
-        $result->getBody()->rewind();
+        $dataResponse = $this->createResponse(new stdClass());
 
-        $this->assertSame(
-            $this->xml(
-                <<<EOF
-                    <response>
-                        <item>
-                            <string>$object->string</string>
-                            <int>$object->int</int>
-                            <float>$object->float</float>
-                            <array>
-                                <item key="0">1</item>
-                                <foo>bar</foo>
-                            </array>
-                        </item>
-                    </response>
-                EOF
-            ),
-            $result->getBody()->getContents()
-        );
+        $this->expectException(RuntimeException::class);
+
+        (new XmlDataResponseFormatter())->format($dataResponse);
     }
 
     public function testArrayObjectValues(): void
@@ -306,7 +236,7 @@ class XmlDataResponseFormatterTest extends TestCase
             $this->xml(
                 <<<EOF
                     <response>
-                        <AnonymousClass key="0">
+                        <dummy-class key="0">
                             <string>$object1->string</string>
                             <int>$object1->int</int>
                             <float>$object1->float</float>
@@ -314,8 +244,8 @@ class XmlDataResponseFormatterTest extends TestCase
                                 <item key="0">foo</item>
                                 <item key="1">1.1</item>
                             </array>
-                        </AnonymousClass>
-                        <AnonymousClass key="1">
+                        </dummy-class>
+                        <dummy-class key="1">
                             <string>$object2->string</string>
                             <int>$object2->int</int>
                             <float>$object2->float</float>
@@ -324,13 +254,73 @@ class XmlDataResponseFormatterTest extends TestCase
                                 <item key="1">2</item>
                                 <item key="2">3</item>
                             </array>
-                        </AnonymousClass>
-                        <AnonymousClass key="2">
+                        </dummy-class>
+                        <dummy-class key="2">
                             <string>$object3->string</string>
                             <int>$object3->int</int>
                             <float>$object3->float</float>
                             <array><bar>baz</bar></array>
-                        </AnonymousClass>
+                        </dummy-class>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testNestedAndMixedValues(): void
+    {
+        $dataResponse = $this->createResponse([
+            $object1 = $this->createDummyObject('foo', 99, 1.1, [
+                $object2 = $this->createDummyObject('bar', 11, 0.1, [
+                    'foo' => 'bar',
+                    1.1,
+                    $object3 = $this->createDummyObject('baz', 1, 2.2, [true, false]),
+                ]),
+            ]),
+            true,
+            'foo' => 'bar',
+            false,
+            11,
+            'baz',
+        ]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <dummy-class key="0">
+                            <string>$object1->string</string>
+                            <int>$object1->int</int>
+                            <float>$object1->float</float>
+                            <array>
+                                <dummy-class>
+                                    <string>$object2->string</string>
+                                    <int>$object2->int</int>
+                                    <float>$object2->float</float>
+                                    <array>
+                                        <foo>bar</foo>
+                                        <item key="0">1.1</item>
+                                        <dummy-class key="1">
+                                            <string>$object3->string</string>
+                                            <int>$object3->int</int>
+                                            <float>$object3->float</float>
+                                            <array>
+                                                <item key="0">true</item>
+                                                <item key="1">false</item>
+                                            </array>
+                                        </dummy-class>
+                                    </array>
+                                </dummy-class>
+                            </array>
+                        </dummy-class>
+                        <item key="1">true</item>
+                        <foo>bar</foo>
+                        <item key="2">false</item>
+                        <item key="3">11</item>
+                        <item key="4">baz</item>
                     </response>
                 EOF
             ),
@@ -375,7 +365,7 @@ class XmlDataResponseFormatterTest extends TestCase
 
     private function createDummyObject(string $string, int $int, float $float, array $array): object
     {
-        return new class($string, $int, $float, $array) {
+        return new class($string, $int, $float, $array) implements XmlDataInterface {
             public string $string;
             public int $int;
             public float $float;
@@ -387,6 +377,21 @@ class XmlDataResponseFormatterTest extends TestCase
                 $this->int = $int;
                 $this->float = $float;
                 $this->array = $array;
+            }
+
+            public function xmlTagName(): string
+            {
+                return 'dummy-class';
+            }
+
+            public function xmlData(): array
+            {
+                return [
+                    'string' => $this->string,
+                    'int' => $this->int,
+                    'float' => $this->float,
+                    'array' => $this->array,
+                ];
             }
         };
     }
