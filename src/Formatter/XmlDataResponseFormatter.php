@@ -9,18 +9,16 @@ use DOMElement;
 use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
+use Traversable;
 use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Strings\NumericHelper;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
-use function get_class;
 use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function sprintf;
 
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -110,10 +108,10 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             return;
         }
 
-        if (is_array($data)) {
+        if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
-                    $this->buildObject($dom, $element, $value);
+                    $this->buildObject($dom, $element, $value, $name);
                     continue;
                 }
 
@@ -145,25 +143,38 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument $dom The root DOM document.
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param object $object To build.
+     * @param int|string|null $tagName The tag name.
      */
-    private function buildObject(DOMDocument $dom, $element, object $object): void
+    private function buildObject(DOMDocument $dom, $element, object $object, $tagName = null): void
     {
-        if (!($object instanceof XmlDataInterface)) {
-            throw new RuntimeException(sprintf(
-                'The "%s" object must implement the "%s" interface.',
-                get_class($object),
-                XmlDataInterface::class,
-            ));
+
+        if ($object instanceof XmlDataInterface) {
+            $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
+
+            foreach ($object->xmlTagAttributes() as $name => $value) {
+                $child->setAttribute($name, $value);
+            }
+
+            $element->appendChild($child);
+            $this->buildXml($dom, $child, $object->xmlData());
+            return;
         }
 
-        $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
-
-        foreach ($object->xmlTagAttributes() as $name => $value) {
-            $child->setAttribute($name, $value);
-        }
-
+        $child = $this->safeCreateDomElement($dom, $tagName);
         $element->appendChild($child);
-        $this->buildXml($dom, $child, $object->xmlData());
+
+        if ($object instanceof Traversable) {
+            $this->buildXml($dom, $child, $object);
+            return;
+        }
+
+        $data = [];
+
+        foreach ($object as $property => $value) {
+            $data[$property] = $value;
+        }
+
+        $this->buildXml($dom, $child, $data);
     }
 
     /**

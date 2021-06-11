@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\Formatter;
 
+use ArrayObject;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use stdClass;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactory;
@@ -163,7 +163,154 @@ class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
+    public function testTraversableValue(): void
+    {
+        $dataResponse = $this->createResponse(['array-value' => new ArrayObject(['test', null])]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <array-value>
+                            <item>test</item>
+                            <item/>
+                        </array-value>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testTraversableValues(): void
+    {
+        $dataResponse = $this->createResponse([
+            new ArrayObject(['foo' => 'bar', null]),
+            new ArrayObject([true, false]),
+            new ArrayObject(['array' => [
+                new ArrayObject(['test', null]),
+                new ArrayObject([true, false]),
+            ]]),
+        ]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <item>
+                            <foo>bar</foo>
+                            <item/>
+                        </item>
+                        <item>
+                            <item>true</item>
+                            <item>false</item>
+                        </item>
+                        <item>
+                            <array>
+                                <item>
+                                    <item>test</item>
+                                    <item/>
+                                </item>
+                                <item>
+                                    <item>true</item>
+                                    <item>false</item>
+                                </item>
+                            </array>
+                        </item>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testPriorityXmlDataInterfaceOverTraversable(): void
+    {
+        $dataResponse = $this->createResponse(new class(['foo']) extends ArrayObject implements XmlDataInterface {
+            public function xmlTagName(): string
+            {
+                return 'xml-data';
+            }
+
+            public function xmlTagAttributes(): array
+            {
+                return ['attribute' => 'test'];
+            }
+
+            public function xmlData(): array
+            {
+                return ['foo' => 'bar'];
+            }
+        });
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <xml-data attribute="test">
+                            <foo>bar</foo>
+                        </xml-data>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testPriorityXmlDataInterfaceOverTraversableInArray(): void
+    {
+        $dataResponse = $this->createResponse([new class(['foo']) extends ArrayObject implements XmlDataInterface {
+            public function xmlTagName(): string
+            {
+                return 'xml-data';
+            }
+
+            public function xmlTagAttributes(): array
+            {
+                return ['attribute' => 'test'];
+            }
+
+            public function xmlData(): array
+            {
+                return ['foo' => 'bar'];
+            }
+        }]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <xml-data attribute="test">
+                            <foo>bar</foo>
+                        </xml-data>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
     public function testEmptyObjectValues(): void
+    {
+        $dataResponse = $this->createResponse(['object' => new stdClass()]);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml('<response><object/></response>'),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testEmptyObjectValuesImplementXmlDataInterface(): void
     {
         $dataResponse = $this->createResponse(['object' => new class() implements XmlDataInterface {
             public function xmlTagName(): string
@@ -215,15 +362,6 @@ class XmlDataResponseFormatterTest extends TestCase
             ),
             $result->getBody()->getContents()
         );
-    }
-
-    public function testObjectNotImplementXmlFormatDataInterface(): void
-    {
-        $dataResponse = $this->createResponse(new stdClass());
-
-        $this->expectException(RuntimeException::class);
-
-        (new XmlDataResponseFormatter())->format($dataResponse);
     }
 
     public function testArrayObjectValues(): void
