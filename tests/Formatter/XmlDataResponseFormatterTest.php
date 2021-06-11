@@ -143,20 +143,20 @@ class XmlDataResponseFormatterTest extends TestCase
         $this->assertSame(
             $this->xml(
                 <<<EOF
-                    <response>
-                        <item key="0">
-                            <item key="100"/>
-                            <item key="200"/>
-                            <item key="300"/>
-                        </item>
-                        <item key="1">
-                            <item key="0">1</item>
-                            <item key="1">1.1</item>
-                            <foo>bar</foo>
-                            <item key="2">true</item>
-                            <item key="3">false</item>
-                        </item>
-                    </response>
+                <response>
+                    <item key="0">
+                        <item key="100"/>
+                        <item key="200"/>
+                        <item key="300"/>
+                    </item>
+                    <item key="1">
+                        <item key="0">1</item>
+                        <item key="1">1.1</item>
+                        <foo>bar</foo>
+                        <item key="2">true</item>
+                        <item key="3">false</item>
+                    </item>
+                </response>
                 EOF
             ),
             $result->getBody()->getContents()
@@ -171,6 +171,11 @@ class XmlDataResponseFormatterTest extends TestCase
                 return 'empty';
             }
 
+            public function xmlTagAttributes(): array
+            {
+                return [];
+            }
+
             public function xmlData(): array
             {
                 return [];
@@ -180,7 +185,7 @@ class XmlDataResponseFormatterTest extends TestCase
         $result->getBody()->rewind();
 
         $this->assertSame(
-            $this->xml('<response><object><empty/></object></response>'),
+            $this->xml('<response><empty/></response>'),
             $result->getBody()->getContents()
         );
     }
@@ -260,6 +265,52 @@ class XmlDataResponseFormatterTest extends TestCase
                             <int>$object3->int</int>
                             <float>$object3->float</float>
                             <array><bar>baz</bar></array>
+                        </dummy-class>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
+    public function testObjectValuesWithAttributes(): void
+    {
+        $objects = [
+            $object1 = $this->createDummyObject('foo', 99, 1.1, [
+                $object2 = $this->createDummyObject('bar', 10, 2.2, [1, 2, 3], ['key' => 'string']),
+                $object3 = $this->createDummyObject('baz', 0, 3.3, ['bar' => 'baz'], ['empty' => '']),
+            ], ['id' => '22']),
+        ];
+        $dataResponse = $this->createResponse($objects);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <dummy-class id="22">
+                            <string>$object1->string</string>
+                            <int>$object1->int</int>
+                            <float>$object1->float</float>
+                            <array>
+                                <dummy-class key="string">
+                                    <string>$object2->string</string>
+                                    <int>$object2->int</int>
+                                    <float>$object2->float</float>
+                                    <array>
+                                        <item key="0">1</item>
+                                        <item key="1">2</item>
+                                        <item key="2">3</item>
+                                    </array>
+                                </dummy-class>
+                                <dummy-class empty="" key="1">
+                                    <string>$object3->string</string>
+                                    <int>$object3->int</int>
+                                    <float>$object3->float</float>
+                                    <array><bar>baz</bar></array>
+                                </dummy-class>
+                            </array>
                         </dummy-class>
                     </response>
                 EOF
@@ -360,28 +411,35 @@ class XmlDataResponseFormatterTest extends TestCase
     private function xml(string $data, string $version = '1.0', string $encoding = 'UTF-8'): string
     {
         $startLine = sprintf('<?xml version="%s" encoding="%s"?>', $version, $encoding);
-        return $startLine . "\n" . preg_replace('/(?!item)\s(?!key)/', '', $data) . "\n";
+        return $startLine . "\n" . preg_replace('/(?!item)\s(?!id|key|empty)/', '', $data) . "\n";
     }
 
-    private function createDummyObject(string $string, int $int, float $float, array $array): object
+    private function createDummyObject(string $string, int $int, float $float, array $array, array $attrs = []): object
     {
-        return new class($string, $int, $float, $array) implements XmlDataInterface {
+        return new class($string, $int, $float, $array, $attrs) implements XmlDataInterface {
             public string $string;
             public int $int;
             public float $float;
             public array $array;
+            public array $attrs;
 
-            public function __construct(string $string, int $int, float $float, array $array)
+            public function __construct(string $string, int $int, float $float, array $array, array $attrs = [])
             {
                 $this->string = $string;
                 $this->int = $int;
                 $this->float = $float;
                 $this->array = $array;
+                $this->attrs = $attrs;
             }
 
             public function xmlTagName(): string
             {
                 return 'dummy-class';
+            }
+
+            public function xmlTagAttributes(): array
+            {
+               return $this->attrs;
             }
 
             public function xmlData(): array

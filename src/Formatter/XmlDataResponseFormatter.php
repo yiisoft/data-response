@@ -115,8 +115,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             $dataSize = count($data);
 
             foreach ($data as $name => $value) {
-                if (is_int($name) && is_object($value)) {
-                    $this->buildObject($dom, $element, $value, $dataSize > 1 ? $name : null);
+                if (is_object($value)) {
+                    $this->buildObject($dom, $element, $value, $dataSize > 1 && is_int($name) ? $name : null);
                     continue;
                 }
 
@@ -128,7 +128,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
                 $element->appendChild($child);
 
-                if (is_array($value) || is_object($value)) {
+                if (is_array($value)) {
                     $this->buildXml($dom, $child, $value);
                     continue;
                 }
@@ -167,7 +167,11 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
         $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
 
-        if ($key !== null) {
+        foreach ($object->xmlTagAttributes() as $name => $value) {
+            $child->setAttribute($name, $value);
+        }
+
+        if ($key !== null && !$child->hasAttribute(self::KEY_ATTRIBUTE_NAME)) {
             $child->setAttribute(self::KEY_ATTRIBUTE_NAME, (string) $key);
         }
 
