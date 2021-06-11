@@ -27,7 +27,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     use ResponseContentTrait;
 
     private const DEFAULT_ITEM_TAG_NAME = 'item';
-    private const KEY_ATTRIBUTE_NAME = 'key';
 
     /**
      * @var string The Content-Type header for the response.
@@ -112,23 +111,16 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data)) {
-            $dataSize = count($data);
-
             foreach ($data as $name => $value) {
-                if (is_int($name) && is_object($value)) {
-                    $this->buildObject($dom, $element, $value, $dataSize > 1 ? $name : null);
+                if (is_object($value)) {
+                    $this->buildObject($dom, $element, $value);
                     continue;
                 }
 
                 $child = $this->safeCreateDomElement($dom, $name);
-
-                if ($dataSize > 1 && is_int($name)) {
-                    $child->setAttribute(self::KEY_ATTRIBUTE_NAME, (string) $name);
-                }
-
                 $element->appendChild($child);
 
-                if (is_array($value) || is_object($value)) {
+                if (is_array($value)) {
                     $this->buildXml($dom, $child, $value);
                     continue;
                 }
@@ -153,9 +145,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument $dom The root DOM document.
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param object $object To build.
-     * @param int|null $key Key attribute value.
      */
-    private function buildObject(DOMDocument $dom, $element, object $object, int $key = null): void
+    private function buildObject(DOMDocument $dom, $element, object $object): void
     {
         if (!($object instanceof XmlDataInterface)) {
             throw new RuntimeException(sprintf(
@@ -167,8 +158,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
         $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
 
-        if ($key !== null) {
-            $child->setAttribute(self::KEY_ATTRIBUTE_NAME, (string) $key);
+        foreach ($object->xmlTagAttributes() as $name => $value) {
+            $child->setAttribute($name, $value);
         }
 
         $element->appendChild($child);
