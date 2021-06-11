@@ -439,7 +439,7 @@ class XmlDataResponseFormatterTest extends TestCase
 
             public function xmlTagAttributes(): array
             {
-               return $this->attrs;
+                return $this->attrs;
             }
 
             public function xmlData(): array
