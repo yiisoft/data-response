@@ -147,7 +147,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private function buildObject(DOMDocument $dom, $element, object $object, $tagName = null): void
     {
-
         if ($object instanceof XmlDataInterface) {
             $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
 
