@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\Stream;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\DataResponse;
-use Yiisoft\DataResponse\DataResponseFactory;
+use RuntimeException;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
@@ -17,11 +13,11 @@ use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 
-class DataResponseTest extends TestCase
+final class DataResponseTest extends TestCase
 {
     public function testCreateResponse(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $dataResponse = $dataResponse->withHeader('Content-Type', 'application/json');
         $dataResponse->getBody()->rewind();
 
@@ -34,7 +30,7 @@ class DataResponseTest extends TestCase
 
     public function testChangeResponseData(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $data = $dataResponse->getData();
         $data .= '-changed';
         $dataResponse = $dataResponse->withData($data);
@@ -45,7 +41,7 @@ class DataResponseTest extends TestCase
 
     public function testChangeResponseDataWithFormatter(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test-value');
+        $dataResponse = $this->createDataResponse('test-value');
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse = $dataResponse->withData('new-test-value');
         $dataResponse->getBody()->rewind();
@@ -55,7 +51,7 @@ class DataResponseTest extends TestCase
 
     public function testSetResponseFormatter(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
@@ -66,7 +62,7 @@ class DataResponseTest extends TestCase
 
     public function testSetEmptyResponseFormatter(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
@@ -77,17 +73,20 @@ class DataResponseTest extends TestCase
 
     public function testSetResponseLoopFormatter(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DataResponseFormatterInterface should not return instance of DataResponse.');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The "Yiisoft\DataResponse\DataResponseFormatterInterface::format()"'
+             . ' method should not return instance of "Yiisoft\DataResponse\DataResponse".'
+        );
 
-        $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
+        $dataResponse = $this->createDataResponse('test');
         $dataResponse = $dataResponse->withResponseFormatter(new LoopDataResponseFormatter());
         $dataResponse->getBody()->rewind();
     }
 
     public function testSetEmptyDataWithoutFormatter(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponse(null);
         $dataResponse->getBody()->rewind();
 
         $this->assertSame('', $dataResponse->getBody()->getContents());
@@ -96,40 +95,42 @@ class DataResponseTest extends TestCase
 
     public function testSetNotStringData(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Data must be a string value.');
-        $factory = new Psr17Factory();
-        $dataResponse = new DataResponse(100, Status::OK, '', $factory);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The data is "integer" not a string. To get non-string data, use the'
+            . ' "Yiisoft\DataResponse\DataResponse::getData()" method.'
+        );
+        $dataResponse = $this->createDataResponse(100);
         $dataResponse->getBody()->rewind();
     }
 
     public function testGetHeader(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals(['application/json; charset=UTF-8'], $dataResponse->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['application/json; charset=UTF-8'], $dataResponse->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testGetHeaderLine(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals('application/json; charset=UTF-8', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
+        $this->assertSame('application/json; charset=UTF-8', $dataResponse->getHeaderLine(Header::CONTENT_TYPE));
     }
 
     public function testGetHeaders(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
-        $this->assertEquals([Header::CONTENT_TYPE => ['application/json; charset=UTF-8']], $dataResponse->getHeaders());
+        $this->assertSame([Header::CONTENT_TYPE => ['application/json; charset=UTF-8']], $dataResponse->getHeaders());
     }
 
     public function testHasHeader(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
 
         $this->assertTrue($dataResponse->hasHeader(Header::CONTENT_TYPE));
@@ -138,7 +139,7 @@ class DataResponseTest extends TestCase
 
     public function testWithoutHeader(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse = $dataResponse->withoutHeader(Header::CONTENT_TYPE);
         $this->assertFalse($dataResponse->hasHeader(Header::CONTENT_TYPE));
@@ -146,69 +147,68 @@ class DataResponseTest extends TestCase
 
     public function testWithHeader(): void
     {
-        $dataResponse = $this->createFactory()->createResponse()
+        $dataResponse = $this->createDataResponseFactory()->createResponse()
             ->withHeader(Header::CONTENT_TYPE, 'application/json');
 
-        $this->assertEquals(['Content-Type' => ['application/json']], $dataResponse->getHeaders());
+        $this->assertSame(['Content-Type' => ['application/json']], $dataResponse->getHeaders());
     }
 
     public function testWithAddedHeader(): void
     {
-        $dataResponse = $this->createFactory()->createResponse()
+        $dataResponse = $this->createDataResponseFactory()->createResponse()
             ->withHeader(Header::CONTENT_TYPE, 'application/json')
             ->withAddedHeader(Header::CONTENT_TYPE, 'application/xml');
 
-        $this->assertEquals(['Content-Type' => ['application/json', 'application/xml']], $dataResponse->getHeaders());
+        $this->assertSame(['Content-Type' => ['application/json', 'application/xml']], $dataResponse->getHeaders());
     }
 
     public function testGetStatusCode(): void
     {
-        $factory = $this->createFactory();
+        $factory = $this->createDataResponseFactory();
 
-        $this->assertEquals(200, $factory->createResponse()->getStatusCode());
-        $this->assertEquals(400, $factory->createResponse(null, Status::BAD_REQUEST)->getStatusCode());
+        $this->assertSame(200, $factory->createResponse()->getStatusCode());
+        $this->assertSame(400, $factory->createResponse(null, Status::BAD_REQUEST)->getStatusCode());
     }
 
     public function testWithStatus(): void
     {
-        $dataResponse = $this->createFactory()->createResponse()->withStatus(Status::BAD_REQUEST, 'reason');
+        $dataResponse = $this->createDataResponseFactory()->createResponse()->withStatus(Status::BAD_REQUEST, 'reason');
 
-        $this->assertEquals(400, $dataResponse->getStatusCode());
-        $this->assertEquals('reason', $dataResponse->getReasonPhrase());
+        $this->assertSame(400, $dataResponse->getStatusCode());
+        $this->assertSame('reason', $dataResponse->getReasonPhrase());
     }
 
     public function testGetProtocolVersion(): void
     {
-        $this->assertEquals('1.1', $this->createFactory()->createResponse()->getProtocolVersion());
+        $this->assertSame('1.1', $this->createDataResponseFactory()->createResponse()->getProtocolVersion());
     }
 
     public function testWithProtocolVersion(): void
     {
-        $dataResponse = $this->createFactory()->createResponse()->withProtocolVersion('1.0');
-        $this->assertEquals('1.0', $dataResponse->getProtocolVersion());
+        $dataResponse = $this->createDataResponseFactory()->createResponse()->withProtocolVersion('1.0');
+        $this->assertSame('1.0', $dataResponse->getProtocolVersion());
     }
 
     public function testWithBody(): void
     {
-        $dataResponse = $this->createFactory()->createResponse()
-            ->withBody(Stream::create('test'));
+        $dataResponse = $this->createDataResponse('test1')->withBody($this->createStream('test2'));
 
         $dataResponse->getBody()->rewind();
-        $this->assertEquals('test', $dataResponse->getBody()->getContents());
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
     public function testGetData(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
-        $this->assertEquals('test', $dataResponse->getData());
+        $dataResponse = $this->createDataResponse('test');
+        $this->assertSame('test', $dataResponse->getData());
 
-        $dataResponse = $this->createFactory()->createResponse(fn () => 'test2');
-        $this->assertEquals('test2', $dataResponse->getData());
+        $dataResponse = $this->createDataResponse(fn () => 'test2');
+        $this->assertSame('test2', $dataResponse->getData());
     }
 
     public function testHasData(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
@@ -217,7 +217,7 @@ class DataResponseTest extends TestCase
 
     public function testHasDataWithEmptyData(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponseFactory()->createResponse();
         $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
         $dataResponse->getBody()->rewind();
 
@@ -226,7 +226,7 @@ class DataResponseTest extends TestCase
 
     public function testSetResponseRecursiveFormatter(): void
     {
-        $dataResponse = new DataResponse('test', Status::OK, '', new Psr17Factory());
+        $dataResponse = $this->createDataResponse('test');
         $dataResponse = $dataResponse->withResponseFormatter(new RecursiveDataResponseFormatter());
         $dataResponse->getBody()->rewind();
         $this->assertTrue(true);
@@ -235,16 +235,11 @@ class DataResponseTest extends TestCase
     public function testDuplicateFormatting(): void
     {
         $formatter = new FakeDataResponseFormatter();
-        $dataResponse = $this->createFactory()->createResponse('');
+        $dataResponse = $this->createDataResponse('');
         $dataResponse = $dataResponse->withResponseFormatter($formatter);
         $dataResponse = $dataResponse->withData(['test']);
         $dataResponse->getBody()->rewind();
 
         $this->assertSame(1, $formatter->getTriggeredCount());
-    }
-
-    private function createFactory(): DataResponseFactory
-    {
-        return new DataResponseFactory(new Psr17Factory());
     }
 }

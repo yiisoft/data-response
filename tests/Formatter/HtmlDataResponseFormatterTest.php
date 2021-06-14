@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\Formatter;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\TestCase;
-use Yiisoft\DataResponse\DataResponseFactory;
+use RuntimeException;
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\TestCase;
 
-class HtmlDataResponseFormatterTest extends TestCase
+final class HtmlDataResponseFormatterTest extends TestCase
 {
     public function testCorrectFormat(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -23,7 +22,7 @@ class HtmlDataResponseFormatterTest extends TestCase
 
     public function testWithEncoding(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $result = (new HtmlDataResponseFormatter())->withEncoding('ISO-8859-1')->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -33,7 +32,7 @@ class HtmlDataResponseFormatterTest extends TestCase
 
     public function testWithContentType(): void
     {
-        $dataResponse = $this->createFactory()->createResponse('test');
+        $dataResponse = $this->createDataResponse('test');
         $result = (new HtmlDataResponseFormatter())->withContentType('text/plain')->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -43,15 +42,15 @@ class HtmlDataResponseFormatterTest extends TestCase
 
     public function testWithIncorrectType(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $dataResponse = $this->createFactory()->createResponse(['test']);
+        $this->expectException(RuntimeException::class);
+        $dataResponse = $this->createDataResponse(['test']);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
     }
 
     public function testDataWithNull(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponse(null);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -68,17 +67,11 @@ class HtmlDataResponseFormatterTest extends TestCase
             }
         };
 
-
-        $dataResponse = $this->createFactory()->createResponse($data);
+        $dataResponse = $this->createDataResponse($data);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame('test', $result->getBody()->getContents());
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
-    }
-
-    private function createFactory(): DataResponseFactory
-    {
-        return new DataResponseFactory(new Psr17Factory());
     }
 }

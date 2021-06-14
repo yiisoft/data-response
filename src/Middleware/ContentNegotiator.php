@@ -91,7 +91,7 @@ final class ContentNegotiator implements MiddlewareInterface
 
             if (!($formatter instanceof DataResponseFormatterInterface)) {
                 throw new RuntimeException(sprintf(
-                    'Invalid. A "%s" instance is expected, "%s" is received.',
+                    'Invalid formatter. A "%s" instance is expected, "%s" is received.',
                     DataResponseFormatterInterface::class,
                     is_object($formatter) ? get_class($formatter) : gettype($formatter),
                 ));

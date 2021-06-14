@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\Formatter;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\TestCase;
-use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\TestCase;
 use Yiisoft\Http\Header;
 
-class JsonDataResponseFormatterTest extends TestCase
+final class JsonDataResponseFormatterTest extends TestCase
 {
     public function testCorrectFormat(): void
     {
-        $dataResponse = $this->createFactory()->createResponse(['test' => 'test']);
+        $dataResponse = $this->createDataResponse(['test' => 'test']);
         $result = (new JsonDataResponseFormatter())->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -24,7 +22,7 @@ class JsonDataResponseFormatterTest extends TestCase
 
     public function testWithContentType(): void
     {
-        $dataResponse = $this->createFactory()->createResponse(['test' => 'test']);
+        $dataResponse = $this->createDataResponse(['test' => 'test']);
         $result = (new JsonDataResponseFormatter())->withContentType('application/xml')->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -34,7 +32,7 @@ class JsonDataResponseFormatterTest extends TestCase
 
     public function testWithOptions(): void
     {
-        $dataResponse = $this->createFactory()->createResponse(['test']);
+        $dataResponse = $this->createDataResponse(['test']);
         $result = (new JsonDataResponseFormatter())->withOptions(JSON_FORCE_OBJECT)->format($dataResponse);
         $result->getBody()->rewind();
 
@@ -44,16 +42,11 @@ class JsonDataResponseFormatterTest extends TestCase
 
     public function testWithEmptyResponse(): void
     {
-        $dataResponse = $this->createFactory()->createResponse();
+        $dataResponse = $this->createDataResponse(null);
         $result = (new JsonDataResponseFormatter())->withOptions(JSON_FORCE_OBJECT)->format($dataResponse);
         $result->getBody()->rewind();
 
         $this->assertSame('', $result->getBody()->getContents());
         $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-    }
-
-    private function createFactory(): DataResponseFactory
-    {
-        return new DataResponseFactory(new Psr17Factory());
     }
 }
