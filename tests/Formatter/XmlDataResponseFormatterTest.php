@@ -511,6 +511,35 @@ final class XmlDataResponseFormatterTest extends TestCase
         );
     }
 
+    public function testObjectWithPublicProperties(): void
+    {
+        $object = new class() {
+            public int $x = 7;
+            public float $y = 42;
+            public string $name = 'yii';
+            protected int $a = 1;
+            private int $b = 2;
+        };
+        $dataResponse = $this->createDataResponse($object);
+        $result = (new XmlDataResponseFormatter())->format($dataResponse);
+        $result->getBody()->rewind();
+
+        $this->assertSame(
+            $this->xml(
+                <<<EOF
+                    <response>
+                        <item>
+                            <x>7</x>
+                            <y>42</y>
+                            <name>yii</name>
+                        </item>
+                    </response>
+                EOF
+            ),
+            $result->getBody()->getContents()
+        );
+    }
+
     public function testItemTagWhenNameIsEmptyOrInvalid(): void
     {
         $dataResponse = $this->createDataResponse([
