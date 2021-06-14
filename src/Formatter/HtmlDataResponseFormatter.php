@@ -34,6 +34,11 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $encoding = 'UTF-8';
 
+    /**
+     * @inheritDoc
+     *
+     * @psalm-suppress MixedAssignment
+     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();
@@ -48,6 +53,13 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
         return $this->addToResponse($dataResponse->getResponse(), empty($data) ? null : (string) $data);
     }
 
+    /**
+     * Checks whether the value is a stringable object.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return bool Whether the value is a stringable object.
+     */
     private function isStringableObject($value): bool
     {
         return is_object($value) && method_exists($value, '__toString');

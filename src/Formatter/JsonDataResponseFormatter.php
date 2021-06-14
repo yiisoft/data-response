@@ -32,6 +32,11 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      */
     private int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
+    /**
+     * @inheritDoc
+     *
+     * @psalm-suppress MixedArgument
+     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         if ($dataResponse->hasData()) {

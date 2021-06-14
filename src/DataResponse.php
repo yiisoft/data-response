@@ -60,6 +60,7 @@ final class DataResponse implements ResponseInterface
             return $this->dataStream = $this->response->getBody();
         }
 
+        /** @psalm-var mixed $data */
         $data = $this->getData();
 
         if (is_string($data)) {
