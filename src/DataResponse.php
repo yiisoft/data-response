@@ -181,6 +181,7 @@ final class DataResponse implements ResponseInterface
     /**
      * @inheritDoc
 
+     *
      * @param string $version
      *
      * @return self
