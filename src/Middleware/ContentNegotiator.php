@@ -13,13 +13,21 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\Http\Header;
 
+use function get_class;
+use function gettype;
+use function is_object;
 use function is_string;
+use function sprintf;
+use function strpos;
 
 /**
  * ContentNegotiator supports response format negotiation.
  */
 final class ContentNegotiator implements MiddlewareInterface
 {
+    /**
+     * @var array<string, DataResponseFormatterInterface>
+     */
     private array $contentFormatters;
 
     /**
@@ -74,8 +82,19 @@ final class ContentNegotiator implements MiddlewareInterface
     private function checkFormatters(array $contentFormatters): void
     {
         foreach ($contentFormatters as $contentType => $formatter) {
-            if (!(is_string($contentType) && $formatter instanceof DataResponseFormatterInterface)) {
-                throw new RuntimeException('Invalid formatter type.');
+            if (!is_string($contentType)) {
+                throw new RuntimeException(sprintf(
+                    'Invalid formatter content type. A string is expected, "%s" is received.',
+                    gettype($contentType),
+                ));
+            }
+
+            if (!($formatter instanceof DataResponseFormatterInterface)) {
+                throw new RuntimeException(sprintf(
+                    'Invalid. A "%s" instance is expected, "%s" is received.',
+                    DataResponseFormatterInterface::class,
+                    is_object($formatter) ? get_class($formatter) : gettype($formatter),
+                ));
             }
         }
     }
