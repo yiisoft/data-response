@@ -10,6 +10,9 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
+/**
+ * JsonDataResponseFormatter formats the response data in JSON.
+ */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
     use ResponseContentTrait;

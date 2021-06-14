@@ -22,6 +22,10 @@ final class ContentNegotiator implements MiddlewareInterface
 {
     private array $contentFormatters;
 
+    /**
+     * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
+     * and the value is the {@see DataResponseFormatterInterface} instance.
+     */
     public function __construct(array $contentFormatters)
     {
         $this->checkFormatters($contentFormatters);
@@ -29,7 +33,12 @@ final class ContentNegotiator implements MiddlewareInterface
     }
 
     /**
-     * @param array $contentFormatters
+     * Returns a new instance with the specified content formatters.
+     *
+     * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
+     * and the value is the {@see DataResponseFormatterInterface} instance.
+     *
+     * @return self
      */
     public function withContentFormatters(array $contentFormatters): self
     {
@@ -57,6 +66,11 @@ final class ContentNegotiator implements MiddlewareInterface
         return $response;
     }
 
+    /**
+     * Checks the content formatters.
+     *
+     * @param array $contentFormatters The content formatters to check.
+     */
     private function checkFormatters(array $contentFormatters): void
     {
         foreach ($contentFormatters as $contentType => $formatter) {

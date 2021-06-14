@@ -20,6 +20,9 @@ use function is_float;
 use function is_int;
 use function is_object;
 
+/**
+ * XmlDataResponseFormatter formats the response data in XML.
+ */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
     use ResponseContentTrait;

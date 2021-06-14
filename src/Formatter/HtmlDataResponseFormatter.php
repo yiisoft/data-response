@@ -17,6 +17,9 @@ use function is_scalar;
 use function method_exists;
 use function sprintf;
 
+/**
+ * HtmlDataResponseFormatter formats the response data in HTML.
+ */
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {
     use ResponseContentTrait;

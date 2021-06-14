@@ -6,6 +6,10 @@ namespace Yiisoft\DataResponse\Middleware;
 
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 
+/**
+ * FormatDataResponseAsXml adds a XML formatter {@see XmlDataResponseFormatter} instance to the
+ * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ */
 final class FormatDataResponseAsXml extends FormatDataResponse
 {
     public function __construct(XmlDataResponseFormatter $responseFormatter)

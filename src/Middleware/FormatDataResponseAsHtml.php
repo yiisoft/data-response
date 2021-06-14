@@ -6,6 +6,10 @@ namespace Yiisoft\DataResponse\Middleware;
 
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 
+/**
+ * FormatDataResponseAsHtml adds a HTML formatter {@see HtmlDataResponseFormatter} instance to the
+ * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ */
 final class FormatDataResponseAsHtml extends FormatDataResponse
 {
     public function __construct(HtmlDataResponseFormatter $responseFormatter)
