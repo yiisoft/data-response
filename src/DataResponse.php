@@ -75,18 +75,35 @@ final class DataResponse implements ResponseInterface
         ));
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @param string $name
+     *
+     * @return string[]
+     */
     public function getHeader($name): array
     {
         $this->response = $this->formatResponse();
         return $this->response->getHeader($name);
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @param string $name
+     */
     public function getHeaderLine($name): string
     {
         $this->response = $this->formatResponse();
         return $this->response->getHeaderLine($name);
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @return string[][]
+     */
     public function getHeaders(): array
     {
         $this->response = $this->formatResponse();
@@ -111,6 +128,11 @@ final class DataResponse implements ResponseInterface
         return $this->response->getStatusCode();
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @param string $name
+     */
     public function hasHeader($name): bool
     {
         $this->response = $this->formatResponse();
