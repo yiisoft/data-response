@@ -47,7 +47,7 @@ echo $dataResponse->getBody()->getContents(); // "test"
 
 ### Formatters
 
-Formatter purpose if to format data response. In the following example we format data as JSON.
+Formatters purpose is to format a data response. In the following example we format data as JSON.
 
 ```php
 use Yiisoft\DataResponse\DataResponseFactory;
