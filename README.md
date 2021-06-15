@@ -19,7 +19,7 @@ The package allows responding with data that is automatically converted into PSR
 
 ## General usage
 
-The package provides `DataResponseFactory` class that, given a PSR-17 response factory, is able to create data response. In this example we use `nyholm/psr7` pacakge but any PSR-17 response factory would do.
+The package provides `DataResponseFactory` class that, given a PSR-17 response factory, is able to create data response. In this example we use `nyholm/psr7` package but any PSR-17 response factory would do.
 
 Data response contains raw data to be processed later.
 
@@ -36,7 +36,7 @@ echo $dataResponse->getBody()->getContents(); //test
 
 ### Formatters
 
-Formatter purpose if to format data response. In the following example we format data as JSON.
+Formatters purpose is to format a data response. In the following example we format data as JSON.
 
 ```php
 use Nyholm\Psr7\Factory\Psr17Factory;
