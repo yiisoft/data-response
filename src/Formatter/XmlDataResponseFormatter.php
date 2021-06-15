@@ -21,7 +21,7 @@ use function is_int;
 use function is_object;
 
 /**
- * XmlDataResponseFormatter formats the response data in XML.
+ * XmlDataResponseFormatter formats the response data as XML.
  */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
