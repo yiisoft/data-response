@@ -11,7 +11,7 @@ use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
 /**
- * JsonDataResponseFormatter formats the response data in JSON.
+ * JsonDataResponseFormatter formats the response data as JSON.
  */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
