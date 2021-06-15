@@ -9,26 +9,36 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
+use function get_class;
+use function gettype;
+use function is_callable;
+use function is_object;
 use function is_string;
+use function sprintf;
 
 /**
  * A wrapper around PSR-7 response that is assigned raw data to be formatted later using a formatter.
  *
- * For example, `['name' => 'Dmitriy']` to be formatted to JSON using {@see \Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter}
- * when {@see DataResponse::getBody()} is called.
+ * For example, `['name' => 'Dmitriy']` to be formatted to JSON using
+ * {@see \Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
  */
 final class DataResponse implements ResponseInterface
 {
-    private ResponseInterface $response;
-
+    /**
+     * @var mixed
+     */
     private $data;
-
+    private bool $formatted = false;
+    private ResponseInterface $response;
     private ?StreamInterface $dataStream = null;
-
     private ?DataResponseFormatterInterface $responseFormatter = null;
 
-    private bool $formatted = false;
-
+    /**
+     * @param mixed $data The response data.
+     * @param int $code The response status code.
+     * @param string $reasonPhrase The response reason phrase associated with the status code.
+     * @param ResponseFactoryInterface $responseFactory The response factory instance.
+     */
     public function __construct($data, int $code, string $reasonPhrase, ResponseFactoryInterface $responseFactory)
     {
         $this->response = $responseFactory->createResponse($code, $reasonPhrase);
@@ -50,19 +60,27 @@ final class DataResponse implements ResponseInterface
             return $this->dataStream = $this->response->getBody();
         }
 
+        /** @psalm-var mixed $data */
         $data = $this->getData();
+
         if (is_string($data)) {
             $this->response->getBody()->write($data);
             return $this->dataStream = $this->response->getBody();
         }
 
-        throw new RuntimeException('Data must be a string value.');
+        throw new RuntimeException(sprintf(
+            'The data is "%s" not a string. To get non-string data, use the "%s::getData()" method.',
+            is_object($data) ? get_class($data) : gettype($data),
+            self::class,
+        ));
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      *
-     * @return array<array-key, string>
+     * @return string[]
      */
     public function getHeader($name): array
     {
@@ -71,6 +89,8 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      */
     public function getHeaderLine($name): string
@@ -80,6 +100,8 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @return string[][]
      */
     public function getHeaders(): array
@@ -107,6 +129,8 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      */
     public function hasHeader($name): bool
@@ -116,10 +140,12 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      * @param string|string[] $value
      *
-     * @return static
+     * @return self
      */
     public function withAddedHeader($name, $value): self
     {
@@ -130,7 +156,9 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
-     * @return static
+     * @inheritDoc
+     *
+     * @return self
      */
     public function withBody(StreamInterface $body): self
     {
@@ -142,10 +170,12 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      * @param string|string[] $value
      *
-     * @return static
+     * @return self
      */
     public function withHeader($name, $value): self
     {
@@ -156,9 +186,11 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $name
      *
-     * @return static
+     * @return self
      */
     public function withoutHeader($name): self
     {
@@ -169,9 +201,11 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param string $version
      *
-     * @return static
+     * @return self
      */
     public function withProtocolVersion($version): self
     {
@@ -182,10 +216,12 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * @inheritDoc
+     *
      * @param int $code
      * @param string $reasonPhrase
      *
-     * @return static
+     * @return self
      */
     public function withStatus($code, $reasonPhrase = ''): self
     {
@@ -196,54 +232,88 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
-     * @return static
+     * Returns a new instance with the specified response formatter.
+     *
+     * @param DataResponseFormatterInterface $responseFormatter
+     *
+     * @return self
      */
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
         $new->formatted = false;
-
         return $new;
     }
 
     /**
-     * @return static
+     * Returns the original instance of the response.
+     *
+     * @return ResponseInterface The original instance of the response.
+     */
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
+    }
+
+    /**
+     * Checks whether the response formatter has been set {@see withResponseFormatter()}.
+     *
+     * @return bool Whether the formatter has been set.
+     */
+    public function hasResponseFormatter(): bool
+    {
+        return $this->responseFormatter !== null;
+    }
+
+    /**
+     * Returns a new instance with the specified response data.
+     *
+     * @param mixed $data The response data.
+     *
+     * @return self
      */
     public function withData($data): self
     {
         $new = clone $this;
         $new->data = $data;
         $new->formatted = false;
-
         return $new;
     }
 
-    public function hasResponseFormatter(): bool
-    {
-        return $this->responseFormatter !== null;
-    }
-
-    public function getResponse(): ResponseInterface
-    {
-        return $this->response;
-    }
-
+    /**
+     * Returns the response data.
+     *
+     * If the response data is a PHP callable, the result of the PHP callable execute will be returned.
+     * If the response data or the result of the execution of the PHP callable is an object,
+     * a cloned copy of this object will be returned.
+     *
+     * @return mixed
+     */
     public function getData()
     {
         if (is_callable($this->data)) {
             $this->data = ($this->data)();
         }
+
         return is_object($this->data) ? clone $this->data : $this->data;
     }
 
+    /**
+     * Checks whether the response data has been set.
+     *
+     * @return bool Whether the response data has been set.
+     */
     public function hasData(): bool
     {
         return $this->getData() !== null;
     }
 
     /**
-     * @return ResponseInterface
+     * Formats the response, if necessary.
+     *
+     * @return ResponseInterface Formatted response.
+     *
      * @psalm-suppress PossiblyNullReference
      */
     private function formatResponse(): ResponseInterface
@@ -257,18 +327,30 @@ final class DataResponse implements ResponseInterface
         $response = $this->responseFormatter->format($this);
 
         if ($response instanceof self) {
-            throw new RuntimeException('DataResponseFormatterInterface should not return instance of DataResponse.');
+            throw new RuntimeException(sprintf(
+                'The "%s::format()" method should not return instance of "%s".',
+                DataResponseFormatterInterface::class,
+                self::class,
+            ));
         }
 
         return $response;
     }
 
+    /**
+     * Clears a response body.
+     */
     private function clearResponseBody(): void
     {
         $this->response->getBody()->rewind();
         $this->response->getBody()->write('');
     }
 
+    /**
+     * Checks whether the response needs to be formatted.
+     *
+     * @return bool Whether the response needs to be formatted.
+     */
     private function needFormatResponse(): bool
     {
         return $this->formatted === false && $this->hasResponseFormatter();

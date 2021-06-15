@@ -7,6 +7,9 @@ namespace Yiisoft\DataResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Http\Status;
 
+/**
+ * DataResponseFactory creates an instance of the data response {@see DataResponse}.
+ */
 final class DataResponseFactory implements DataResponseFactoryInterface
 {
     private ResponseFactoryInterface $responseFactory;

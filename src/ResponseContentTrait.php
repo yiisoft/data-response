@@ -7,6 +7,9 @@ namespace Yiisoft\DataResponse;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Http\Header;
 
+/**
+ * ResponseContentTrait provides methods for manipulating the response content.
+ */
 trait ResponseContentTrait
 {
     /**

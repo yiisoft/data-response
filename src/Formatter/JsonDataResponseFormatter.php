@@ -10,6 +10,9 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
+/**
+ * JsonDataResponseFormatter formats the response data as JSON.
+ */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
     use ResponseContentTrait;
@@ -29,6 +32,11 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      */
     private int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
+    /**
+     * @inheritDoc
+     *
+     * @psalm-suppress MixedArgument
+     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         if ($dataResponse->hasData()) {

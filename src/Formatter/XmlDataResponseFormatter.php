@@ -20,6 +20,9 @@ use function is_float;
 use function is_int;
 use function is_object;
 
+/**
+ * XmlDataResponseFormatter formats the response data as XML.
+ */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
     use ResponseContentTrait;
@@ -46,6 +49,11 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $rootTag = 'response';
 
+    /**
+     * @inheritDoc
+     *
+     * @psalm-suppress MixedArgument, MixedAssignment
+     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         if ($dataResponse->hasData()) {
@@ -101,6 +109,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument $dom The root DOM document.
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param mixed $data Data for building XML.
+     *
+     * @psalm-suppress MixedArgument, MixedAssignment
      */
     private function buildXml(DOMDocument $dom, $element, $data): void
     {
@@ -144,6 +154,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param object $object To build.
      * @param int|string|null $tagName The tag name.
+     *
+     * @psalm-suppress MixedAssignment, MixedArrayOffset
      */
     private function buildObject(DOMDocument $dom, $element, object $object, $tagName = null): void
     {

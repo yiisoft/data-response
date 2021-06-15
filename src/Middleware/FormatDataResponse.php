@@ -11,6 +11,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
+/**
+ * FormatDataResponse adds a formatter {@see DataResponseFormatterInterface} instance to the
+ * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ */
 class FormatDataResponse implements MiddlewareInterface
 {
     private DataResponseFormatterInterface $responseFormatter;
@@ -23,6 +27,7 @@ class FormatDataResponse implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
+
         if ($response instanceof DataResponse && !$response->hasResponseFormatter()) {
             $response = $response->withResponseFormatter($this->responseFormatter);
         }
