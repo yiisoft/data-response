@@ -18,7 +18,7 @@ use function method_exists;
 use function sprintf;
 
 /**
- * HtmlDataResponseFormatter formats the response data in HTML.
+ * HtmlDataResponseFormatter formats the response data as HTML.
  */
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {
