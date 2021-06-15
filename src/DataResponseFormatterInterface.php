@@ -7,7 +7,7 @@ namespace Yiisoft\DataResponse;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * DataResponseFormatterInterface is the interface that should be implemented data response formatter classes.
+ * DataResponseFormatterInterface is the interface that should be implemented by data response formatter classes.
  */
 interface DataResponseFormatterInterface
 {
