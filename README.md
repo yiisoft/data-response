@@ -17,6 +17,11 @@
 
 The package allows responding with data that is automatically converted into PSR-7 response.
 
+## Requirements
+
+- PHP 7.4 or higher.
+- `DOM` PHP extension.
+
 ## Installation
 
 The package could be installed via composer:
