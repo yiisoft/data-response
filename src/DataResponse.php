@@ -309,14 +309,14 @@ final class DataResponse implements ResponseInterface
      * Formats the response, if necessary.
      *
      * @return ResponseInterface Formatted response.
-     *
-     * @psalm-suppress PossiblyNullReference
      */
     private function formatResponse(): ResponseInterface
     {
         if (!$this->needFormatResponse()) {
             return $this->response;
         }
+
+        /** @psalm-var DataResponseFormatterInterface $this->responseFormatter */
 
         $this->clearResponseBody();
         $this->formatted = true;

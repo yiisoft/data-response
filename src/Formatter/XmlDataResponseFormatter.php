@@ -51,13 +51,13 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
     /**
      * @inheritDoc
-     *
-     * @psalm-suppress MixedArgument, MixedAssignment
      */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         if ($dataResponse->hasData()) {
             $dom = new DOMDocument($this->version, $this->encoding);
+
+            /** @var mixed */
             $data = $dataResponse->getData();
 
             if (!empty($this->rootTag)) {
@@ -71,6 +71,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             $content = (string) $dom->saveXML();
         }
 
+        /** @psalm-suppress MixedArgument */
         return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
@@ -109,8 +110,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument $dom The root DOM document.
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param mixed $data Data for building XML.
-     *
-     * @psalm-suppress MixedArgument, MixedAssignment
      */
     private function buildXml(DOMDocument $dom, $element, $data): void
     {
@@ -119,6 +118,10 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
+            /**
+             * @var int|string $name
+             * @var mixed $value
+             */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
                     $this->buildObject($dom, $element, $value, $name);
@@ -133,6 +136,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                     continue;
                 }
 
+                /** @psalm-var scalar $value */
+
                 $this->setScalarValueToDomElement($child, $value);
             }
 
@@ -144,6 +149,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             return;
         }
 
+        /** @psalm-var scalar $data */
+
         $this->setScalarValueToDomElement($element, $data);
     }
 
@@ -154,8 +161,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param object $object To build.
      * @param int|string|null $tagName The tag name.
-     *
-     * @psalm-suppress MixedAssignment, MixedArrayOffset
      */
     private function buildObject(DOMDocument $dom, $element, object $object, $tagName = null): void
     {
@@ -181,7 +186,12 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
         $data = [];
 
+        /**
+         * @var string $property
+         * @var mixed $value
+         */
         foreach ($object as $property => $value) {
+            /** @var mixed */
             $data[$property] = $value;
         }
 

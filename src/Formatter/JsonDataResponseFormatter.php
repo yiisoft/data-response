@@ -37,8 +37,6 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      * @inheritDoc
      *
      * @throws JsonException
-     *
-     * @psalm-suppress MixedArgument
      */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
@@ -46,6 +44,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
             $content = Json::encode($dataResponse->getData(), $this->options);
         }
 
+        /** @psalm-suppress MixedArgument */
         return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
