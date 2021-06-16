@@ -15,7 +15,8 @@
 [![static analysis](https://github.com/yiisoft/data-response/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/data-response/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-response/coverage.svg)](https://shepherd.dev/github/yiisoft/data-response)
 
-The package allows responding with data that is automatically converted into PSR-7 response.
+The package allows responding with data that is automatically converted into [PSR-7](https://www.php-fig.org/psr/psr-7/)
+response.
 
 ## Requirements
 
@@ -32,7 +33,8 @@ composer require yiisoft/data-response --prefer-dist
 
 ## General usage
 
-The package provides `DataResponseFactory` class that, given a PSR-17 response factory, is able to create data response.
+The package provides `DataResponseFactory` class that, given a [PSR-17](https://www.php-fig.org/psr/psr-17/)
+response factory, is able to create data response.
 
 Data response contains raw data to be processed later.
 
@@ -52,7 +54,7 @@ echo $dataResponse->getBody()->getContents(); // "test"
 
 ### Formatters
 
-Formatters purpose is to format a data response. In the following example we format data as JSON.
+Formatter purpose is to format a data response. In the following example we format data as JSON.
 
 ```php
 use Yiisoft\DataResponse\DataResponseFactory;
@@ -72,13 +74,14 @@ echo $dataResponse->getBody()->getContents(); // "test"
 ```
 
 The following formatters are available:
-* HtmlDataResponseFormatter
-* JsonDataResponseFormatter
-* XmlDataResponseFormatter
+
+- `HtmlDataResponseFormatter`
+- `JsonDataResponseFormatter`
+- `XmlDataResponseFormatter`
 
 ### Middleware
 
-The package provides a PSR-15 middleware that is able to format a data response.
+The package provides a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware that is able to format a data response.
 
 ```php
 
@@ -89,7 +92,7 @@ $middleware = (new FormatDataResponse(new JsonDataResponseFormatter()));
 //$middleware->process($request, $handler);
 ```
 
-Also the package provides PSR-15 middleware for content negotiation:
+Also, the package provides [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware for content negotiation:
 
 ```php
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;

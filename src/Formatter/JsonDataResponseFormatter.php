@@ -23,7 +23,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
     private string $contentType = 'application/json';
 
     /**
-     * @var string The encoding to the Content-Type header.
+     * @var string The encoding for the Content-Type header.
      */
     private string $encoding = 'UTF-8';
 

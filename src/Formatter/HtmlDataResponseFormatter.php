@@ -30,7 +30,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     private string $contentType = 'text/html';
 
     /**
-     * @var string The encoding to the Content-Type header.
+     * @var string The encoding for the Content-Type header.
      */
     private string $encoding = 'UTF-8';
 
@@ -45,7 +45,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 
         if (!is_scalar($data) && $data !== null && !$this->isStringableObject($data)) {
             throw new RuntimeException(sprintf(
-                'Data must be a scalar value or null or a stringable object, %s given.',
+                'Data must be either a scalar value, null, or a stringable object. %s given.',
                 is_object($data) ? get_class($data) : gettype($data),
             ));
         }

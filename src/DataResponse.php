@@ -17,9 +17,9 @@ use function is_string;
 use function sprintf;
 
 /**
- * A wrapper around PSR-7 response that is assigned raw data to be formatted later using a formatter.
+ * A wrapper around PSR-7 response that is assigned raw data to be formatted with a formatter later.
  *
- * For example, `['name' => 'Dmitriy']` to be formatted to JSON using
+ * For example, `['name' => 'Dmitriy']` to be formatted as JSON using
  * {@see \Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
  */
 final class DataResponse implements ResponseInterface

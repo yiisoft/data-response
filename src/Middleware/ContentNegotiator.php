@@ -22,6 +22,7 @@ use function strpos;
 
 /**
  * ContentNegotiator supports response format negotiation.
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
  */
 final class ContentNegotiator implements MiddlewareInterface
 {
@@ -32,7 +33,7 @@ final class ContentNegotiator implements MiddlewareInterface
 
     /**
      * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
-     * and the value is the {@see DataResponseFormatterInterface} instance.
+     * and the value is an instance of {@see DataResponseFormatterInterface}.
      */
     public function __construct(array $contentFormatters)
     {
@@ -44,7 +45,7 @@ final class ContentNegotiator implements MiddlewareInterface
      * Returns a new instance with the specified content formatters.
      *
      * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
-     * and the value is the {@see DataResponseFormatterInterface} instance.
+     * and the value is an instance of {@see DataResponseFormatterInterface}.
      *
      * @return self
      */

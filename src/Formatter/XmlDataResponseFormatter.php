@@ -35,7 +35,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     private string $contentType = 'application/xml';
 
     /**
-     * @var string The encoding to the Content-Type header.
+     * @var string The encoding for the Content-Type header.
      */
     private string $encoding = 'UTF-8';
 
@@ -189,8 +189,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     }
 
     /**
-     * Safely creates a DOMElement instance by the specified tag name, if the tag name is not empty,
-     * not integer, and valid. Otherwise the {@see DEFAULT_ITEM_TAG_NAME} value will be used.
+     * Safely creates a DOMElement instance by the specified tag name if the tag name is not empty,
+     * is not integer, and is valid. Otherwise {@see DEFAULT_ITEM_TAG_NAME} value is used.
      *
      * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
      *
@@ -216,7 +216,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     }
 
     /**
-     * Sets the scalar value to Dom Element instance if the value is not empty.
+     * Sets the scalar value to DOM Element instance if the value is not empty.
      *
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param bool|float|int|string|null $value
@@ -231,7 +231,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
     }
 
     /**
-     * Formats scalar value to use in XML node.
+     * Formats scalar value for use in XML node.
      *
      * @param bool|float|int|string|null $value To format.
      *
