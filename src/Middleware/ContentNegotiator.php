@@ -23,18 +23,20 @@ use function strpos;
 /**
  * ContentNegotiator supports response format negotiation.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
  */
 final class ContentNegotiator implements MiddlewareInterface
 {
     /**
-     * @var array<string, DataResponseFormatterInterface>
+     * @psalm-var array<string, DataResponseFormatterInterface>
      */
     private array $contentFormatters;
 
     /**
-     * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
-     * and the value is an instance of {@see DataResponseFormatterInterface}.
+     * @param array $contentFormatters The array key is the content type, and the value is an instance of
+     * {@see DataResponseFormatterInterface}.
+     *
+     * @psalm-param array<string, DataResponseFormatterInterface> $contentFormatters
      */
     public function __construct(array $contentFormatters)
     {
@@ -45,8 +47,10 @@ final class ContentNegotiator implements MiddlewareInterface
     /**
      * Returns a new instance with the specified content formatters.
      *
-     * @param array<string, DataResponseFormatterInterface> $contentFormatters The array key is the content type,
-     * and the value is an instance of {@see DataResponseFormatterInterface}.
+     * @param array $contentFormatters The array key is the content type, and the value is an instance of
+     * {@see DataResponseFormatterInterface}.
+     *
+     * @psalm-param array<string, DataResponseFormatterInterface> $contentFormatters
      *
      * @return self
      */

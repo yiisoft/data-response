@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Formatter;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
@@ -35,6 +36,8 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
     /**
      * @inheritDoc
      *
+     * @throws JsonException
+     *
      * @psalm-suppress MixedArgument
      */
     public function format(DataResponse $dataResponse): ResponseInterface
@@ -50,7 +53,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      * Returns a new instance with the specified encoding options.
      *
      * @param int $options The encoding options. For more details please refer to
-     * {@see https://www.php.net/manual/en/function.json-encode.php}.
+     * {@link https://www.php.net/manual/en/function.json-encode.php}.
      *
      * @return self
      */
