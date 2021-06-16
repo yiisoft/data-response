@@ -48,7 +48,7 @@ trait ResponseContentTrait
      *
      * @return ResponseInterface A response with added content and a content type header.
      */
-    private function addToResponse(ResponseInterface $response, string $content = null): ResponseInterface
+    private function addToResponse(ResponseInterface $response, ?string $content = null): ResponseInterface
     {
         if ($content !== null) {
             $response->getBody()->write($content);
