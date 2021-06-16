@@ -22,6 +22,7 @@ use function strpos;
 
 /**
  * ContentNegotiator supports response format negotiation.
+ *
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
  */
 final class ContentNegotiator implements MiddlewareInterface
