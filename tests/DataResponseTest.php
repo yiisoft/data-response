@@ -6,7 +6,9 @@ namespace Yiisoft\DataResponse\Tests;
 
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use stdClass;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
@@ -241,5 +243,27 @@ final class DataResponseTest extends TestCase
         $dataResponse->getBody()->rewind();
 
         $this->assertSame(1, $formatter->getTriggeredCount());
+    }
+
+    public function testGetDataImmutability(): void
+    {
+        $object = new stdClass();
+
+        $dataResponse = $this->createDataResponse($object);
+
+        $this->assertNotSame($object, $dataResponse->getData());
+    }
+
+    public function testImmutability(): void
+    {
+        $dataResponse = $this->createDataResponse(null);
+        $this->assertNotSame($dataResponse, $dataResponse->withAddedHeader(Header::CONTENT_TYPE, 'application/xml'));
+        $this->assertNotSame($dataResponse, $dataResponse->withBody($this->createStream('')));
+        $this->assertNotSame($dataResponse, $dataResponse->withData(null));
+        $this->assertNotSame($dataResponse, $dataResponse->withHeader(Header::CONTENT_TYPE, 'application/xml'));
+        $this->assertNotSame($dataResponse, $dataResponse->withoutHeader(Header::CONTENT_TYPE));
+        $this->assertNotSame($dataResponse, $dataResponse->withProtocolVersion('1.0'));
+        $this->assertNotSame($dataResponse, $dataResponse->withResponseFormatter(new XmlDataResponseFormatter()));
+        $this->assertNotSame($dataResponse, $dataResponse->withStatus(Status::ACCEPTED));
     }
 }

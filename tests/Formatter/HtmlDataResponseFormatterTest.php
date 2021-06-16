@@ -74,4 +74,11 @@ final class HtmlDataResponseFormatterTest extends TestCase
         $this->assertSame('test', $result->getBody()->getContents());
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
+
+    public function testImmutability(): void
+    {
+        $formatter = new HtmlDataResponseFormatter();
+        $this->assertNotSame($formatter, $formatter->withContentType('text/plain'));
+        $this->assertNotSame($formatter, $formatter->withEncoding('utf-8'));
+    }
 }
