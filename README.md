@@ -21,6 +21,7 @@ response.
 ## Requirements
 
 - PHP 7.4 or higher.
+- `JSON` PHP extension.
 - `DOM` PHP extension.
 
 ## Installation
