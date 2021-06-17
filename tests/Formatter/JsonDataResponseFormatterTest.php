@@ -49,4 +49,12 @@ final class JsonDataResponseFormatterTest extends TestCase
         $this->assertSame('', $result->getBody()->getContents());
         $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
+
+    public function testImmutability(): void
+    {
+        $formatter = new JsonDataResponseFormatter();
+        $this->assertNotSame($formatter, $formatter->withContentType('text/plain'));
+        $this->assertNotSame($formatter, $formatter->withEncoding('utf-8'));
+        $this->assertNotSame($formatter, $formatter->withOptions(JSON_BIGINT_AS_STRING));
+    }
 }

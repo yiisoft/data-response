@@ -603,4 +603,13 @@ final class XmlDataResponseFormatterTest extends TestCase
             }
         };
     }
+
+    public function testImmutability(): void
+    {
+        $formatter = new XmlDataResponseFormatter();
+        $this->assertNotSame($formatter, $formatter->withContentType('text/plain'));
+        $this->assertNotSame($formatter, $formatter->withEncoding('utf-8'));
+        $this->assertNotSame($formatter, $formatter->withRootTag('order'));
+        $this->assertNotSame($formatter, $formatter->withVersion('5.45'));
+    }
 }

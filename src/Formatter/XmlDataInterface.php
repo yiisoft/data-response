@@ -10,7 +10,7 @@ namespace Yiisoft\DataResponse\Formatter;
 interface XmlDataInterface
 {
     /**
-     * Returns a valid XML tag name {@see https://www.w3.org/TR/REC-xml/#NT-NameStartChar}
+     * Returns a valid XML tag name {@link https://www.w3.org/TR/REC-xml/#NT-NameStartChar}
      * to use when formatting an object as XML.
      *
      * @return string The XML tag name.

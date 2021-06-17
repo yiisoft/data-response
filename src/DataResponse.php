@@ -60,7 +60,7 @@ final class DataResponse implements ResponseInterface
             return $this->dataStream = $this->response->getBody();
         }
 
-        /** @psalm-var mixed $data */
+        /** @var mixed */
         $data = $this->getData();
 
         if (is_string($data)) {
@@ -233,10 +233,6 @@ final class DataResponse implements ResponseInterface
 
     /**
      * Returns a new instance with the specified response formatter.
-     *
-     * @param DataResponseFormatterInterface $responseFormatter
-     *
-     * @return self
      */
     public function withResponseFormatter(DataResponseFormatterInterface $responseFormatter): self
     {
@@ -313,14 +309,14 @@ final class DataResponse implements ResponseInterface
      * Formats the response, if necessary.
      *
      * @return ResponseInterface Formatted response.
-     *
-     * @psalm-suppress PossiblyNullReference
      */
     private function formatResponse(): ResponseInterface
     {
         if (!$this->needFormatResponse()) {
             return $this->response;
         }
+
+        /** @psalm-var DataResponseFormatterInterface $this->responseFormatter */
 
         $this->clearResponseBody();
         $this->formatted = true;
