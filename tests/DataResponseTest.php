@@ -218,6 +218,30 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
+    public function testWithoutData(): void
+    {
+        $dataResponse = $this->createDataResponse('test')->withoutData();
+        $dataResponse->getBody()->rewind();
+
+        $this->assertNull($dataResponse->getData());
+        $this->assertSame('', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithoutDataAndWithBodyAndWithResponseFormatter(): void
+    {
+        $dataResponse = $this->createDataResponse('test1')
+            ->withBody($this->createStream('test2'))
+            ->withResponseFormatter(new JsonDataResponseFormatter())
+            ->withoutData()
+        ;
+
+        $dataResponse->getBody()->rewind();
+
+        $this->assertNull($dataResponse->getData());
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+        $this->assertSame([Header::CONTENT_TYPE => ['application/json; charset=UTF-8']], $dataResponse->getHeaders());
+    }
+
     public function testGetData(): void
     {
         $dataResponse = $this->createDataResponse('test');

@@ -288,6 +288,20 @@ final class DataResponse implements ResponseInterface
     }
 
     /**
+     * Returns a new instance without the response data.
+     *
+     * @return self
+     */
+    public function withoutData(): self
+    {
+        $new = clone $this;
+        $new->data = null;
+        $new->dataStream = null;
+        $new->formatted = false;
+        return $new;
+    }
+
+    /**
      * Returns the response data.
      *
      * If the response data is a PHP callable, the result of the PHP callable execute will be returned.
