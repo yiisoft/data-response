@@ -30,6 +30,27 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test', $dataResponse->getBody()->getContents());
     }
 
+    public function testChangeResponseData(): void
+    {
+        $dataResponse = $this->createDataResponse('test');
+        $data = $dataResponse->getData();
+        $data .= '-changed';
+        $dataResponse = $dataResponse->withData($data);
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test-changed', $dataResponse->getBody()->getContents());
+    }
+
+    public function testChangeResponseDataWithFormatter(): void
+    {
+        $dataResponse = $this->createDataResponse('test-value');
+        $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
+        $dataResponse = $dataResponse->withData('new-test-value');
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('"new-test-value"', $dataResponse->getBody()->getContents());
+    }
+
     public function testSetResponseFormatter(): void
     {
         $dataResponse = $this->createDataResponse('test');
@@ -186,6 +207,17 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
+    public function testWithData(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData('test2');
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+    }
+
     public function testGetData(): void
     {
         $dataResponse = $this->createDataResponse('test');
@@ -226,7 +258,7 @@ final class DataResponseTest extends TestCase
         $formatter = new FakeDataResponseFormatter();
         $dataResponse = $this->createDataResponse('');
         $dataResponse = $dataResponse->withResponseFormatter($formatter);
-        $dataResponse = $dataResponse->withBody($this->createStream('test'));
+        $dataResponse = $dataResponse->withData(['test']);
         $dataResponse->getBody()->rewind();
 
         $this->assertSame(1, $formatter->getTriggeredCount());
@@ -246,6 +278,7 @@ final class DataResponseTest extends TestCase
         $dataResponse = $this->createDataResponse(null);
         $this->assertNotSame($dataResponse, $dataResponse->withAddedHeader(Header::CONTENT_TYPE, 'application/xml'));
         $this->assertNotSame($dataResponse, $dataResponse->withBody($this->createStream('')));
+        $this->assertNotSame($dataResponse, $dataResponse->withData(null));
         $this->assertNotSame($dataResponse, $dataResponse->withHeader(Header::CONTENT_TYPE, 'application/xml'));
         $this->assertNotSame($dataResponse, $dataResponse->withoutHeader(Header::CONTENT_TYPE));
         $this->assertNotSame($dataResponse, $dataResponse->withProtocolVersion('1.0'));
