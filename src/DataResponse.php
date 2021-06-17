@@ -45,6 +45,14 @@ final class DataResponse implements ResponseInterface
         $this->data = $data;
     }
 
+    /**
+     * @inheritDoc
+     *
+     * If `$this->data` is not null, it will overwrite the contents of the `StreamInterface`.
+     *
+     * @throws RuntimeException If no formatter was set {@see withResponseFormatter()}
+     * and the data is not a string {@see getData()}.
+     */
     public function getBody(): StreamInterface
     {
         if ($this->dataStream !== null) {
@@ -64,6 +72,7 @@ final class DataResponse implements ResponseInterface
         $data = $this->getData();
 
         if (is_string($data)) {
+            $this->response->getBody()->rewind();
             $this->response->getBody()->write($data);
             return $this->dataStream = $this->response->getBody();
         }
@@ -164,7 +173,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withBody($body);
-        $new->dataStream = $body;
+        $new->dataStream = null;
         $new->formatted = false;
         return $new;
     }
@@ -273,6 +282,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->data = $data;
+        $new->dataStream = null;
         $new->formatted = false;
         return $new;
     }

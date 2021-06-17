@@ -51,6 +51,7 @@ trait ResponseContentTrait
     private function addToResponse(ResponseInterface $response, ?string $content = null): ResponseInterface
     {
         if ($content !== null) {
+            $response->getBody()->rewind();
             $response->getBody()->write($content);
         }
 

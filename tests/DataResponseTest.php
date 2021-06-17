@@ -196,6 +196,25 @@ final class DataResponseTest extends TestCase
         $dataResponse = $this->createDataResponse('test1')->withBody($this->createStream('test2'));
 
         $dataResponse->getBody()->rewind();
+        $this->assertSame('test1', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithBodyIfDataIsNull(): void
+    {
+        $dataResponse = $this->createDataResponse(null)->withBody($this->createStream('test2'));
+
+        $dataResponse->getBody()->rewind();
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithData(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData('test2');
+        $dataResponse->getBody()->rewind();
+
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
