@@ -251,7 +251,7 @@ final class DataResponseTest extends TestCase
     public function testWithBodyIfDataIsNullWhenOverride(): void
     {
         $dataResponse = $this->createDataResponse('test');
-        $dataResponse->getBody()->rewind();;
+        $dataResponse->getBody()->rewind();
 
         $dataResponse = $dataResponse->withData(null);
         $dataResponse->getBody()->rewind();
