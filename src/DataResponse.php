@@ -6,14 +6,18 @@ namespace Yiisoft\DataResponse;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
+use function ftruncate;
 use function get_class;
 use function gettype;
 use function is_callable;
 use function is_object;
+use function is_resource;
 use function is_string;
+use function rewind;
 use function sprintf;
 
 /**
@@ -28,7 +32,14 @@ final class DataResponse implements ResponseInterface
      * @var mixed
      */
     private $data;
+
+    /**
+     * @var resource
+     */
+    private $resource;
+
     private bool $formatted = false;
+    private bool $forcedBody = false;
     private ResponseInterface $response;
     private ?StreamInterface $dataStream = null;
     private ?DataResponseFormatterInterface $responseFormatter = null;
@@ -38,11 +49,17 @@ final class DataResponse implements ResponseInterface
      * @param int $code The response status code.
      * @param string $reasonPhrase The response reason phrase associated with the status code.
      * @param ResponseFactoryInterface $responseFactory The response factory instance.
+     * @param StreamFactoryInterface $streamFactory The stream factory instance.
      */
-    public function __construct($data, int $code, string $reasonPhrase, ResponseFactoryInterface $responseFactory)
-    {
-        $this->response = $responseFactory->createResponse($code, $reasonPhrase);
+    public function __construct(
+        $data,
+        int $code,
+        string $reasonPhrase,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
         $this->data = $data;
+        $this->createResponse($code, $reasonPhrase, $responseFactory, $streamFactory);
     }
 
     public function getBody(): StreamInterface
@@ -52,11 +69,12 @@ final class DataResponse implements ResponseInterface
         }
 
         if ($this->hasResponseFormatter()) {
-            $this->response = $this->formatResponse();
+            $this->formatResponse();
             return $this->dataStream = $this->response->getBody();
         }
 
         if ($this->data === null) {
+            $this->clearResponseBody();
             return $this->dataStream = $this->response->getBody();
         }
 
@@ -64,6 +82,7 @@ final class DataResponse implements ResponseInterface
         $data = $this->getData();
 
         if (is_string($data)) {
+            $this->clearResponseBody();
             $this->response->getBody()->write($data);
             return $this->dataStream = $this->response->getBody();
         }
@@ -84,7 +103,7 @@ final class DataResponse implements ResponseInterface
      */
     public function getHeader($name): array
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getHeader($name);
     }
 
@@ -95,7 +114,7 @@ final class DataResponse implements ResponseInterface
      */
     public function getHeaderLine($name): string
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getHeaderLine($name);
     }
 
@@ -106,25 +125,25 @@ final class DataResponse implements ResponseInterface
      */
     public function getHeaders(): array
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getHeaders();
     }
 
     public function getProtocolVersion(): string
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getProtocolVersion();
     }
 
     public function getReasonPhrase(): string
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getReasonPhrase();
     }
 
     public function getStatusCode(): int
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->getStatusCode();
     }
 
@@ -135,7 +154,7 @@ final class DataResponse implements ResponseInterface
      */
     public function hasHeader($name): bool
     {
-        $this->response = $this->formatResponse();
+        $this->formatResponse();
         return $this->response->hasHeader($name);
     }
 
@@ -165,6 +184,7 @@ final class DataResponse implements ResponseInterface
         $new = clone $this;
         $new->response = $this->response->withBody($body);
         $new->dataStream = $body;
+        $new->forcedBody = true;
         $new->formatted = false;
         return $new;
     }
@@ -195,7 +215,7 @@ final class DataResponse implements ResponseInterface
     public function withoutHeader($name): self
     {
         $new = clone $this;
-        $new->response = $new->formatResponse();
+        $new->formatResponse();
         $new->response = $new->response->withoutHeader($name);
         return $new;
     }
@@ -267,12 +287,23 @@ final class DataResponse implements ResponseInterface
      *
      * @param mixed $data The response data.
      *
+     * @throws RuntimeException If the body was previously forced to be set {@see withBody()}.
+     *
      * @return self
      */
     public function withData($data): self
     {
+        if ($this->forcedBody) {
+            throw new RuntimeException(sprintf(
+                'The data cannot be set because the body was previously'
+                . ' forced to be set using the "%s::withBody()" method.',
+                self::class,
+            ));
+        }
+
         $new = clone $this;
         $new->data = $data;
+        $new->dataStream = null;
         $new->formatted = false;
         return $new;
     }
@@ -307,13 +338,11 @@ final class DataResponse implements ResponseInterface
 
     /**
      * Formats the response, if necessary.
-     *
-     * @return ResponseInterface Formatted response.
      */
-    private function formatResponse(): ResponseInterface
+    private function formatResponse(): void
     {
-        if (!$this->needFormatResponse()) {
-            return $this->response;
+        if ($this->formatted || !$this->hasResponseFormatter()) {
+            return;
         }
 
         /** @psalm-var DataResponseFormatterInterface $this->responseFormatter */
@@ -330,7 +359,7 @@ final class DataResponse implements ResponseInterface
             ));
         }
 
-        return $response;
+        $this->response = $response;
     }
 
     /**
@@ -338,17 +367,48 @@ final class DataResponse implements ResponseInterface
      */
     private function clearResponseBody(): void
     {
-        $this->response->getBody()->rewind();
-        $this->response->getBody()->write('');
+        if (!$this->forcedBody) {
+            ftruncate($this->resource, 0);
+            rewind($this->resource);
+        }
     }
 
     /**
-     * Checks whether the response needs to be formatted.
+     * Creates a new response by retrieving and validating the stream resource.
      *
-     * @return bool Whether the response needs to be formatted.
+     * @param int $code The response status code.
+     * @param string $reasonPhrase The response reason phrase associated with the status code.
+     * @param ResponseFactoryInterface $responseFactory The response factory instance.
+     * @param StreamFactoryInterface $streamFactory The stream factory instance.
+     *
+     * @throws RuntimeException If the stream resource is not valid.
      */
-    private function needFormatResponse(): bool
-    {
-        return $this->formatted === false && $this->hasResponseFormatter();
+    private function createResponse(
+        int $code,
+        string $reasonPhrase,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory
+    ): void {
+        $response = $responseFactory->createResponse($code, $reasonPhrase);
+        $stream = $response->getBody();
+
+        if (!$stream->isReadable()) {
+            throw new RuntimeException('Stream is not readable.');
+        }
+
+        if (!$stream->isSeekable()) {
+            throw new RuntimeException('Stream is not seekable.');
+        }
+
+        if (!$stream->isWritable()) {
+            throw new RuntimeException('Stream is not writable.');
+        }
+
+        if (!is_resource($resource = $stream->detach())) {
+            throw new RuntimeException('Resource was not separated from the stream.');
+        }
+
+        $this->resource = $resource;
+        $this->response = $response->withBody($streamFactory->createStreamFromResource($this->resource));
     }
 }

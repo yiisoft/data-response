@@ -12,6 +12,7 @@ use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\ResponseFactoryWithCustomStream;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 
@@ -28,6 +29,46 @@ final class DataResponseTest extends TestCase
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
         $this->assertSame($dataResponse->getResponse()->getBody(), $dataResponse->getBody());
         $this->assertSame('test', $dataResponse->getBody()->getContents());
+    }
+
+    public function testCreateResponseWithThrowExceptionIfStreamIsNotReadable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not readable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://output'),
+        );
+    }
+
+    public function testCreateResponseWithThrowExceptionIfStreamIsNotSeekable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not seekable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://stdin'),
+        );
+    }
+
+    public function testCreateResponseWithThrowExceptionIfStreamIsNotWritable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not writable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://input'),
+        );
+    }
+
+    public function testCreateResponseWithThrowExceptionIfResourceWasNotSeparatedFromStream(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Resource was not separated from the stream.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::createWithDisabledDetachMethod(),
+        );
     }
 
     public function testChangeResponseData(): void
@@ -197,6 +238,53 @@ final class DataResponseTest extends TestCase
 
         $dataResponse->getBody()->rewind();
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithBodyIfDataIsNull(): void
+    {
+        $dataResponse = $this->createDataResponse(null)->withBody($this->createStream('test'));
+
+        $dataResponse->getBody()->rewind();
+        $this->assertSame('test', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithBodyIfDataIsNullWhenOverride(): void
+    {
+        $dataResponse = $this->createDataResponse('test');
+        $dataResponse->getBody()->rewind();;
+
+        $dataResponse = $dataResponse->withData(null);
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithData(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData('test2');
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithDataThrowExceptionIfWithBodyWasCalled(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withBody($this->createStream('test2'));
+        $dataResponse->getBody()->rewind();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The data cannot be set because the body was previously forced to be set'
+            . ' using the "Yiisoft\DataResponse\DataResponse::withBody()" method.',
+        );
+
+        $dataResponse->withData('test3');
     }
 
     public function testGetData(): void
