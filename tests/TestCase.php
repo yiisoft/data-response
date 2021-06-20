@@ -7,6 +7,7 @@ namespace Yiisoft\DataResponse\Tests;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\ServerRequestFactory;
 use HttpSoft\Message\StreamFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -23,12 +24,17 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected function createDataResponse($data, int $status = Status::OK, string $reasonPhrase = ''): DataResponse
     {
-        return new DataResponse($data, $status, $reasonPhrase, new ResponseFactory());
+        return new DataResponse($data, $status, $reasonPhrase, new ResponseFactory(), new StreamFactory());
+    }
+
+    protected function createDataResponseWithCustomResponseFactory(ResponseFactoryInterface $factory): DataResponse
+    {
+        return new DataResponse(null, Status::OK, '', $factory, new StreamFactory());
     }
 
     protected function createDataResponseFactory(): DataResponseFactory
     {
-        return new DataResponseFactory(new ResponseFactory());
+        return new DataResponseFactory(new ResponseFactory(), new StreamFactory());
     }
 
     protected function createStream(string $content = ''): StreamInterface

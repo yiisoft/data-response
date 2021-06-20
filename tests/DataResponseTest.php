@@ -9,9 +9,11 @@ use RuntimeException;
 use stdClass;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\CustomDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\ResponseFactoryWithCustomStream;
 use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
 
@@ -28,6 +30,46 @@ final class DataResponseTest extends TestCase
         $this->assertSame(['application/json'], $dataResponse->getHeader('Content-Type'));
         $this->assertSame($dataResponse->getResponse()->getBody(), $dataResponse->getBody());
         $this->assertSame('test', $dataResponse->getBody()->getContents());
+    }
+
+    public function testCreateResponseThrowsExceptionIfStreamIsNotReadable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not readable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://output'),
+        );
+    }
+
+    public function testCreateResponseThrowsExceptionIfStreamIsNotSeekable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not seekable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://stdin'),
+        );
+    }
+
+    public function testCreateResponseThrowsExceptionIfStreamIsNotWritable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Stream is not writable.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::create('php://input'),
+        );
+    }
+
+    public function testCreateResponseThrowsExceptionIfResourceWasNotSeparatedFromStream(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Resource was not separated from the stream.');
+
+        $this->createDataResponseWithCustomResponseFactory(
+            ResponseFactoryWithCustomStream::createWithDisabledDetachMethod(),
+        );
     }
 
     public function testChangeResponseData(): void
@@ -199,6 +241,53 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
+    public function testWithBodyIfDataIsNull(): void
+    {
+        $dataResponse = $this->createDataResponse(null)->withBody($this->createStream('test'));
+
+        $dataResponse->getBody()->rewind();
+        $this->assertSame('test', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithBodyIfDataIsNullWhenOverride(): void
+    {
+        $dataResponse = $this->createDataResponse('test');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData(null);
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithData(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData('test2');
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+    }
+
+    public function testWithDataThrowsExceptionIfWithBodyWasCalled(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withBody($this->createStream('test2'));
+        $dataResponse->getBody()->rewind();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The data cannot be set because the body was previously forced to be set'
+            . ' using the "Yiisoft\DataResponse\DataResponse::withBody()" method.',
+        );
+
+        $dataResponse->withData('test3');
+    }
+
     public function testGetData(): void
     {
         $dataResponse = $this->createDataResponse('test');
@@ -265,5 +354,37 @@ final class DataResponseTest extends TestCase
         $this->assertNotSame($dataResponse, $dataResponse->withProtocolVersion('1.0'));
         $this->assertNotSame($dataResponse, $dataResponse->withResponseFormatter(new XmlDataResponseFormatter()));
         $this->assertNotSame($dataResponse, $dataResponse->withStatus(Status::ACCEPTED));
+    }
+
+    public function testFormatterCouldChangeStatusCode(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withStatusCode(410);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals(410, $dataResponse->getStatusCode());
+    }
+
+    public function testFormatterCouldChangeHeaders(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withHeaders(['Content-Type' => 'Custom']);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('Custom', $dataResponse->getHeaderLine('Content-Type'));
+    }
+
+    public function testFormatterCouldChangeProtocol(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withProtocol('2.0');
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('2.0', $dataResponse->getProtocolVersion());
+    }
+
+    public function testFormatterCouldChangeReasonPhrase(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withReasonPhrase('Reason');
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('Reason', $dataResponse->getReasonPhrase());
     }
 }
