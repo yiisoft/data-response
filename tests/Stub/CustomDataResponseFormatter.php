@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
-class CustomDataResponseFormatter implements DataResponseFormatterInterface
+final class CustomDataResponseFormatter implements DataResponseFormatterInterface
 {
     private int $statusCode = 200;
     private array $headers = [];
