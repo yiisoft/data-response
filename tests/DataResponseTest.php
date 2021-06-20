@@ -31,7 +31,7 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test', $dataResponse->getBody()->getContents());
     }
 
-    public function testCreateResponseWithThrowExceptionIfStreamIsNotReadable(): void
+    public function testCreateResponseThrowsExceptionIfStreamIsNotReadable(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Stream is not readable.');
@@ -41,7 +41,7 @@ final class DataResponseTest extends TestCase
         );
     }
 
-    public function testCreateResponseWithThrowExceptionIfStreamIsNotSeekable(): void
+    public function testCreateResponseThrowsExceptionIfStreamIsNotSeekable(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Stream is not seekable.');
@@ -51,7 +51,7 @@ final class DataResponseTest extends TestCase
         );
     }
 
-    public function testCreateResponseWithThrowExceptionIfStreamIsNotWritable(): void
+    public function testCreateResponseThrowsExceptionIfStreamIsNotWritable(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Stream is not writable.');
@@ -61,7 +61,7 @@ final class DataResponseTest extends TestCase
         );
     }
 
-    public function testCreateResponseWithThrowExceptionIfResourceWasNotSeparatedFromStream(): void
+    public function testCreateResponseThrowsExceptionIfResourceWasNotSeparatedFromStream(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Resource was not separated from the stream.');
@@ -270,7 +270,7 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
-    public function testWithDataThrowExceptionIfWithBodyWasCalled(): void
+    public function testWithDataThrowsExceptionIfWithBodyWasCalled(): void
     {
         $dataResponse = $this->createDataResponse('test1');
         $dataResponse->getBody()->rewind();
