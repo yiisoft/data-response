@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\Stub;
-
 
 use HttpSoft\Message\Response;
 use Psr\Http\Message\ResponseInterface;
@@ -17,35 +17,35 @@ class CustomDataResponseFormatter implements DataResponseFormatterInterface
     private string $protocol = '1.1';
     private string $reasonPhrase = '';
 
-    public function withStatusCode(int $statusCode): CustomDataResponseFormatter
+    public function withStatusCode(int $statusCode): self
     {
         $new = clone $this;
         $new->statusCode = $statusCode;
         return $new;
     }
 
-    public function withHeaders(array $headers): CustomDataResponseFormatter
+    public function withHeaders(array $headers): self
     {
         $new = clone $this;
         $new->headers = $headers;
         return $new;
     }
 
-    public function withBody(string $body): CustomDataResponseFormatter
+    public function withBody(string $body): self
     {
         $new = clone $this;
         $new->body = $body;
         return $new;
     }
 
-    public function withProtocol(string $protocol): CustomDataResponseFormatter
+    public function withProtocol(string $protocol): self
     {
         $new = clone $this;
         $new->protocol = $protocol;
         return $new;
     }
 
-    public function withReasonPhrase(string $reasonPhrase): CustomDataResponseFormatter
+    public function withReasonPhrase(string $reasonPhrase): self
     {
         $new = clone $this;
         $new->reasonPhrase = $reasonPhrase;
