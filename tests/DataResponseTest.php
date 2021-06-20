@@ -9,6 +9,7 @@ use RuntimeException;
 use stdClass;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
+use Yiisoft\DataResponse\Tests\Stub\CustomDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\FakeDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\LoopDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\RecursiveDataResponseFormatter;
@@ -353,5 +354,37 @@ final class DataResponseTest extends TestCase
         $this->assertNotSame($dataResponse, $dataResponse->withProtocolVersion('1.0'));
         $this->assertNotSame($dataResponse, $dataResponse->withResponseFormatter(new XmlDataResponseFormatter()));
         $this->assertNotSame($dataResponse, $dataResponse->withStatus(Status::ACCEPTED));
+    }
+
+    public function testFormatterCouldChangeStatusCode(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withStatusCode(410);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals(410, $dataResponse->getStatusCode());
+    }
+
+    public function testFormatterCouldChangeHeaders(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withHeaders(['Content-Type' => 'Custom']);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('Custom', $dataResponse->getHeaderLine('Content-Type'));
+    }
+
+    public function testFormatterCouldChangeProtocol(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withProtocol('2.0');
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('2.0', $dataResponse->getProtocolVersion());
+    }
+
+    public function testFormatterCouldChangeReasonPhrase(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withReasonPhrase('Reason');
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+
+        $this->assertEquals('Reason', $dataResponse->getReasonPhrase());
     }
 }
