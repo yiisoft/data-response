@@ -186,6 +186,7 @@ final class DataResponse implements ResponseInterface
         $new->dataStream = $body;
         $new->forcedBody = true;
         $new->formatted = false;
+        $new->data = null;
         return $new;
     }
 
