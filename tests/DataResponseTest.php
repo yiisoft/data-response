@@ -192,7 +192,8 @@ final class DataResponseTest extends TestCase
     public function testWithHeader(): void
     {
         $dataResponse = $this->createDataResponseFactory()->createResponse()
-            ->withHeader(Header::CONTENT_TYPE, 'application/json');
+            ->withHeader(Header::CONTENT_TYPE, 'application/json')
+        ;
 
         $this->assertSame(['Content-Type' => ['application/json']], $dataResponse->getHeaders());
     }
@@ -201,7 +202,8 @@ final class DataResponseTest extends TestCase
     {
         $dataResponse = $this->createDataResponseFactory()->createResponse()
             ->withHeader(Header::CONTENT_TYPE, 'application/json')
-            ->withAddedHeader(Header::CONTENT_TYPE, 'application/xml');
+            ->withAddedHeader(Header::CONTENT_TYPE, 'application/xml')
+        ;
 
         $this->assertSame(['Content-Type' => ['application/json', 'application/xml']], $dataResponse->getHeaders());
     }
@@ -294,6 +296,24 @@ final class DataResponseTest extends TestCase
         $this->assertSame('test2', $dataResponse->getBody()->getContents());
     }
 
+    public function testWithDataMultipleCalls(): void
+    {
+        $dataResponse = $this->createDataResponse('test1');
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse = $dataResponse->withData('test2');
+        $this->assertSame(5, $dataResponse->getBody()->tell());
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test2', $dataResponse->getBody()->getContents());
+
+        $dataResponse = $dataResponse->withData('test3');
+        $this->assertSame(5, $dataResponse->getBody()->tell());
+        $dataResponse->getBody()->rewind();
+
+        $this->assertSame('test3', $dataResponse->getBody()->getContents());
+    }
+
     public function testWithDataThrowsExceptionIfWithBodyWasCalled(): void
     {
         $dataResponse = $this->createDataResponse('test1');
@@ -382,32 +402,49 @@ final class DataResponseTest extends TestCase
     public function testFormatterCouldChangeStatusCode(): void
     {
         $formatter = (new CustomDataResponseFormatter())->withStatusCode(410);
-        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter)->withStatus(200);
 
-        $this->assertEquals(410, $dataResponse->getStatusCode());
+        $this->assertSame(410, $dataResponse->getStatusCode());
     }
 
     public function testFormatterCouldChangeHeaders(): void
     {
         $formatter = (new CustomDataResponseFormatter())->withHeaders(['Content-Type' => 'Custom']);
-        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter)
+            ->withHeader('Content-Type', 'plain/text')
+        ;
 
-        $this->assertEquals('Custom', $dataResponse->getHeaderLine('Content-Type'));
+        $this->assertSame('Custom', $dataResponse->getHeaderLine('Content-Type'));
+    }
+
+    public function testFormatterCouldChangeAndAddHeaders(): void
+    {
+        $formatter = (new CustomDataResponseFormatter())->withHeaders(['Content-Type' => 'Custom']);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter)
+            ->withHeader('Content-Type', 'plain/text')
+            ->withAddedHeader('Content-Type', 'plain/html')
+        ;
+
+        $this->assertSame('Custom', $dataResponse->getHeaderLine('Content-Type'));
     }
 
     public function testFormatterCouldChangeProtocol(): void
     {
         $formatter = (new CustomDataResponseFormatter())->withProtocol('2.0');
-        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter)
+            ->withProtocolVersion('1.0')
+        ;
 
-        $this->assertEquals('2.0', $dataResponse->getProtocolVersion());
+        $this->assertSame('2.0', $dataResponse->getProtocolVersion());
     }
 
     public function testFormatterCouldChangeReasonPhrase(): void
     {
         $formatter = (new CustomDataResponseFormatter())->withReasonPhrase('Reason');
-        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter);
+        $dataResponse = $this->createDataResponse(['test'])->withResponseFormatter($formatter)
+            ->withStatus(200, 'OK')
+        ;
 
-        $this->assertEquals('Reason', $dataResponse->getReasonPhrase());
+        $this->assertSame('Reason', $dataResponse->getReasonPhrase());
     }
 }
