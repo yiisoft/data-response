@@ -48,6 +48,7 @@
             "source-directory": "config"
         },
         "config-plugin": {
+            "params": "params.php",
             "web": "web.php"
         }
     },
