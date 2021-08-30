@@ -1,6 +1,11 @@
 # Yii Data Response Change Log
 
 
+## 1.0.2 under development
+
+- no changes in this release.
+
+
 ## 1.0.1 August 30, 2021
 
 - Chg: Use definitions from `yiisoft/definitions` in configuration (samdark)
