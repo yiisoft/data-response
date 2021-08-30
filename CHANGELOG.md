@@ -3,7 +3,7 @@
 
 ## 1.0.1 under development
 
-- no changes in this release.
+- Chg: Use definitions from `yiisoft/definitions` in configuration (samdark)
 
 ## 1.0.0 June 21, 2021
 

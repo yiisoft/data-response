@@ -7,7 +7,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
-use Yiisoft\Di\DynamicReferencesArray;
+use Yiisoft\Definitions\DynamicReferencesArray;
 
 /* @var $params array */
 
