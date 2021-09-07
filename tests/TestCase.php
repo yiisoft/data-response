@@ -49,7 +49,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function createRequestHandler(ResponseInterface $response): RequestHandlerInterface
     {
-        return new class($response) implements RequestHandlerInterface {
+        return new class ($response) implements RequestHandlerInterface {
             private ResponseInterface $response;
 
             public function __construct(ResponseInterface $response)

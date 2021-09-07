@@ -60,7 +60,7 @@ final class HtmlDataResponseFormatterTest extends TestCase
 
     public function testDataWithObject(): void
     {
-        $data = new class() {
+        $data = new class () {
             public function __toString(): string
             {
                 return 'test';

@@ -27,7 +27,7 @@ final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
 
     public static function createWithDisabledDetachMethod(): self
     {
-        return new self(new class() implements StreamInterface {
+        return new self(new class () implements StreamInterface {
             use StreamTrait {
                 detach as private detachInternal;
             }
@@ -47,7 +47,7 @@ final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
 
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
-        return new class($this->stream, $code, $reasonPhrase) implements ResponseInterface {
+        return new class ($this->stream, $code, $reasonPhrase) implements ResponseInterface {
             use ResponseTrait;
 
             public function __construct(

@@ -224,7 +224,7 @@ final class XmlDataResponseFormatterTest extends TestCase
 
     public function testPriorityXmlDataInterfaceOverTraversable(): void
     {
-        $dataResponse = $this->createDataResponse(new class(['foo']) extends ArrayObject implements XmlDataInterface {
+        $dataResponse = $this->createDataResponse(new class (['foo']) extends ArrayObject implements XmlDataInterface {
             public function xmlTagName(): string
             {
                 return 'xml-data';
@@ -259,7 +259,7 @@ final class XmlDataResponseFormatterTest extends TestCase
 
     public function testPriorityXmlDataInterfaceOverTraversableInArray(): void
     {
-        $dataResponse = $this->createDataResponse([new class(['foo']) extends ArrayObject implements XmlDataInterface {
+        $dataResponse = $this->createDataResponse([new class (['foo']) extends ArrayObject implements XmlDataInterface {
             public function xmlTagName(): string
             {
                 return 'xml-data';
@@ -306,7 +306,7 @@ final class XmlDataResponseFormatterTest extends TestCase
 
     public function testEmptyObjectValuesImplementXmlDataInterface(): void
     {
-        $dataResponse = $this->createDataResponse(['object' => new class() implements XmlDataInterface {
+        $dataResponse = $this->createDataResponse(['object' => new class () implements XmlDataInterface {
             public function xmlTagName(): string
             {
                 return 'empty';
@@ -513,7 +513,7 @@ final class XmlDataResponseFormatterTest extends TestCase
 
     public function testObjectWithPublicProperties(): void
     {
-        $object = new class() {
+        $object = new class () {
             public int $x = 7;
             public float $y = 42;
             public string $name = 'yii';
@@ -566,7 +566,7 @@ final class XmlDataResponseFormatterTest extends TestCase
 
     private function createDummyObject(string $string, int $int, float $float, array $array, array $attrs = []): object
     {
-        return new class($string, $int, $float, $array, $attrs) implements XmlDataInterface {
+        return new class ($string, $int, $float, $array, $attrs) implements XmlDataInterface {
             public string $string;
             public int $int;
             public float $float;
