@@ -1,10 +1,8 @@
 # Yii Data Response Change Log
 
-
 ## 1.0.2 under development
 
-- no changes in this release.
-
+- Chg #62: Update `yiisoft/http` dependency (devanych)
 
 ## 1.0.1 August 30, 2021
 
