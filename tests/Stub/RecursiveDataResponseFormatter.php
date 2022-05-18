@@ -12,7 +12,9 @@ final class RecursiveDataResponseFormatter implements DataResponseFormatterInter
 {
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        $dataResponse->getBody()->getContents();
+        $dataResponse
+            ->getBody()
+            ->getContents();
 
         return $dataResponse->getResponse();
     }

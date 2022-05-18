@@ -12,7 +12,9 @@ final class DataResponseFactoryTest extends TestCase
 {
     public function testCreateResponseWithDefaultParams(): void
     {
-        $response = $this->createDataResponseFactory()->createResponse();
+        $response = $this
+            ->createDataResponseFactory()
+            ->createResponse();
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertInstanceOf(DataResponse::class, $response);
@@ -24,7 +26,9 @@ final class DataResponseFactoryTest extends TestCase
 
     public function testCreateResponseWithCustomParams(): void
     {
-        $response = $this->createDataResponseFactory()->createResponse(['key' => 'value'], Status::BAD_REQUEST, 'reason');
+        $response = $this
+            ->createDataResponseFactory()
+            ->createResponse(['key' => 'value'], Status::BAD_REQUEST, 'reason');
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertInstanceOf(DataResponse::class, $response);

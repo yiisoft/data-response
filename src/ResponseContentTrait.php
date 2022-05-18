@@ -51,7 +51,9 @@ trait ResponseContentTrait
     private function addToResponse(ResponseInterface $response, ?string $content = null): ResponseInterface
     {
         if ($content !== null) {
-            $response->getBody()->write($content);
+            $response
+                ->getBody()
+                ->write($content);
         }
 
         return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");

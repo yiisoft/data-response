@@ -83,7 +83,9 @@ final class DataResponse implements ResponseInterface
 
         if (is_string($data)) {
             $this->clearResponseBody();
-            $this->response->getBody()->write($data);
+            $this->response
+                ->getBody()
+                ->write($data);
             return $this->dataStream = $this->response->getBody();
         }
 

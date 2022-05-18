@@ -48,9 +48,13 @@ use Yiisoft\DataResponse\DataResponseFactory;
 
 $factory = new DataResponseFactory($responseFactory);
 $dataResponse = $factory->createResponse('test');
-$dataResponse->getBody()->rewind();
+$dataResponse
+    ->getBody()
+    ->rewind();
 
-echo $dataResponse->getBody()->getContents(); // "test"
+echo $dataResponse
+    ->getBody()
+    ->getContents(); // "test"
 ```
 
 ### Formatters
@@ -68,10 +72,14 @@ use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 $factory = new DataResponseFactory($responseFactory);
 $dataResponse = $factory->createResponse('test');
 $dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-$dataResponse->getBody()->rewind();
+$dataResponse
+    ->getBody()
+    ->rewind();
 
 echo $dataResponse->getHeader('Content-Type'); // ["application/json; charset=UTF-8"]
-echo $dataResponse->getBody()->getContents(); // "test"
+echo $dataResponse
+    ->getBody()
+    ->getContents(); // "test"
 ```
 
 The following formatters are available:

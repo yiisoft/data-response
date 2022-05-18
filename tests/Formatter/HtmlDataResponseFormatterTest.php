@@ -14,29 +14,54 @@ final class HtmlDataResponseFormatterTest extends TestCase
     {
         $dataResponse = $this->createDataResponse('test');
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('test', $result->getBody()->getContents());
+        $this->assertSame(
+            'test',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
     public function testWithEncoding(): void
     {
         $dataResponse = $this->createDataResponse('test');
-        $result = (new HtmlDataResponseFormatter())->withEncoding('ISO-8859-1')->format($dataResponse);
-        $result->getBody()->rewind();
+        $result = (new HtmlDataResponseFormatter())
+            ->withEncoding('ISO-8859-1')
+            ->format($dataResponse);
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('test', $result->getBody()->getContents());
+        $this->assertSame(
+            'test',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['text/html; charset=ISO-8859-1'], $result->getHeader('Content-Type'));
     }
 
     public function testWithContentType(): void
     {
         $dataResponse = $this->createDataResponse('test');
-        $result = (new HtmlDataResponseFormatter())->withContentType('text/plain')->format($dataResponse);
-        $result->getBody()->rewind();
+        $result = (new HtmlDataResponseFormatter())
+            ->withContentType('text/plain')
+            ->format($dataResponse);
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('test', $result->getBody()->getContents());
+        $this->assertSame(
+            'test',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame('text/plain; charset=UTF-8', $result->getHeaderLine('Content-Type'));
     }
 
@@ -45,16 +70,25 @@ final class HtmlDataResponseFormatterTest extends TestCase
         $this->expectException(RuntimeException::class);
         $dataResponse = $this->createDataResponse(['test']);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
     }
 
     public function testDataWithNull(): void
     {
         $dataResponse = $this->createDataResponse(null);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('', $result->getBody()->getContents());
+        $this->assertSame(
+            '',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
@@ -69,9 +103,16 @@ final class HtmlDataResponseFormatterTest extends TestCase
 
         $dataResponse = $this->createDataResponse($data);
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('test', $result->getBody()->getContents());
+        $this->assertSame(
+            'test',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
