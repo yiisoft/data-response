@@ -21,7 +21,9 @@ final class ContentNegotiatorTest extends TestCase
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $response = $this->process($middleware, 'text/html', '<div>Hello</div>');
-        $content = $response->getBody()->getContents();
+        $content = $response
+            ->getBody()
+            ->getContents();
 
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
@@ -33,7 +35,9 @@ final class ContentNegotiatorTest extends TestCase
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $response = $this->process($middleware, 'application/xml', 'Hello');
-        $content = $response->getBody()->getContents();
+        $content = $response
+            ->getBody()
+            ->getContents();
 
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
@@ -45,7 +49,9 @@ final class ContentNegotiatorTest extends TestCase
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $response = $this->process($middleware, 'application/json', ['test' => 'Hello']);
-        $content = $response->getBody()->getContents();
+        $content = $response
+            ->getBody()
+            ->getContents();
 
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertTrue($response->hasResponseFormatter());
@@ -57,7 +63,9 @@ final class ContentNegotiatorTest extends TestCase
     {
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $response = $this->process($middleware, 'text/plain', 'Hello World!');
-        $content = $response->getBody()->getContents();
+        $content = $response
+            ->getBody()
+            ->getContents();
 
         $this->assertInstanceOf(DataResponse::class, $response);
         $this->assertFalse($response->hasResponseFormatter());
@@ -104,11 +112,17 @@ final class ContentNegotiatorTest extends TestCase
     private function process(ContentNegotiator $middleware, string $headerAcceptValue, $data): ResponseInterface
     {
         $response = $middleware->process(
-            $this->createRequest()->withHeader(Header::ACCEPT, $headerAcceptValue),
-            $this->createRequestHandler($this->createDataResponseFactory()->createResponse($data)),
+            $this
+                ->createRequest()
+                ->withHeader(Header::ACCEPT, $headerAcceptValue),
+            $this->createRequestHandler($this
+                ->createDataResponseFactory()
+                ->createResponse($data)),
         );
 
-        $response->getBody()->rewind();
+        $response
+            ->getBody()
+            ->rewind();
         return $response;
     }
 

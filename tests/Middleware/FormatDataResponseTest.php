@@ -23,9 +23,16 @@ final class FormatDataResponseTest extends TestCase
             $this->createRequestHandler($dataResponse)
         );
 
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
+        $this->assertSame(
+            '{"test":"test"}',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
@@ -38,9 +45,16 @@ final class FormatDataResponseTest extends TestCase
             $this->createRequestHandler($dataResponse)
         );
 
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('{"test":"test"}', $result->getBody()->getContents());
+        $this->assertSame(
+            '{"test":"test"}',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['application/json; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
@@ -53,9 +67,16 @@ final class FormatDataResponseTest extends TestCase
             $this->createRequestHandler($dataResponse)
         );
 
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame('test', $result->getBody()->getContents());
+        $this->assertSame(
+            'test',
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 
@@ -68,9 +89,16 @@ final class FormatDataResponseTest extends TestCase
             $this->createRequestHandler($dataResponse)
         );
 
-        $result->getBody()->rewind();
+        $result
+            ->getBody()
+            ->rewind();
 
-        $this->assertSame($this->xml('<response><test>test</test></response>'), $result->getBody()->getContents());
+        $this->assertSame(
+            $this->xml('<response><test>test</test></response>'),
+            $result
+                ->getBody()
+                ->getContents(),
+        );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
 }
