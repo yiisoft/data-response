@@ -363,7 +363,8 @@ final class DataResponseTest extends TestCase
             'test2',
             $dataResponse
                 ->getBody()
-                ->getContents());
+                ->getContents()
+        );
 
         $dataResponse = $dataResponse
             ->withBody($this->createStream('test3'))
