@@ -661,19 +661,8 @@ final class XmlDataResponseFormatterTest extends TestCase
     private function createDummyObject(string $string, int $int, float $float, array $array, array $attrs = []): object
     {
         return new class ($string, $int, $float, $array, $attrs) implements XmlDataInterface {
-            public string $string;
-            public int $int;
-            public float $float;
-            public array $array;
-            public array $attrs;
-
-            public function __construct(string $string, int $int, float $float, array $array, array $attrs = [])
+            public function __construct(public string $string, public int $int, public float $float, public array $array, public array $attrs = [])
             {
-                $this->string = $string;
-                $this->int = $int;
-                $this->float = $float;
-                $this->array = $array;
-                $this->attrs = $attrs;
             }
 
             public function xmlTagName(): string

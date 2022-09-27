@@ -10,8 +10,6 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 
-use function get_class;
-use function gettype;
 use function is_object;
 use function is_scalar;
 use function method_exists;
@@ -45,7 +43,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
         if (!is_scalar($data) && $data !== null && !$this->isStringableObject($data)) {
             throw new RuntimeException(sprintf(
                 'Data must be either a scalar value, null, or a stringable object. %s given.',
-                is_object($data) ? get_class($data) : gettype($data),
+                get_debug_type($data),
             ));
         }
 
@@ -59,7 +57,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @return bool Whether the value is a stringable object.
      */
-    private function isStringableObject($value): bool
+    private function isStringableObject(mixed $value): bool
     {
         return is_object($value) && method_exists($value, '__toString');
     }

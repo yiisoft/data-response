@@ -79,8 +79,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * Returns a new instance with the specified version.
      *
      * @param string $version The XML version. Default is "1.0".
-     *
-     * @return self
      */
     public function withVersion(string $version): self
     {
@@ -94,8 +92,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param string $rootTag The name of the root element. Default is "response".
      * If an empty value is set, the root tag should not be added.
-     *
-     * @return self
      */
     public function withRootTag(string $rootTag): self
     {
@@ -111,7 +107,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param mixed $data Data for building XML.
      */
-    private function buildXml(DOMDocument $dom, $element, $data): void
+    private function buildXml(DOMDocument $dom, DOMDocument|DOMElement $element, mixed $data): void
     {
         if (empty($data)) {
             return;
@@ -162,7 +158,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param object $object To build.
      * @param int|string|null $tagName The tag name.
      */
-    private function buildObject(DOMDocument $dom, $element, object $object, $tagName = null): void
+    private function buildObject(DOMDocument $dom, DOMDocument|DOMElement $element, object $object, $tagName = null): void
     {
         if ($object instanceof XmlDataInterface) {
             $child = $this->safeCreateDomElement($dom, $object->xmlTagName());
@@ -206,8 +202,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param DOMDocument $dom The root DOM document.
      * @param int|string|null $tagName The tag name.
-     *
-     * @return DOMElement
      */
     private function safeCreateDomElement(DOMDocument $dom, $tagName): DOMElement
     {
@@ -220,7 +214,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                 throw new DOMException();
             }
             return $element;
-        } catch (DOMException $e) {
+        } catch (DOMException) {
             return $dom->createElement(self::DEFAULT_ITEM_TAG_NAME);
         }
     }
@@ -231,7 +225,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param bool|float|int|string|null $value
      */
-    private function setScalarValueToDomElement($element, $value): void
+    private function setScalarValueToDomElement(DOMDocument|DOMElement $element, $value): void
     {
         $value = $this->formatScalarValue($value);
 
