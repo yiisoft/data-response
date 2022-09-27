@@ -10,8 +10,6 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 
-use function get_class;
-use function gettype;
 use function is_object;
 use function is_scalar;
 use function method_exists;

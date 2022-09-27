@@ -11,8 +11,6 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 use function ftruncate;
-use function get_class;
-use function gettype;
 use function is_callable;
 use function is_object;
 use function is_resource;
