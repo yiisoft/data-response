@@ -17,11 +17,8 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
  */
 class FormatDataResponse implements MiddlewareInterface
 {
-    private DataResponseFormatterInterface $responseFormatter;
-
-    public function __construct(DataResponseFormatterInterface $responseFormatter)
+    public function __construct(private DataResponseFormatterInterface $responseFormatter)
     {
-        $this->responseFormatter = $responseFormatter;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

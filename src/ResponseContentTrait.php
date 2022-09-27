@@ -16,8 +16,6 @@ trait ResponseContentTrait
      * Returns a new instance with the specified content type.
      *
      * @param string $contentType The content type. For example, "text/html".
-     *
-     * @return self
      */
     public function withContentType(string $contentType): self
     {
@@ -30,8 +28,6 @@ trait ResponseContentTrait
      * Returns a new instance with the specified encoding.
      *
      * @param string $encoding The encoding. For example, "UTF-8".
-     *
-     * @return self
      */
     public function withEncoding(string $encoding): self
     {

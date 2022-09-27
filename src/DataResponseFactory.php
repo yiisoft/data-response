@@ -13,13 +13,8 @@ use Yiisoft\Http\Status;
  */
 final class DataResponseFactory implements DataResponseFactoryInterface
 {
-    private ResponseFactoryInterface $responseFactory;
-    private StreamFactoryInterface $streamFactory;
-
-    public function __construct(ResponseFactoryInterface $responseFactory, StreamFactoryInterface $streamFactory)
+    public function __construct(private ResponseFactoryInterface $responseFactory, private StreamFactoryInterface $streamFactory)
     {
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory = $streamFactory;
     }
 
     public function createResponse($data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse
