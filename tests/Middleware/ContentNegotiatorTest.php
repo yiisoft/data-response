@@ -75,7 +75,7 @@ final class ContentNegotiatorTest extends TestCase
     public function testWrongContentFormattersInConstructor(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage(
+        $this->expectExceptionMessage(
             'Invalid formatter. A "Yiisoft\DataResponse\DataResponseFormatterInterface"'
             . ' instance is expected, "stdClass" is received.'
         );
@@ -88,7 +88,7 @@ final class ContentNegotiatorTest extends TestCase
     public function testWrongContentFormattersInSetter(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage('Invalid formatter content type. A string is expected, "integer" is received.');
+        $this->expectExceptionMessage('Invalid formatter content type. A string is expected, "integer" is received.');
         $middleware = new ContentNegotiator($this->getContentFormatters());
         $middleware->withContentFormatters([
             'text/html' => new HtmlDataResponseFormatter(),
