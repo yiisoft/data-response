@@ -1,6 +1,6 @@
 # Yii Data Response Change Log
 
-## 2.0.0 under development
+## 2.0.0 February 15, 2023
 
 - Chg #62: Update `yiisoft/http` dependency (@devanych)
 - Chg #71: Adapt configuration group names to Yii conventions (@vjik)
