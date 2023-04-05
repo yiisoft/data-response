@@ -202,7 +202,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * Safely creates a DOMElement instance by the specified tag name if the tag name is not empty,
      * is not integer, and is valid. Otherwise {@see DEFAULT_ITEM_TAG_NAME} value is used.
      *
-     * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
+     * @see https://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
      *
      * @param DOMDocument $dom The root DOM document.
      * @param int|string|null $tagName The tag name.
