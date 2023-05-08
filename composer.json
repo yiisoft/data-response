@@ -21,7 +21,7 @@
         "php": "^7.4|^8.0",
         "ext-dom": "*",
         "ext-json": "*",
-        "psr/http-message": "^1.0",
+        "psr/http-message": "^2.0",
         "psr/http-server-middleware": "^1.0",
         "yiisoft/http": "^1.2",
         "yiisoft/json": "^1.0",
