@@ -20,5 +20,5 @@ interface DataResponseFactoryInterface
      *
      * @return DataResponse The instance of the data response.
      */
-    public function createResponse($data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse;
+    public function createResponse(mixed $data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse;
 }

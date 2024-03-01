@@ -13,11 +13,8 @@ use Psr\Http\Message\StreamInterface;
 
 final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
 {
-    private StreamInterface $stream;
-
-    private function __construct(StreamInterface $stream)
+    private function __construct(private StreamInterface $stream)
     {
-        $this->stream = $stream;
     }
 
     public static function create(string $stream = 'php://memory', string $mode = 'wb+'): self

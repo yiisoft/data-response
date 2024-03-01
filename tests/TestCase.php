@@ -50,11 +50,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function createRequestHandler(ResponseInterface $response): RequestHandlerInterface
     {
         return new class ($response) implements RequestHandlerInterface {
-            private ResponseInterface $response;
-
-            public function __construct(ResponseInterface $response)
+            public function __construct(private ResponseInterface $response)
             {
-                $this->response = $response;
             }
 
             public function handle(ServerRequestInterface $request): ResponseInterface

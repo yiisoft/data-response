@@ -70,7 +70,7 @@ final class ContentNegotiator implements MiddlewareInterface
 
             foreach ($accepted as $accept) {
                 foreach ($this->contentFormatters as $contentType => $formatter) {
-                    if (strpos($accept, $contentType) !== false) {
+                    if (str_contains($accept, $contentType)) {
                         return $response->withResponseFormatter($formatter);
                     }
                 }
@@ -99,7 +99,7 @@ final class ContentNegotiator implements MiddlewareInterface
                 throw new RuntimeException(sprintf(
                     'Invalid formatter. A "%s" instance is expected, "%s" is received.',
                     DataResponseFormatterInterface::class,
-                    is_object($formatter) ? get_class($formatter) : gettype($formatter),
+                    get_debug_type($formatter),
                 ));
             }
         }
