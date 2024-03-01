@@ -7,7 +7,7 @@ namespace Yiisoft\DataResponse;
 use Yiisoft\Http\Status;
 
 /**
- * DataResponseFactoryInterface is the interface that should be implemented by data response factory classes.
+ * `DataResponseFactoryInterface` is the interface that should be implemented by data response factory classes.
  */
 interface DataResponseFactoryInterface
 {
@@ -20,5 +20,5 @@ interface DataResponseFactoryInterface
      *
      * @return DataResponse The instance of the data response.
      */
-    public function createResponse(mixed $data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse;
+    public function createResponse($data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse;
 }
