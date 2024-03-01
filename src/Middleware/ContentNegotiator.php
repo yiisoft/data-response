@@ -13,12 +13,9 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\Http\Header;
 
-use function get_class;
 use function gettype;
-use function is_object;
 use function is_string;
 use function sprintf;
-use function strpos;
 
 /**
  * ContentNegotiator supports response format negotiation.
