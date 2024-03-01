@@ -39,7 +39,6 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        /** @var mixed */
         $data = $dataResponse->getData();
 
         if (!is_scalar($data) && $data !== null && !$this->isStringableObject($data)) {

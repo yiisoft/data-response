@@ -57,7 +57,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         if ($dataResponse->hasData()) {
             $dom = new DOMDocument($this->version, $this->encoding);
 
-            /** @var mixed */
             $data = $dataResponse->getData();
 
             if (!empty($this->rootTag)) {
@@ -120,7 +119,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
             /**
              * @var int|string $name
-             * @var mixed $value
              */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
@@ -188,10 +186,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
         /**
          * @var string $property
-         * @var mixed $value
          */
         foreach ($object as $property => $value) {
-            /** @var mixed */
             $data[$property] = $value;
         }
 
