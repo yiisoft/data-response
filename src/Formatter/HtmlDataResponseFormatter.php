@@ -6,13 +6,12 @@ namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use Stringable;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 
-use function is_object;
 use function is_scalar;
-use function method_exists;
 use function sprintf;
 
 /**
@@ -39,25 +38,15 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
     {
         $data = $dataResponse->getData();
 
-        if (!is_scalar($data) && $data !== null && !$this->isStringableObject($data)) {
-            throw new RuntimeException(sprintf(
-                'Data must be either a scalar value, null, or a stringable object. %s given.',
-                get_debug_type($data),
-            ));
+        if (!is_scalar($data) && $data !== null && !$data instanceof Stringable) {
+            throw new RuntimeException(
+                sprintf(
+                    'Data must be either a scalar value, null, or a stringable object. %s given.',
+                    get_debug_type($data),
+                )
+            );
         }
 
         return $this->addToResponse($dataResponse->getResponse(), empty($data) ? null : (string) $data);
-    }
-
-    /**
-     * Checks whether the value is a stringable object.
-     *
-     * @param mixed $value The value to check.
-     *
-     * @return bool Whether the value is a stringable object.
-     */
-    private function isStringableObject(mixed $value): bool
-    {
-        return is_object($value) && method_exists($value, '__toString');
     }
 }
