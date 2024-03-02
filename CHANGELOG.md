@@ -5,6 +5,7 @@
 - Enh #85: Raise minimum PHP version to 8.1 and refactor code (@vjik)
 - Enh #80: Add support for `psr/http-message` version `^2.0` (@vjik)
 - Bug #85: Explicitly add transitive dependencies `psr/http-factory` and `psr/http-server-handler` (@vjik)
+- New #88: Add `PlainTextDataResponseFormatter` formatter and `FormatDataResponseAsPlainText` middleware (@vjik) 
 
 ## 2.0.0 February 15, 2023
 
