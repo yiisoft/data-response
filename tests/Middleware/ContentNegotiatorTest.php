@@ -103,13 +103,9 @@ final class ContentNegotiatorTest extends TestCase
     }
 
     /**
-     * @param ContentNegotiator $middleware
-     * @param string $headerAcceptValue
-     * @param mixed $data
-     *
      * @return ResponseInterface
      */
-    private function process(ContentNegotiator $middleware, string $headerAcceptValue, $data): ResponseInterface
+    private function process(ContentNegotiator $middleware, string $headerAcceptValue, mixed $data): ResponseInterface
     {
         $response = $middleware->process(
             $this

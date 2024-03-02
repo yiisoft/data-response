@@ -11,8 +11,6 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 use function ftruncate;
-use function get_class;
-use function gettype;
 use function is_callable;
 use function is_object;
 use function is_resource;
@@ -28,11 +26,6 @@ use function sprintf;
  */
 final class DataResponse implements ResponseInterface
 {
-    /**
-     * @var mixed
-     */
-    private $data;
-
     /**
      * @var resource
      */
@@ -52,13 +45,12 @@ final class DataResponse implements ResponseInterface
      * @param StreamFactoryInterface $streamFactory The stream factory instance.
      */
     public function __construct(
-        $data,
+        private mixed $data,
         int $code,
         string $reasonPhrase,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory
     ) {
-        $this->data = $data;
         $this->createResponse($code, $reasonPhrase, $responseFactory, $streamFactory);
     }
 
@@ -78,7 +70,6 @@ final class DataResponse implements ResponseInterface
             return $this->dataStream = $this->response->getBody();
         }
 
-        /** @var mixed */
         $data = $this->getData();
 
         if (is_string($data)) {
@@ -91,7 +82,7 @@ final class DataResponse implements ResponseInterface
 
         throw new RuntimeException(sprintf(
             'The data is "%s" not a string. To get non-string data, use the "%s::getData()" method.',
-            is_object($data) ? get_class($data) : gettype($data),
+            get_debug_type($data),
             self::class,
         ));
     }
@@ -294,7 +285,7 @@ final class DataResponse implements ResponseInterface
      *
      * @return self
      */
-    public function withData($data): self
+    public function withData(mixed $data): self
     {
         if ($this->forcedBody) {
             throw new RuntimeException(sprintf(

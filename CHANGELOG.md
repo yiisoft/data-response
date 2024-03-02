@@ -1,8 +1,10 @@
 # Yii Data Response Change Log
 
-## 2.0.1 under development
+## 2.1.0 under development
 
+- Enh #85: Raise minimum PHP version to 8.1 and refactor code (@vjik)
 - Enh #80: Add support for `psr/http-message` version `^2.0` (@vjik)
+- Bug #85: Explicitly add transitive dependencies `psr/http-factory` and `psr/http-server-handler` (@vjik)
 
 ## 2.0.0 February 15, 2023
 

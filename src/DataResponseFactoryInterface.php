@@ -7,7 +7,7 @@ namespace Yiisoft\DataResponse;
 use Yiisoft\Http\Status;
 
 /**
- * DataResponseFactoryInterface is the interface that should be implemented by data response factory classes.
+ * `DataResponseFactoryInterface` is the interface that should be implemented by data response factory classes.
  */
 interface DataResponseFactoryInterface
 {

@@ -197,7 +197,7 @@ final class DataResponseTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'The data is "integer" not a string. To get non-string data, use the'
+            'The data is "int" not a string. To get non-string data, use the'
             . ' "Yiisoft\DataResponse\DataResponse::getData()" method.'
         );
         $dataResponse = $this->createDataResponse(100);

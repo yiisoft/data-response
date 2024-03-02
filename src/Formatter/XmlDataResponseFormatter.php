@@ -57,7 +57,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         if ($dataResponse->hasData()) {
             $dom = new DOMDocument($this->version, $this->encoding);
 
-            /** @var mixed */
             $data = $dataResponse->getData();
 
             if (!empty($this->rootTag)) {
@@ -111,7 +110,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * @param DOMDocument|DOMElement $element The current DOM element being processed.
      * @param mixed $data Data for building XML.
      */
-    private function buildXml(DOMDocument $dom, $element, $data): void
+    private function buildXml(DOMDocument $dom, $element, mixed $data): void
     {
         if (empty($data)) {
             return;
@@ -120,7 +119,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
             /**
              * @var int|string $name
-             * @var mixed $value
              */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
@@ -188,10 +186,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
         /**
          * @var string $property
-         * @var mixed $value
          */
         foreach ($object as $property => $value) {
-            /** @var mixed */
             $data[$property] = $value;
         }
 
@@ -220,7 +216,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                 throw new DOMException();
             }
             return $element;
-        } catch (DOMException $e) {
+        } catch (DOMException) {
             return $dom->createElement(self::DEFAULT_ITEM_TAG_NAME);
         }
     }
