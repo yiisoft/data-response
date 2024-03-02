@@ -10,7 +10,6 @@ use Yiisoft\DataResponse\Tests\TestCase;
 
 final class PlainTextDataResponseFormatterTest extends TestCase
 {
-
     public function testCorrectFormat(): void
     {
         $dataResponse = $this->createDataResponse('test');
