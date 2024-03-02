@@ -27,7 +27,7 @@ response.
 The package could be installed via composer:
 
 ```shell
-composer require yiisoft/data-response --prefer-dist
+composer require yiisoft/data-response
 ```
 
 ## General usage
@@ -85,6 +85,7 @@ The following formatters are available:
 - `HtmlDataResponseFormatter`
 - `JsonDataResponseFormatter`
 - `XmlDataResponseFormatter`
+- `PlainTextDataResponseFormatter`
 
 ### Middleware
 
