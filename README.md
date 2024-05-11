@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
     <h1 align="center">Yii Data Response</h1>
     <br>
@@ -92,7 +92,6 @@ The following formatters are available:
 The package provides a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware that is able to format a data response.
 
 ```php
-
 use Yiisoft\DataResponse\Middleware\FormatDataResponse;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 
