@@ -6,12 +6,12 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/data-response/v/stable.png)](https://packagist.org/packages/yiisoft/data-response)
-[![Total Downloads](https://poser.pugx.org/yiisoft/data-response/downloads.png)](https://packagist.org/packages/yiisoft/data-response)
-[![Build status](https://github.com/yiisoft/data-response/workflows/build/badge.svg)](https://github.com/yiisoft/data-response/actions?query=workflow%3Abuild)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/data-response/v)](https://packagist.org/packages/yiisoft/data-response)
+[![Total Downloads](https://poser.pugx.org/yiisoft/data-response/downloads)](https://packagist.org/packages/yiisoft/data-response)
+[![Build status](https://github.com/yiisoft/data-response/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/data-response/actions/workflows/build.yml)
 [![Code Coverage](https://codecov.io/gh/yiisoft/data-response/graph/badge.svg?token=SPEX4FPFBU)](https://codecov.io/gh/yiisoft/data-response)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fdata-response%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/data-response/master)
-[![static analysis](https://github.com/yiisoft/data-response/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/data-response/actions?query=workflow%3A%22static+analysis%22)
+[![Static analysis](https://github.com/yiisoft/data-response/actions/workflows/static.yml/badge.svg?branch=master)](https://github.com/yiisoft/data-response/actions/workflows/static.yml?query=branch%3Amaster)
 [![type-coverage](https://shepherd.dev/github/yiisoft/data-response/coverage.svg)](https://shepherd.dev/github/yiisoft/data-response)
 
 The package allows responding with data that is automatically converted into [PSR-7](https://www.php-fig.org/psr/psr-7/)
