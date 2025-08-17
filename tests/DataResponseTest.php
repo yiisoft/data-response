@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests;
 
+use Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use stdClass;
+use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\Stub\CustomDataResponseFormatter;
@@ -504,6 +507,32 @@ final class DataResponseTest extends TestCase
         );
 
         $dataResponse->withData('test3');
+    }
+
+    public static function dataEdgeCaseWithKeepBodyPositionAfterCallGetter(): iterable
+    {
+        yield [fn(DataResponse $dataResponse) => $dataResponse->withAddedHeader('X-Test', '42')];
+        yield [fn(DataResponse $dataResponse) => $dataResponse->withHeader('X-Test', '42')];
+        yield [fn(DataResponse $dataResponse) => $dataResponse->withProtocolVersion('1.1')];
+        yield [fn(DataResponse $dataResponse) => $dataResponse->withStatus(200)];
+        yield [fn(DataResponse $dataResponse) => $dataResponse->withResponseFormatter(new JsonDataResponseFormatter())];
+    }
+
+    #[DataProvider('dataEdgeCaseWithKeepBodyPositionAfterCallGetter')]
+    public function testEdgeCaseWithKeepBodyPositionAfterCallGetter(Closure $closure): void
+    {
+        $dataResponse = $this
+            ->createDataResponse('test')
+            ->withResponseFormatter(new JsonDataResponseFormatter());
+
+        $dataResponse->getBody();
+        $dataResponse = $closure($dataResponse);
+
+        $dataResponse->getBody()->rewind();
+
+        $dataResponse->getStatusCode();
+
+        $this->assertSame('"test"', $dataResponse->getBody()->getContents());
     }
 
     public function testGetData(): void

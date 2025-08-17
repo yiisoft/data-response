@@ -3,6 +3,7 @@
 ## 2.1.1 under development
 
 - Chg #97: Change PHP constraint in `composer.json` to `~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0` (@vjik)
+- Bug #99: Fix edge case with reset body position after calling getters and using `with*` methods (@vjik) 
 
 ## 2.1.0 March 03, 2024
 
