@@ -31,9 +31,6 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $encoding = 'UTF-8';
 
-    /**
-     * @inheritDoc
-     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();

@@ -87,35 +87,18 @@ final class DataResponse implements ResponseInterface
         ));
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     *
-     * @return string[]
-     */
     public function getHeader($name): array
     {
         $this->formatResponse();
         return $this->response->getHeader($name);
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     */
     public function getHeaderLine($name): string
     {
         $this->formatResponse();
         return $this->response->getHeaderLine($name);
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @return string[][]
-     */
     public function getHeaders(): array
     {
         $this->formatResponse();
@@ -140,25 +123,12 @@ final class DataResponse implements ResponseInterface
         return $this->response->getStatusCode();
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     */
     public function hasHeader($name): bool
     {
         $this->formatResponse();
         return $this->response->hasHeader($name);
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     * @param string|string[] $value
-     *
-     * @return self
-     */
     public function withAddedHeader($name, $value): self
     {
         $new = clone $this;
@@ -167,11 +137,6 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @return self
-     */
     public function withBody(StreamInterface $body): self
     {
         $new = clone $this;
@@ -183,14 +148,6 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     * @param string|string[] $value
-     *
-     * @return self
-     */
     public function withHeader($name, $value): self
     {
         $new = clone $this;
@@ -199,13 +156,6 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $name
-     *
-     * @return self
-     */
     public function withoutHeader($name): self
     {
         $new = clone $this;
@@ -214,13 +164,6 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param string $version
-     *
-     * @return self
-     */
     public function withProtocolVersion($version): self
     {
         $new = clone $this;
@@ -229,14 +172,6 @@ final class DataResponse implements ResponseInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param int $code
-     * @param string $reasonPhrase
-     *
-     * @return self
-     */
     public function withStatus($code, $reasonPhrase = ''): self
     {
         $new = clone $this;
@@ -270,6 +205,9 @@ final class DataResponse implements ResponseInterface
      * Checks whether the response formatter has been set {@see withResponseFormatter()}.
      *
      * @return bool Whether the formatter has been set.
+     *
+     * @psalm-assert-if-true !null $this->responseFormatter
+     * @psalm-assert-if-false null $this->responseFormatter
      */
     public function hasResponseFormatter(): bool
     {
@@ -282,8 +220,6 @@ final class DataResponse implements ResponseInterface
      * @param mixed $data The response data.
      *
      * @throws RuntimeException If the body was previously forced to be set {@see withBody()}.
-     *
-     * @return self
      */
     public function withData(mixed $data): self
     {
@@ -337,8 +273,6 @@ final class DataResponse implements ResponseInterface
         if ($this->formatted || !$this->hasResponseFormatter()) {
             return;
         }
-
-        /** @psalm-var DataResponseFormatterInterface $this->responseFormatter */
 
         $this->clearResponseBody();
         $this->formatted = true;

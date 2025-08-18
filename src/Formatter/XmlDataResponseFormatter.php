@@ -49,9 +49,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $rootTag = 'response';
 
-    /**
-     * @inheritDoc
-     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         if ($dataResponse->hasData()) {
@@ -70,7 +67,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             $content = (string) $dom->saveXML();
         }
 
-        /** @psalm-suppress MixedArgument */
         return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
@@ -78,8 +74,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      * Returns a new instance with the specified version.
      *
      * @param string $version The XML version. Default is "1.0".
-     *
-     * @return self
      */
     public function withVersion(string $version): self
     {
@@ -93,8 +87,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param string $rootTag The name of the root element. Default is "response".
      * If an empty value is set, the root tag should not be added.
-     *
-     * @return self
      */
     public function withRootTag(string $rootTag): self
     {
@@ -117,9 +109,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
-            /**
-             * @var int|string $name
-             */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
                     $this->buildObject($dom, $element, $value, $name);
@@ -134,8 +123,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                     continue;
                 }
 
-                /** @psalm-var scalar $value */
-
                 $this->setScalarValueToDomElement($child, $value);
             }
 
@@ -146,8 +133,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             $this->buildObject($dom, $element, $data);
             return;
         }
-
-        /** @psalm-var scalar $data */
 
         $this->setScalarValueToDomElement($element, $data);
     }

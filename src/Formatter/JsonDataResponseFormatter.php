@@ -44,7 +44,6 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
             $content = Json::encode($dataResponse->getData(), $this->options);
         }
 
-        /** @psalm-suppress MixedArgument */
         return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
     }
 
@@ -53,8 +52,6 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param int $options The encoding options. For more details please refer to
      * {@link https://www.php.net/manual/en/function.json-encode.php}.
-     *
-     * @return self
      */
     public function withOptions(int $options): self
     {

@@ -28,9 +28,6 @@ final class PlainTextDataResponseFormatter implements DataResponseFormatterInter
      */
     private string $encoding = 'UTF-8';
 
-    /**
-     * @inheritDoc
-     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();
