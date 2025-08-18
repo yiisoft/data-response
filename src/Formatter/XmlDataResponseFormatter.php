@@ -108,7 +108,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
-            /** @var string|int $name */
+            /** @var int|string $name */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
                     $this->buildObject($dom, $element, $value, $name);
