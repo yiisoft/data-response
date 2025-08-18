@@ -12,7 +12,7 @@ use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
 /**
- * JsonDataResponseFormatter formats the response data as JSON.
+ * `JsonDataResponseFormatter` formats the response data as JSON.
  */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -40,12 +40,14 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        if ($dataResponse->hasData()) {
-            $content = Json::encode($dataResponse->getData(), $this->options);
+        if (!$dataResponse->hasData()) {
+            return $this->addToResponse($dataResponse->getResponse());
         }
 
-        /** @psalm-suppress MixedArgument */
-        return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
+        return $this->addToResponse(
+            $dataResponse->getResponse(),
+            Json::encode($dataResponse->getData(), $this->options)
+        );
     }
 
     /**
@@ -53,8 +55,6 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param int $options The encoding options. For more details please refer to
      * {@link https://www.php.net/manual/en/function.json-encode.php}.
-     *
-     * @return self
      */
     public function withOptions(int $options): self
     {

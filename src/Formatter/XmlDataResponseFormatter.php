@@ -21,7 +21,7 @@ use function is_int;
 use function is_object;
 
 /**
- * XmlDataResponseFormatter formats the response data as XML.
+ * `XmlDataResponseFormatter` formats the response data as XML.
  */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -49,37 +49,30 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $rootTag = 'response';
 
-    /**
-     * @inheritDoc
-     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        if ($dataResponse->hasData()) {
-            $dom = new DOMDocument($this->version, $this->encoding);
-
-            $data = $dataResponse->getData();
-
-            if (!empty($this->rootTag)) {
-                $root = new DOMElement($this->rootTag);
-                $dom->appendChild($root);
-                $this->buildXml($dom, $root, $data);
-            } else {
-                $this->buildXml($dom, $dom, $data);
-            }
-
-            $content = (string) $dom->saveXML();
+        if (!$dataResponse->hasData()) {
+            return $this->addToResponse($dataResponse->getResponse());
         }
 
-        /** @psalm-suppress MixedArgument */
-        return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
+        $dom = new DOMDocument($this->version, $this->encoding);
+        $data = $dataResponse->getData();
+
+        if (empty($this->rootTag)) {
+            $this->buildXml($dom, $dom, $data);
+            return $this->addToResponse($dataResponse->getResponse(), (string) $dom->saveXML());
+        }
+
+        $root = new DOMElement($this->rootTag);
+        $dom->appendChild($root);
+        $this->buildXml($dom, $root, $data);
+        return $this->addToResponse($dataResponse->getResponse(), (string) $dom->saveXML());
     }
 
     /**
      * Returns a new instance with the specified version.
      *
      * @param string $version The XML version. Default is "1.0".
-     *
-     * @return self
      */
     public function withVersion(string $version): self
     {
@@ -93,8 +86,6 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
      *
      * @param string $rootTag The name of the root element. Default is "response".
      * If an empty value is set, the root tag should not be added.
-     *
-     * @return self
      */
     public function withRootTag(string $rootTag): self
     {
@@ -117,9 +108,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
-            /**
-             * @var int|string $name
-             */
+            /** @var int|string $name */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
                     $this->buildObject($dom, $element, $value, $name);

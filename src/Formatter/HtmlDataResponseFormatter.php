@@ -15,7 +15,7 @@ use function is_scalar;
 use function sprintf;
 
 /**
- * HtmlDataResponseFormatter formats the response data as HTML.
+ * `HtmlDataResponseFormatter` formats the response data as HTML.
  */
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -31,9 +31,6 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
      */
     private string $encoding = 'UTF-8';
 
-    /**
-     * @inheritDoc
-     */
     public function format(DataResponse $dataResponse): ResponseInterface
     {
         $data = $dataResponse->getData();

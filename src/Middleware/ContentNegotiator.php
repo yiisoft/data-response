@@ -48,8 +48,6 @@ final class ContentNegotiator implements MiddlewareInterface
      * {@see DataResponseFormatterInterface}.
      *
      * @psalm-param array<string, DataResponseFormatterInterface> $contentFormatters
-     *
-     * @return self
      */
     public function withContentFormatters(array $contentFormatters): self
     {
