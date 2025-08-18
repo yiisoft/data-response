@@ -4,7 +4,7 @@
 
 - Chg #97, #100: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
 - Bug #99: Fix edge case with reset body position after calling getters and using `with*` methods (@vjik)
-- Enh #102: Refactor `XmlDataResponseFormatter::format()` and `JsonDataResponseFormatter::format()` methods (@vjik)
+- Enh #101: Refactor `XmlDataResponseFormatter::format()` and `JsonDataResponseFormatter::format()` methods (@vjik)
 
 ## 2.1.0 March 03, 2024
 
