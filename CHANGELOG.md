@@ -1,5 +1,9 @@
 # Yii Data Response Change Log
 
+## 2.1.2 under development
+
+- no changes in this release.
+
 ## 2.1.1 August 18, 2025
 
 - Chg #97, #100: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
