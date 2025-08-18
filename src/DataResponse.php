@@ -207,7 +207,6 @@ final class DataResponse implements ResponseInterface
      * @return bool Whether the formatter has been set.
      *
      * @psalm-assert-if-true !null $this->responseFormatter
-     * @psalm-assert-if-false null $this->responseFormatter
      */
     public function hasResponseFormatter(): bool
     {
