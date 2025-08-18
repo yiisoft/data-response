@@ -15,7 +15,7 @@ use function is_scalar;
 use function sprintf;
 
 /**
- * HtmlDataResponseFormatter formats the response data as HTML.
+ * `HtmlDataResponseFormatter` formats the response data as HTML.
  */
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {

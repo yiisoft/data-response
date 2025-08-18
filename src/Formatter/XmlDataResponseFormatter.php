@@ -21,7 +21,7 @@ use function is_int;
 use function is_object;
 
 /**
- * XmlDataResponseFormatter formats the response data as XML.
+ * `XmlDataResponseFormatter` formats the response data as XML.
  */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {
@@ -51,23 +51,22 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        if ($dataResponse->hasData()) {
-            $dom = new DOMDocument($this->version, $this->encoding);
-
-            $data = $dataResponse->getData();
-
-            if (!empty($this->rootTag)) {
-                $root = new DOMElement($this->rootTag);
-                $dom->appendChild($root);
-                $this->buildXml($dom, $root, $data);
-            } else {
-                $this->buildXml($dom, $dom, $data);
-            }
-
-            $content = (string) $dom->saveXML();
+        if (!$dataResponse->hasData()) {
+            return $this->addToResponse($dataResponse->getResponse());
         }
 
-        return $this->addToResponse($dataResponse->getResponse(), $content ?? null);
+        $dom = new DOMDocument($this->version, $this->encoding);
+        $data = $dataResponse->getData();
+
+        if (empty($this->rootTag)) {
+            $this->buildXml($dom, $dom, $data);
+            return $this->addToResponse($dataResponse->getResponse(), (string) $dom->saveXML());
+        }
+
+        $root = new DOMElement($this->rootTag);
+        $dom->appendChild($root);
+        $this->buildXml($dom, $root, $data);
+        return $this->addToResponse($dataResponse->getResponse(), (string) $dom->saveXML());
     }
 
     /**
@@ -109,6 +108,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         }
 
         if (is_array($data) || ($data instanceof Traversable && !($data instanceof XmlDataInterface))) {
+            /** @var string|int $name */
             foreach ($data as $name => $value) {
                 if (is_object($value)) {
                     $this->buildObject($dom, $element, $value, $name);
@@ -123,6 +123,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
                     continue;
                 }
 
+                /** @psalm-var scalar $value */
+
                 $this->setScalarValueToDomElement($child, $value);
             }
 
@@ -133,6 +135,8 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
             $this->buildObject($dom, $element, $data);
             return;
         }
+
+        /** @psalm-var scalar $data */
 
         $this->setScalarValueToDomElement($element, $data);
     }
