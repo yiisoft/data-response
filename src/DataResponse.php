@@ -163,7 +163,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withAddedHeader($name, $value);
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -176,9 +176,9 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withBody($body);
+        $new->resetFormatted();
         $new->dataStream = $body;
         $new->forcedBody = true;
-        $new->formatted = false;
         $new->data = null;
         return $new;
     }
@@ -195,7 +195,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withHeader($name, $value);
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -225,7 +225,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withProtocolVersion($version);
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -241,7 +241,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withStatus($code, $reasonPhrase);
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -252,7 +252,7 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->responseFormatter = $responseFormatter;
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -297,8 +297,7 @@ final class DataResponse implements ResponseInterface
 
         $new = clone $this;
         $new->data = $data;
-        $new->dataStream = null;
-        $new->formatted = false;
+        $new->resetFormatted();
         return $new;
     }
 
@@ -404,5 +403,11 @@ final class DataResponse implements ResponseInterface
 
         $this->resource = $resource;
         $this->response = $response->withBody($streamFactory->createStreamFromResource($this->resource));
+    }
+
+    private function resetFormatted(): void
+    {
+        $this->dataStream = null;
+        $this->formatted = false;
     }
 }
