@@ -65,10 +65,8 @@ final class ContentNegotiator implements MiddlewareInterface
         $response = $handler->handle($request);
         if ($response instanceof DataResponse && !$response->hasResponseFormatter()) {
             foreach ($this->acceptProvider->get($request) as $accept) {
-                foreach ($this->contentFormatters as $contentType => $formatter) {
-                    if ($contentType === $accept) {
-                        return $response->withResponseFormatter($formatter);
-                    }
+                if (isset($this->contentFormatters[$accept])) {
+                    return $response->withResponseFormatter($this->contentFormatters[$accept]);
                 }
             }
         }
