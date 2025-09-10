@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Middleware\AcceptProvider;
 
 use Psr\Http\Message\ServerRequestInterface;
-
 use Yiisoft\Http\Method;
 
 use function is_array;

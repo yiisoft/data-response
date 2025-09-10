@@ -13,7 +13,6 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\Middleware\AcceptProvider\AcceptProviderInterface;
 use Yiisoft\DataResponse\Middleware\AcceptProvider\HeaderAcceptProvider;
-use Yiisoft\Http\Header;
 
 use function gettype;
 use function is_string;
