@@ -21,14 +21,14 @@ final class RequestParameterAcceptProvider implements AcceptProviderInterface
     public function get(ServerRequestInterface $request): array
     {
         return $request->getMethod() === Method::GET
-            ? $this->fget($request)
-            : [...$this->post($request), ...$this->fget($request)];
+            ? $this->fromQueryParams($request)
+            : [...$this->fromParsedBody($request), ...$this->fromQueryParams($request)];
     }
 
     /**
      * @return string[]
      */
-    public function fget(ServerRequestInterface $request): array
+    public function fromQueryParams(ServerRequestInterface $request): array
     {
         return $this->prepareValue($request->getQueryParams()[$this->name] ?? null);
     }
@@ -36,7 +36,7 @@ final class RequestParameterAcceptProvider implements AcceptProviderInterface
     /**
      * @return string[]
      */
-    private function post(ServerRequestInterface $request): array
+    private function fromParsedBody(ServerRequestInterface $request): array
     {
         $body = $request->getParsedBody();
         return is_array($body)
