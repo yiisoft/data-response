@@ -1,5 +1,9 @@
 # Yii Data Response Change Log
 
+## 2.1.3 under development
+
+- no changes in this release.
+
 ## 2.1.2 December 18, 2025
 
 - Enh #104: Add PHP 8.5 support (@vjik)
