@@ -2,7 +2,7 @@
 
 ## 2.1.3 under development
 
-- no changes in this release.
+- Enh #105: Add Content-Length header to response (@olegbaturin)
 
 ## 2.1.2 December 18, 2025
 
