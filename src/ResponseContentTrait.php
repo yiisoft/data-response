@@ -50,6 +50,8 @@ trait ResponseContentTrait
             $response
                 ->getBody()
                 ->write($content);
+
+            $response = $response->withHeader(Header::CONTENT_LENGTH, (string) $response->getBody()->getSize());
         }
 
         return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");

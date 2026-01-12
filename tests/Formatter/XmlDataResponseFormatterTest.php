@@ -9,6 +9,7 @@ use stdClass;
 use Yiisoft\DataResponse\Formatter\XmlDataInterface;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\TestCase;
+use Yiisoft\Http\Header;
 
 final class XmlDataResponseFormatterTest extends TestCase
 {
@@ -26,7 +27,8 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['65'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -46,7 +48,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(["application/xml; charset={$encoding}"], $result->getHeader('Content-Type'));
+        $this->assertSame(["application/xml; charset={$encoding}"], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithVersion(): void
@@ -66,7 +68,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithRootTag(): void
@@ -85,7 +87,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithoutRootTag(): void
@@ -104,7 +106,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithEmptyRootTag(): void
@@ -121,7 +123,27 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+    }
+
+    public function testWithEmptyResponse(): void
+    {
+        $dataResponse = $this->createDataResponse(null);
+        $result = (new XmlDataResponseFormatter())
+            ->withRootTag('')
+            ->format($dataResponse);
+        $result
+            ->getBody()
+            ->rewind();
+
+        $this->assertSame(
+            '',
+            $result
+                ->getBody()
+                ->getContents()
+        );
+        $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithContentType(): void
@@ -140,7 +162,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents()
         );
-        $this->assertSame(['text/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testScalarValues(): void

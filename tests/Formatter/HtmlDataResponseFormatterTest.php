@@ -7,24 +7,26 @@ namespace Yiisoft\DataResponse\Tests\Formatter;
 use RuntimeException;
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\TestCase;
+use Yiisoft\Http\Header;
 
 final class HtmlDataResponseFormatterTest extends TestCase
 {
     public function testCorrectFormat(): void
     {
-        $dataResponse = $this->createDataResponse('test');
+        $dataResponse = $this->createDataResponse('<div>test</div>');
         $result = (new HtmlDataResponseFormatter())->format($dataResponse);
         $result
             ->getBody()
             ->rewind();
 
         $this->assertSame(
-            'test',
+            '<div>test</div>',
             $result
                 ->getBody()
                 ->getContents(),
         );
-        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['15'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -43,7 +45,7 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents(),
         );
-        $this->assertSame(['text/html; charset=ISO-8859-1'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/html; charset=ISO-8859-1'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithContentType(): void
@@ -62,7 +64,7 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents(),
         );
-        $this->assertSame('text/plain; charset=UTF-8', $result->getHeaderLine('Content-Type'));
+        $this->assertSame('text/plain; charset=UTF-8', $result->getHeaderLine(Header::CONTENT_TYPE));
     }
 
     public function testWithIncorrectType(): void
@@ -89,7 +91,8 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents(),
         );
-        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testDataWithObject(): void
@@ -113,7 +116,7 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getBody()
                 ->getContents(),
         );
-        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testImmutability(): void

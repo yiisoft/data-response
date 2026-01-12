@@ -7,6 +7,7 @@ namespace Yiisoft\DataResponse\Tests\Formatter;
 use LogicException;
 use Yiisoft\DataResponse\Formatter\PlainTextDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\TestCase;
+use Yiisoft\Http\Header;
 
 final class PlainTextDataResponseFormatterTest extends TestCase
 {
@@ -20,7 +21,8 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             'test',
             $result->getBody()->getContents(),
         );
-        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame(['4'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -35,7 +37,7 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             'test',
             $result->getBody()->getContents(),
         );
-        $this->assertSame(['text/plain; charset=ISO-8859-1'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/plain; charset=ISO-8859-1'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testWithContentType(): void
@@ -50,7 +52,7 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             'test',
             $result->getBody()->getContents(),
         );
-        $this->assertSame('text/html; charset=UTF-8', $result->getHeaderLine('Content-Type'));
+        $this->assertSame('text/html; charset=UTF-8', $result->getHeaderLine(Header::CONTENT_TYPE));
     }
 
     public function testWithIncorrectType(): void
@@ -73,7 +75,8 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             '',
             $result->getBody()->getContents(),
         );
-        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
+        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testDataWithStringableObject(): void
@@ -93,7 +96,7 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             'test',
             $result->getBody()->getContents(),
         );
-        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader('Content-Type'));
+        $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
     }
 
     public function testImmutability(): void
