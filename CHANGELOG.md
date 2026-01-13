@@ -2,7 +2,7 @@
 
 ## 2.1.3 under development
 
-- Enh #105: Add Content-Length header to response (@olegbaturin)
+- Enh #105: Add automatic `Content-Length` header generation to `DataResponse` (@olegbaturin)
 
 ## 2.1.2 December 18, 2025
 

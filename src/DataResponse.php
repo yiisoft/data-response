@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Yiisoft\Http\Header;
 
 use function ftruncate;
 use function is_callable;
@@ -32,6 +33,7 @@ final class DataResponse implements ResponseInterface
     private $resource;
 
     private bool $formatted = false;
+    private bool $formattedHeaders = false;
     private bool $forcedBody = false;
     private ResponseInterface $response;
     private ?StreamInterface $dataStream = null;
@@ -90,18 +92,21 @@ final class DataResponse implements ResponseInterface
     public function getHeader($name): array
     {
         $this->formatResponse();
+        $this->formatHeaders();
         return $this->response->getHeader($name);
     }
 
     public function getHeaderLine($name): string
     {
         $this->formatResponse();
+        $this->formatHeaders();
         return $this->response->getHeaderLine($name);
     }
 
     public function getHeaders(): array
     {
         $this->formatResponse();
+        $this->formatHeaders();
         return $this->response->getHeaders();
     }
 
@@ -126,6 +131,7 @@ final class DataResponse implements ResponseInterface
     public function hasHeader($name): bool
     {
         $this->formatResponse();
+        $this->formatHeaders();
         return $this->response->hasHeader($name);
     }
 
@@ -288,6 +294,22 @@ final class DataResponse implements ResponseInterface
         $this->response = $response;
     }
 
+    private function formatHeaders(): void
+    {
+        if ($this->formattedHeaders) {
+            return;
+        }
+
+        $contentLength = $this->getBody()->getSize();
+        if ($contentLength === null || $contentLength === 0) {
+            $this->response = $this->response->withoutHeader(Header::CONTENT_LENGTH);
+        } else {
+            $this->response = $this->response->withHeader(Header::CONTENT_LENGTH, (string) $contentLength);
+        }
+
+        $this->formattedHeaders = true;
+    }
+
     /**
      * Clears a response body.
      */
@@ -342,5 +364,6 @@ final class DataResponse implements ResponseInterface
     {
         $this->dataStream = null;
         $this->formatted = false;
+        $this->formattedHeaders = false;
     }
 }
