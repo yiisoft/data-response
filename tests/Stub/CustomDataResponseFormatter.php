@@ -54,12 +54,19 @@ final class CustomDataResponseFormatter implements DataResponseFormatterInterfac
 
     public function format(DataResponse $dataResponse): ResponseInterface
     {
-        return new Response(
-            $this->statusCode,
-            $this->headers,
-            $this->body,
-            $this->protocol,
-            $this->reasonPhrase
+        $response = new Response(
+            statusCode: $this->statusCode,
+            headers: $this->headers,
+            protocol: $this->protocol,
+            reasonPhrase: $this->reasonPhrase
         );
+
+        if ($this->body !== null) {
+            $response
+                ->getBody()
+                ->write($this->body);
+        }
+
+        return $response;
     }
 }
