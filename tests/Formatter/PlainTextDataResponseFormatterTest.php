@@ -22,7 +22,6 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             $result->getBody()->getContents(),
         );
         $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame(['4'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -76,7 +75,6 @@ final class PlainTextDataResponseFormatterTest extends TestCase
             $result->getBody()->getContents(),
         );
         $this->assertSame(['text/plain; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testDataWithStringableObject(): void

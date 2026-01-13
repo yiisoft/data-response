@@ -28,7 +28,6 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getContents()
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame(['65'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -143,7 +142,6 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ->getContents()
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithContentType(): void

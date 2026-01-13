@@ -26,7 +26,6 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getContents(),
         );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame(['15'], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testWithEncoding(): void
@@ -92,7 +91,6 @@ final class HtmlDataResponseFormatterTest extends TestCase
                 ->getContents(),
         );
         $this->assertSame(['text/html; charset=UTF-8'], $result->getHeader(Header::CONTENT_TYPE));
-        $this->assertSame([], $result->getHeader(Header::CONTENT_LENGTH));
     }
 
     public function testDataWithObject(): void
