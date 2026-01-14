@@ -16,8 +16,7 @@ final class DataResponseFactory implements DataResponseFactoryInterface
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-    ) {
-    }
+    ) {}
 
     public function createResponse($data = null, int $code = Status::OK, string $reasonPhrase = ''): DataResponse
     {

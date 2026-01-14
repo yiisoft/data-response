@@ -11,6 +11,9 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 use Yiisoft\Json\Json;
 
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 /**
  * `JsonDataResponseFormatter` formats the response data as JSON.
  */
@@ -46,7 +49,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 
         return $this->addToResponse(
             $dataResponse->getResponse(),
-            Json::encode($dataResponse->getData(), $this->options)
+            Json::encode($dataResponse->getData(), $this->options),
         );
     }
 

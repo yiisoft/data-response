@@ -20,7 +20,7 @@ final class FormatDataResponseTest extends TestCase
         $dataResponse = $this->createDataResponse(['test' => 'test']);
         $result = (new FormatDataResponse(new JsonDataResponseFormatter()))->process(
             $this->createRequest(),
-            $this->createRequestHandler($dataResponse)
+            $this->createRequestHandler($dataResponse),
         );
 
         $result
@@ -42,7 +42,7 @@ final class FormatDataResponseTest extends TestCase
 
         $result = (new FormatDataResponseAsJson(new JsonDataResponseFormatter()))->process(
             $this->createRequest(),
-            $this->createRequestHandler($dataResponse)
+            $this->createRequestHandler($dataResponse),
         );
 
         $result
@@ -64,7 +64,7 @@ final class FormatDataResponseTest extends TestCase
 
         $result = (new FormatDataResponseAsHtml(new HtmlDataResponseFormatter()))->process(
             $this->createRequest(),
-            $this->createRequestHandler($dataResponse)
+            $this->createRequestHandler($dataResponse),
         );
 
         $result
@@ -86,7 +86,7 @@ final class FormatDataResponseTest extends TestCase
 
         $result = (new FormatDataResponseAsXml(new XmlDataResponseFormatter()))->process(
             $this->createRequest(),
-            $this->createRequestHandler($dataResponse)
+            $this->createRequestHandler($dataResponse),
         );
 
         $result

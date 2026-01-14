@@ -11,6 +11,9 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\ResponseContentTrait;
 
+use function is_scalar;
+use function sprintf;
+
 /**
  * `PlainTextDataResponseFormatter` formats the response data as plain text.
  */

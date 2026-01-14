@@ -40,7 +40,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
                 sprintf(
                     'Data must be either a scalar value, null, or a stringable object. %s given.',
                     get_debug_type($data),
-                )
+                ),
             );
         }
 

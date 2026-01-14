@@ -17,7 +17,7 @@ final class FormatDataResponseAsPlainTextTest extends TestCase
 
         $response = $middleware->process(
             $this->createRequest(),
-            $this->createRequestHandler($dataResponse)
+            $this->createRequestHandler($dataResponse),
         );
 
         $response->getBody()->rewind();

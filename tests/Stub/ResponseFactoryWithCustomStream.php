@@ -13,9 +13,7 @@ use Psr\Http\Message\StreamInterface;
 
 final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
 {
-    private function __construct(private StreamInterface $stream)
-    {
-    }
+    private function __construct(private StreamInterface $stream) {}
 
     public static function create(string $stream = 'php://memory', string $mode = 'wb+'): self
     {
@@ -24,7 +22,7 @@ final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
 
     public static function createWithDisabledDetachMethod(): self
     {
-        return new self(new class () implements StreamInterface {
+        return new self(new class implements StreamInterface {
             use StreamTrait {
                 detach as private detachInternal;
             }
@@ -50,7 +48,7 @@ final class ResponseFactoryWithCustomStream implements ResponseFactoryInterface
             public function __construct(
                 StreamInterface $stream,
                 int $statusCode = 200,
-                string $reasonPhrase = ''
+                string $reasonPhrase = '',
             ) {
                 $this->init($statusCode, $reasonPhrase, [], $stream);
             }

@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 
 use function ftruncate;
 use function is_callable;
@@ -22,7 +23,7 @@ use function sprintf;
  * A wrapper around PSR-7 response that is assigned raw data to be formatted with a formatter later.
  *
  * For example, `['name' => 'Dmitriy']` to be formatted as JSON using
- * {@see \Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
+ * {@see JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
  */
 final class DataResponse implements ResponseInterface
 {
@@ -49,7 +50,7 @@ final class DataResponse implements ResponseInterface
         int $code,
         string $reasonPhrase,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->createResponse($code, $reasonPhrase, $responseFactory, $streamFactory);
     }
@@ -313,7 +314,7 @@ final class DataResponse implements ResponseInterface
         int $code,
         string $reasonPhrase,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ): void {
         $response = $responseFactory->createResponse($code, $reasonPhrase);
         $stream = $response->getBody();

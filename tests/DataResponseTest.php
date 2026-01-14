@@ -170,7 +170,7 @@ final class DataResponseTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'The "Yiisoft\DataResponse\DataResponseFormatterInterface::format()"'
-             . ' method should not return instance of "Yiisoft\DataResponse\DataResponse".'
+             . ' method should not return instance of "Yiisoft\DataResponse\DataResponse".',
         );
 
         $dataResponse = $this->createDataResponse('test');
@@ -201,7 +201,7 @@ final class DataResponseTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'The data is "int" not a string. To get non-string data, use the'
-            . ' "Yiisoft\DataResponse\DataResponse::getData()" method.'
+            . ' "Yiisoft\DataResponse\DataResponse::getData()" method.',
         );
         $dataResponse = $this->createDataResponse(100);
         $dataResponse
@@ -366,7 +366,7 @@ final class DataResponseTest extends TestCase
             'test2',
             $dataResponse
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
 
         $dataResponse = $dataResponse
@@ -540,7 +540,7 @@ final class DataResponseTest extends TestCase
         $dataResponse = $this->createDataResponse('test');
         $this->assertSame('test', $dataResponse->getData());
 
-        $dataResponse = $this->createDataResponse(fn () => 'test2');
+        $dataResponse = $this->createDataResponse(fn() => 'test2');
         $this->assertSame('test2', $dataResponse->getData());
     }
 

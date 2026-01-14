@@ -8,6 +8,9 @@ use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Tests\TestCase;
 use Yiisoft\Http\Header;
 
+use const JSON_BIGINT_AS_STRING;
+use const JSON_FORCE_OBJECT;
+
 final class JsonDataResponseFormatterTest extends TestCase
 {
     public function testCorrectFormat(): void
