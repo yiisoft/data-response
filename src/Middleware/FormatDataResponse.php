@@ -19,8 +19,7 @@ class FormatDataResponse implements MiddlewareInterface
 {
     public function __construct(
         private DataResponseFormatterInterface $responseFormatter,
-    ) {
-    }
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

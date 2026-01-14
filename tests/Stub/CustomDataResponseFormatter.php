@@ -59,7 +59,7 @@ final class CustomDataResponseFormatter implements DataResponseFormatterInterfac
             $this->headers,
             $this->body,
             $this->protocol,
-            $this->reasonPhrase
+            $this->reasonPhrase,
         );
     }
 }

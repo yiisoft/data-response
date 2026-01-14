@@ -78,7 +78,7 @@ final class PlainTextDataResponseFormatterTest extends TestCase
 
     public function testDataWithStringableObject(): void
     {
-        $data = new class () {
+        $data = new class {
             public function __toString(): string
             {
                 return 'test';

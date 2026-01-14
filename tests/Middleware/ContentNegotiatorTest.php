@@ -77,7 +77,7 @@ final class ContentNegotiatorTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'Invalid formatter. A "Yiisoft\DataResponse\DataResponseFormatterInterface"'
-            . ' instance is expected, "stdClass" is received.'
+            . ' instance is expected, "stdClass" is received.',
         );
         new ContentNegotiator([
             'text/html' => new HtmlDataResponseFormatter(),

@@ -13,8 +13,11 @@ use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use PHPUnit\Framework\TestCase;
 
-final class ConfigTest extends \PHPUnit\Framework\TestCase
+use function dirname;
+
+final class ConfigTest extends TestCase
 {
     public function testDiWeb(): void
     {
@@ -34,12 +37,11 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
         return new Container(
             ContainerConfig::create()->withDefinitions(
                 $this->getDiConfig($postfix)
-                +
-                [
+                + [
                     ResponseFactoryInterface::class => $this->createMock(ResponseFactoryInterface::class),
                     StreamFactoryInterface::class => $this->createMock(StreamFactoryInterface::class),
-                ]
-            )
+                ],
+            ),
         );
     }
 

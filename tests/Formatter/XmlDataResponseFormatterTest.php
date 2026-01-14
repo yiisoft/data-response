@@ -24,7 +24,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -44,7 +44,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>', '1.0', $encoding),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(["application/xml; charset={$encoding}"], $result->getHeader('Content-Type'));
     }
@@ -64,7 +64,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>', $version),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -83,7 +83,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<exampleRootTag>test</exampleRootTag>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -102,7 +102,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<tag>value</tag>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -119,7 +119,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response/>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['application/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -138,7 +138,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response>test</response>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
         $this->assertSame(['text/xml; charset=UTF-8'], $result->getHeader('Content-Type'));
     }
@@ -159,11 +159,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                         <item>false</item>
                         <item>100.2</item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -195,11 +195,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <item>false</item>
                         </item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -220,11 +220,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <item/>
                         </array-value>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -268,11 +268,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             </array>
                         </item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -307,11 +307,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <foo>bar</foo>
                         </xml-data>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -346,11 +346,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <foo>bar</foo>
                         </xml-data>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -366,13 +366,13 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response><object/></response>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
     public function testEmptyObjectValuesImplementXmlDataInterface(): void
     {
-        $dataResponse = $this->createDataResponse(['object' => new class () implements XmlDataInterface {
+        $dataResponse = $this->createDataResponse(['object' => new class implements XmlDataInterface {
             public function xmlTagName(): string
             {
                 return 'empty';
@@ -397,7 +397,7 @@ final class XmlDataResponseFormatterTest extends TestCase
             $this->xml('<response><empty/></response>'),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -424,11 +424,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             </array>
                         </dummy-class>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -475,11 +475,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <array><bar>baz</bar></array>
                         </dummy-class>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -525,11 +525,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             </array>
                         </dummy-class>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -589,17 +589,17 @@ final class XmlDataResponseFormatterTest extends TestCase
                         <item>11</item>
                         <item>baz</item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
     public function testObjectWithPublicProperties(): void
     {
-        $object = new class () {
+        $object = new class {
             public int $x = 7;
             public float $y = 42;
             public string $name = 'yii';
@@ -622,11 +622,11 @@ final class XmlDataResponseFormatterTest extends TestCase
                             <name>yii</name>
                         </item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
     }
 
@@ -650,12 +650,21 @@ final class XmlDataResponseFormatterTest extends TestCase
                         <validName>test</validName>
                         <item>test</item>
                     </response>
-                EOF
+                EOF,
             ),
             $result
                 ->getBody()
-                ->getContents()
+                ->getContents(),
         );
+    }
+
+    public function testImmutability(): void
+    {
+        $formatter = new XmlDataResponseFormatter();
+        $this->assertNotSame($formatter, $formatter->withContentType('text/plain'));
+        $this->assertNotSame($formatter, $formatter->withEncoding('utf-8'));
+        $this->assertNotSame($formatter, $formatter->withRootTag('order'));
+        $this->assertNotSame($formatter, $formatter->withVersion('5.45'));
     }
 
     private function createDummyObject(string $string, int $int, float $float, array $array, array $attrs = []): object
@@ -667,8 +676,7 @@ final class XmlDataResponseFormatterTest extends TestCase
                 public float $float,
                 public array $array,
                 public array $attrs = [],
-            ) {
-            }
+            ) {}
 
             public function xmlTagName(): string
             {
@@ -690,14 +698,5 @@ final class XmlDataResponseFormatterTest extends TestCase
                 ];
             }
         };
-    }
-
-    public function testImmutability(): void
-    {
-        $formatter = new XmlDataResponseFormatter();
-        $this->assertNotSame($formatter, $formatter->withContentType('text/plain'));
-        $this->assertNotSame($formatter, $formatter->withEncoding('utf-8'));
-        $this->assertNotSame($formatter, $formatter->withRootTag('order'));
-        $this->assertNotSame($formatter, $formatter->withVersion('5.45'));
     }
 }
