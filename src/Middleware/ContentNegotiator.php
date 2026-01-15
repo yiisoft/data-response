@@ -11,7 +11,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
-use Yiisoft\Http\Header;
+use Yiisoft\DataResponse\Middleware\AcceptProvider\AcceptProviderInterface;
+use Yiisoft\DataResponse\Middleware\AcceptProvider\HeaderAcceptProvider;
 
 use function gettype;
 use function is_string;
@@ -35,8 +36,10 @@ final class ContentNegotiator implements MiddlewareInterface
      *
      * @psalm-param array<string, DataResponseFormatterInterface> $contentFormatters
      */
-    public function __construct(array $contentFormatters)
-    {
+    public function __construct(
+        array $contentFormatters,
+        private readonly AcceptProviderInterface $acceptProvider = new HeaderAcceptProvider(),
+    ) {
         $this->checkFormatters($contentFormatters);
         $this->contentFormatters = $contentFormatters;
     }
@@ -61,13 +64,9 @@ final class ContentNegotiator implements MiddlewareInterface
     {
         $response = $handler->handle($request);
         if ($response instanceof DataResponse && !$response->hasResponseFormatter()) {
-            $accepted = $request->getHeader(Header::ACCEPT);
-
-            foreach ($accepted as $accept) {
-                foreach ($this->contentFormatters as $contentType => $formatter) {
-                    if (str_contains($accept, $contentType)) {
-                        return $response->withResponseFormatter($formatter);
-                    }
+            foreach ($this->acceptProvider->get($request) as $accept) {
+                if (isset($this->contentFormatters[$accept])) {
+                    return $response->withResponseFormatter($this->contentFormatters[$accept]);
                 }
             }
         }
