@@ -28,8 +28,7 @@ final class JsonResponseFormatter implements ResponseFormatterInterface
         private readonly string $contentType = 'application/json',
         private readonly string $encoding = 'UTF-8',
         private readonly int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-    ) {
-    }
+    ) {}
 
     /**
      * @inheritDoc

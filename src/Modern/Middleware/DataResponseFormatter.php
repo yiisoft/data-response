@@ -15,8 +15,7 @@ class DataResponseFormatter implements MiddlewareInterface
 {
     public function __construct(
         private readonly ResponseFormatterInterface $defaultFormatter,
-    ) {
-    }
+    ) {}
 
     final public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

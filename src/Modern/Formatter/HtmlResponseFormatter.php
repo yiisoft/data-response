@@ -25,8 +25,7 @@ final class HtmlResponseFormatter implements ResponseFormatterInterface
     public function __construct(
         private readonly string $contentType = 'text/html',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(mixed $data, ResponseInterface $response): ResponseInterface
     {
