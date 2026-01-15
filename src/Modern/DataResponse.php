@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Modern;
 
-use LogicException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -14,8 +13,7 @@ final class DataResponse implements ResponseInterface
     public function __construct(
         public readonly mixed $data,
         private ResponseInterface $response,
-    ) {
-    }
+    ) {}
 
     public function getProtocolVersion(): string
     {

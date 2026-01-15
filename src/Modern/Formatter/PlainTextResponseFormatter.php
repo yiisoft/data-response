@@ -25,8 +25,7 @@ final class PlainTextResponseFormatter implements ResponseFormatterInterface
     public function __construct(
         private readonly string $contentType = 'text/plain',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(mixed $data, ResponseInterface $response): ResponseInterface
     {
