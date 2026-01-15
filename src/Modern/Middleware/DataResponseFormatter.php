@@ -14,7 +14,7 @@ use Yiisoft\DataResponse\Modern\ResponseFormatterInterface;
 class DataResponseFormatter implements MiddlewareInterface
 {
     public function __construct(
-        private readonly ResponseFormatterInterface $defaultFormatter,
+        private readonly ResponseFormatterInterface $formatter,
     ) {
     }
 
@@ -22,7 +22,7 @@ class DataResponseFormatter implements MiddlewareInterface
     {
         $response = $handler->handle($request);
         if ($response instanceof DataResponse) {
-            $response = $this->defaultFormatter->format($response->data, $response->getResponse());
+            $response = $this->formatter->format($response->data, $response->getResponse());
         }
         return $response;
     }
