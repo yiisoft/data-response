@@ -8,13 +8,9 @@ use LogicException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Yiisoft\DataResponse\DataResponseFormatterInterface;
 
 final class DataResponse implements ResponseInterface
 {
-    private bool $formatted = false;
-    public ?DataResponseFormatterInterface $responseFormatter = null;
-
     public function __construct(
         public readonly mixed $data,
         private ResponseInterface $response,
@@ -76,10 +72,6 @@ final class DataResponse implements ResponseInterface
 
     public function getBody(): StreamInterface
     {
-        if (!$this->formatted) {
-            throw new LogicException('The response body is not formatted.');
-        }
-
         return $this->response->getBody();
     }
 
@@ -87,7 +79,6 @@ final class DataResponse implements ResponseInterface
     {
         $new = clone $this;
         $new->response = $this->response->withBody($body);
-        $new->formatted = true;
         return $new;
     }
 
@@ -106,5 +97,10 @@ final class DataResponse implements ResponseInterface
     public function getReasonPhrase(): string
     {
         return $this->response->getReasonPhrase();
+    }
+
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
     }
 }
