@@ -4,15 +4,54 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Modern\Middleware;
 
-use Yiisoft\DataResponse\Modern\Formatter\JsonResponseFormatter;
+use JsonException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Yiisoft\DataResponse\Modern\DataResponse;
+use Yiisoft\Http\Header;
+use Yiisoft\Json\Json;
+
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Formats DataResponse as JSON.
  */
-final class JsonDataResponseFormatter extends DataResponseFormatter
+final class JsonDataResponseFormatter implements MiddlewareInterface
 {
-    public function __construct(JsonResponseFormatter $formatter = new JsonResponseFormatter())
+    /**
+     * @param string $contentType The Content-Type header for the response.
+     * @param string $encoding The encoding for the Content-Type header.
+     * @param int $options The encoding options. For more details please refer to
+     * {@link https://www.php.net/manual/en/function.json-encode.php}.
+     */
+    public function __construct(
+        private readonly string $contentType = 'application/json',
+        private readonly string $encoding = 'UTF-8',
+        private readonly int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+    ) {}
+
+    /**
+     * @throws JsonException
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        parent::__construct($formatter);
+        $response = $handler->handle($request);
+        if (!$response instanceof DataResponse) {
+            return $response;
+        }
+
+        $data = $response->data;
+        $response = $response->getResponse();
+
+        if ($data !== null) {
+            $response
+                ->getBody()
+                ->write(Json::encode($data, $this->options));
+        }
+
+        return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");
     }
 }

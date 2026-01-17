@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Formatter;
+namespace Yiisoft\DataResponse\Modern;
 
 /**
  * XmlFormatDataInterface provides methods used when formatting objects {@see XmlDataResponseFormatter} as XML data.
