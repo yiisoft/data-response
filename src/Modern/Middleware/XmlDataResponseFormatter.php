@@ -10,6 +10,7 @@ use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
@@ -37,6 +38,7 @@ final class XmlDataResponseFormatter implements MiddlewareInterface
      * @param string $rootTag The name of the root element. If an empty value is set, the root tag should not be added.
      */
     public function __construct(
+        private readonly StreamFactoryInterface $streamFactory,
         private readonly string $contentType = 'application/xml',
         private readonly string $encoding = 'UTF-8',
         private readonly string $version = '1.0',
@@ -50,7 +52,7 @@ final class XmlDataResponseFormatter implements MiddlewareInterface
             return $response;
         }
 
-        $data = $response->data;
+        $data = $response->getData();
         $response = $response->getResponse();
 
         if (empty($data)) {
@@ -61,18 +63,18 @@ final class XmlDataResponseFormatter implements MiddlewareInterface
 
         if (empty($this->rootTag)) {
             $this->buildXml($dom, $dom, $data);
-            $response
-                ->getBody()
-                ->write((string) $dom->saveXML());
+            $response = $response->withBody(
+                $this->streamFactory->createStream((string) $dom->saveXML()),
+            );
             return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");
         }
 
         $root = new DOMElement($this->rootTag);
         $dom->appendChild($root);
         $this->buildXml($dom, $root, $data);
-        $response
-            ->getBody()
-            ->write((string) $dom->saveXML());
+        $response = $response->withBody(
+            $this->streamFactory->createStream((string) $dom->saveXML()),
+        );
         return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");
     }
 

@@ -7,6 +7,7 @@ namespace Yiisoft\DataResponse\Modern\Middleware;
 use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Stringable;
@@ -26,6 +27,7 @@ final class PlainTextDataResponseFormatter implements MiddlewareInterface
      * @param string $encoding The encoding for the Content-Type header.
      */
     public function __construct(
+        private readonly StreamFactoryInterface $streamFactory,
         private readonly string $contentType = 'text/plain',
         private readonly string $encoding = 'UTF-8',
     ) {}
@@ -37,7 +39,7 @@ final class PlainTextDataResponseFormatter implements MiddlewareInterface
             return $response;
         }
 
-        $data = $response->data;
+        $data = $response->getData();
         $response = $response->getResponse();
 
         if (!is_scalar($data) && $data !== null && !$data instanceof Stringable) {
@@ -48,9 +50,9 @@ final class PlainTextDataResponseFormatter implements MiddlewareInterface
         }
 
         if (!empty($data)) {
-            $response
-                ->getBody()
-                ->write((string) $data);
+            $response = $response->withBody(
+                $this->streamFactory->createStream((string) $data),
+            );
         }
 
         return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");

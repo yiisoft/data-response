@@ -7,6 +7,7 @@ namespace Yiisoft\DataResponse\Modern\Middleware;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\DataResponse\Modern\DataResponse;
@@ -28,6 +29,7 @@ final class JsonDataResponseFormatter implements MiddlewareInterface
      * {@link https://www.php.net/manual/en/function.json-encode.php}.
      */
     public function __construct(
+        private readonly StreamFactoryInterface $streamFactory,
         private readonly string $contentType = 'application/json',
         private readonly string $encoding = 'UTF-8',
         private readonly int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
@@ -43,13 +45,13 @@ final class JsonDataResponseFormatter implements MiddlewareInterface
             return $response;
         }
 
-        $data = $response->data;
+        $data = $response->getData();
         $response = $response->getResponse();
 
         if ($data !== null) {
-            $response
-                ->getBody()
-                ->write(Json::encode($data, $this->options));
+            $response = $response->withBody(
+                $this->streamFactory->createStream(Json::encode($data, $this->options)),
+            );
         }
 
         return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");

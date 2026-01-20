@@ -11,9 +11,21 @@ use Psr\Http\Message\StreamInterface;
 final class DataResponse implements ResponseInterface
 {
     public function __construct(
-        public readonly mixed $data,
         private ResponseInterface $response,
+        private mixed $data,
     ) {}
+
+    public function getData(): mixed
+    {
+        return $this->data;
+    }
+
+    public function withData(mixed $data): self
+    {
+        $new = clone $this;
+        $new->data = $data;
+        return $new;
+    }
 
     public function getProtocolVersion(): string
     {
