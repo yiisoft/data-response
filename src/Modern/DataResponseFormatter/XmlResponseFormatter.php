@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Formatter;
+namespace Yiisoft\DataResponse\Modern\DataResponseFormatter;
 
 use DOMDocument;
 use DOMElement;

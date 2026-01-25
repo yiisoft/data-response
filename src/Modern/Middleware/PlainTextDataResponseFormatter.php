@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Modern\Middleware;
 
-use Yiisoft\DataResponse\Modern\Formatter\PlainTextResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponseFormatter\PlainTextResponseFormatter;
 
 /**
  * Formats DataResponse as plain text.

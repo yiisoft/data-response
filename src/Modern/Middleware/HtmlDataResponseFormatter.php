@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Modern\Middleware;
 
-use Yiisoft\DataResponse\Modern\Formatter\HtmlResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponseFormatter\HtmlResponseFormatter;
 
 /**
  * Formats DataResponse as HTML.
