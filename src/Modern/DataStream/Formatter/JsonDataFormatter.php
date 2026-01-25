@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataFormatter;
+namespace Yiisoft\DataResponse\Modern\DataStream\Formatter;
 
 use JsonException;
-use Yiisoft\DataResponse\Modern\DataFormatterInterface;
+use Yiisoft\DataResponse\Modern\DataStream\DataFormatterInterface;
 use Yiisoft\Json\Json;
 
 use const JSON_UNESCAPED_SLASHES;

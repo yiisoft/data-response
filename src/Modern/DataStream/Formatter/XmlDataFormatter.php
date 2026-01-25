@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataFormatter;
+namespace Yiisoft\DataResponse\Modern\DataStream\Formatter;
 
 use DOMDocument;
 use DOMElement;
 use DOMException;
 use DOMText;
 use Traversable;
-use Yiisoft\DataResponse\Modern\DataFormatterInterface;
-use Yiisoft\DataResponse\Modern\XmlDataInterface;
+use Yiisoft\DataResponse\Modern\DataStream\DataFormatterInterface;
 use Yiisoft\Strings\NumericHelper;
 
 use function is_array;

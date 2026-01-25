@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern;
+namespace Yiisoft\DataResponse\Modern\DataStream;
 
 use Psr\Http\Message\StreamInterface;
-use Yiisoft\DataResponse\Modern\DataFormatter\StringDataFormatter;
+use Yiisoft\DataResponse\Modern\DataStream\Formatter\StringDataFormatter;
+use Yiisoft\DataResponse\Modern\StringStream;
 
 /**
  * A lazy stream that formats data only when it's being read.

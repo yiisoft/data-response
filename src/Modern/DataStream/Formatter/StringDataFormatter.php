@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataFormatter;
+namespace Yiisoft\DataResponse\Modern\DataStream\Formatter;
 
 use RuntimeException;
 use Stringable;
-use Yiisoft\DataResponse\Modern\DataFormatterInterface;
+use Yiisoft\DataResponse\Modern\DataStream\DataFormatterInterface;
 
 use function is_scalar;
 use function sprintf;
