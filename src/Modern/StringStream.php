@@ -9,6 +9,10 @@ use RuntimeException;
 
 use function strlen;
 
+use const SEEK_CUR;
+use const SEEK_END;
+use const SEEK_SET;
+
 /**
  * A read-only stream implementation for string content.
  *
@@ -22,8 +26,7 @@ final class StringStream implements StreamInterface
 
     public function __construct(
         private readonly string $content,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {
@@ -130,7 +133,7 @@ final class StringStream implements StreamInterface
     public function getContents(): string
     {
         return $this->read(
-            $this->getContentSize() - $this->position
+            $this->getContentSize() - $this->position,
         );
     }
 

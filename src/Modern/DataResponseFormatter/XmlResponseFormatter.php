@@ -38,8 +38,7 @@ final class XmlResponseFormatter implements ResponseFormatterInterface
         private readonly string $encoding = 'UTF-8',
         private readonly string $version = '1.0',
         private readonly string $rootTag = 'response',
-    ) {
-    }
+    ) {}
 
     public function format(mixed $data, ResponseInterface $response): ResponseInterface
     {
