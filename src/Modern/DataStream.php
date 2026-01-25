@@ -7,6 +7,8 @@ namespace Yiisoft\DataResponse\Modern;
 use Psr\Http\Message\StreamInterface;
 use Yiisoft\DataResponse\Modern\DataFormatter\StringDataFormatter;
 
+use const SEEK_SET;
+
 /**
  * A lazy stream that formats data only when it's being read.
  *
@@ -24,7 +26,11 @@ final class DataStream implements StreamInterface
     public function __construct(
         private mixed $data,
         private DataFormatterInterface $formatter = new StringDataFormatter(),
-    ) {
+    ) {}
+
+    public function __toString(): string
+    {
+        return (string) $this->getFormatted();
     }
 
     /**
@@ -47,11 +53,6 @@ final class DataStream implements StreamInterface
     {
         $this->data = $data;
         $this->resetState();
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->getFormatted();
     }
 
     public function close(): void
