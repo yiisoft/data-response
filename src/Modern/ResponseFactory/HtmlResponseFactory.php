@@ -16,8 +16,7 @@ final class HtmlResponseFactory
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly HtmlDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         string|bool|int|float|null|Stringable $data = null,

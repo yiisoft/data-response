@@ -19,8 +19,7 @@ final class DataResponseFactory implements DataResponseFactoryInterface
         mixed $data = null,
         int $code = Status::OK,
         string $reasonPhrase = '',
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         return $this->responseFactory
             ->createResponse($code, $reasonPhrase)
             ->withBody(new DataStream($data));

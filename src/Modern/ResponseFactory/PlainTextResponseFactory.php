@@ -16,8 +16,7 @@ final class PlainTextResponseFactory
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly PlainTextDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         string|bool|int|float|null|Stringable $data = null,

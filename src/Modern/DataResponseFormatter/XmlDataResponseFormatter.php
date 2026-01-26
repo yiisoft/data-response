@@ -15,8 +15,7 @@ final class XmlDataResponseFormatter implements DataResponseFormatterInterface
         private readonly XmlDataFormatter $formatter = new XmlDataFormatter(),
         private readonly string $contentType = 'application/xml',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(DataStream $body, ResponseInterface $response): ResponseInterface
     {

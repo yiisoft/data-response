@@ -15,8 +15,7 @@ final class JsonDataResponseFormatter implements DataResponseFormatterInterface
         private readonly JsonDataFormatter $formatter = new JsonDataFormatter(),
         private readonly string $contentType = 'application/json',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(DataStream $body, ResponseInterface $response): ResponseInterface
     {

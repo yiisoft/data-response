@@ -15,8 +15,7 @@ final class JsonDataResponseMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly JsonDataResponseFormatter $formatter = new JsonDataResponseFormatter(),
-    ) {
-    }
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

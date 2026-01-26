@@ -15,8 +15,7 @@ final class PlainTextDataResponseFormatter implements DataResponseFormatterInter
         private readonly StringDataFormatter $formatter = new StringDataFormatter(),
         private readonly string $contentType = 'text/plain',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(DataStream $body, ResponseInterface $response): ResponseInterface
     {

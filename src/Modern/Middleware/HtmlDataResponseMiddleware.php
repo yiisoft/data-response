@@ -15,8 +15,7 @@ final class HtmlDataResponseMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly HtmlDataResponseFormatter $formatter = new HtmlDataResponseFormatter(),
-    ) {
-    }
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

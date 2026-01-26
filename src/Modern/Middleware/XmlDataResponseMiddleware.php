@@ -15,8 +15,7 @@ final class XmlDataResponseMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly XmlDataResponseFormatter $formatter = new XmlDataResponseFormatter(),
-    ) {
-    }
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
