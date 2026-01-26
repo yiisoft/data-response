@@ -19,7 +19,7 @@ final class HtmlResponseFactory
     ) {}
 
     public function createResponse(
-        string|bool|int|float|null|Stringable $data = null,
+        string|bool|int|float|Stringable|null $data = null,
         int $code = Status::OK,
         string $reasonPhrase = '',
     ): ResponseInterface {
