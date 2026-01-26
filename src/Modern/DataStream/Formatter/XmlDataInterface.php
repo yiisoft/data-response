@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Modern\DataStream\Formatter;
 
+use Yiisoft\DataResponse\Modern\DataResponseFormatter\XmlDataResponseFormatter;
+
 /**
  * XmlFormatDataInterface provides methods used when formatting objects {@see XmlDataResponseFormatter} as XML data.
  */
