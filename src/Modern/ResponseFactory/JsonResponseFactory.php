@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataResponseFactory;
+namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataResponseFormatter\PlainTextDataResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponseFormatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\Http\Status;
 
-final class PlainTextDataResponseFactory implements DataResponseFactoryInterface
+final class JsonResponseFactory
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly PlainTextDataResponseFormatter $formatter,
+        private readonly JsonDataResponseFormatter $formatter,
     ) {
     }
 
