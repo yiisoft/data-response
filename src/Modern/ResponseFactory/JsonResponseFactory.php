@@ -6,7 +6,7 @@ namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataResponseFormatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\Http\Status;
 

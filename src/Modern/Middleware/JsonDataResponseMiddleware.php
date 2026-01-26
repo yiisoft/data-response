@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\DataResponse\Modern\DataResponseFormatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponse\Formatter\JsonDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 
 final class JsonDataResponseMiddleware implements MiddlewareInterface

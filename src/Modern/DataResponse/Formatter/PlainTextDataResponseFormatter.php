@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataResponseFormatter;
+namespace Yiisoft\DataResponse\Modern\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\Modern\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
-use Yiisoft\DataResponse\Modern\DataStream\Formatter\JsonDataFormatter;
+use Yiisoft\DataResponse\Modern\DataStream\Formatter\StringDataFormatter;
 use Yiisoft\Http\Header;
 
-final class JsonDataResponseFormatter implements DataResponseFormatterInterface
+final class PlainTextDataResponseFormatter implements DataResponseFormatterInterface
 {
     public function __construct(
-        private readonly JsonDataFormatter $formatter = new JsonDataFormatter(),
-        private readonly string $contentType = 'application/json',
+        private readonly StringDataFormatter $formatter = new StringDataFormatter(),
+        private readonly string $contentType = 'text/plain',
         private readonly string $encoding = 'UTF-8',
     ) {}
 

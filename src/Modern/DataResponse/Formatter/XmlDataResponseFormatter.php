@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataResponseFormatter;
+namespace Yiisoft\DataResponse\Modern\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\Modern\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\DataResponse\Modern\DataStream\Formatter\XmlDataFormatter;
 use Yiisoft\Http\Header;

@@ -7,7 +7,7 @@ namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Stringable;
-use Yiisoft\DataResponse\Modern\DataResponseFormatter\PlainTextDataResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponse\Formatter\PlainTextDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\Http\Status;
 

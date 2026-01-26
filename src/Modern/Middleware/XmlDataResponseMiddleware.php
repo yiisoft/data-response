@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\DataResponse\Modern\DataResponseFormatter\XmlDataResponseFormatter;
+use Yiisoft\DataResponse\Modern\DataResponse\Formatter\XmlDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 
 final class XmlDataResponseMiddleware implements MiddlewareInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataResponseFormatter;
+namespace Yiisoft\DataResponse\Modern\DataResponse;
 
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;

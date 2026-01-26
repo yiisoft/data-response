@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataResponseFactory;
+namespace Yiisoft\DataResponse\Modern\DataResponse;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
