@@ -15,8 +15,7 @@ final class JsonDataResponseFactory implements DataResponseFactoryInterface
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly JsonDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         mixed $data = null,

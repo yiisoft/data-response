@@ -15,8 +15,7 @@ final class PlainTextDataResponseFactory implements DataResponseFactoryInterface
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly PlainTextDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         mixed $data = null,

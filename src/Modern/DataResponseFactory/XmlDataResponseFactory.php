@@ -15,8 +15,7 @@ final class XmlDataResponseFactory implements DataResponseFactoryInterface
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly XmlDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         mixed $data = null,

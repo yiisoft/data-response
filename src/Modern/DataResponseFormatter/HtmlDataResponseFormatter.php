@@ -15,8 +15,7 @@ final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
         private readonly StringDataFormatter $formatter = new StringDataFormatter(),
         private readonly string $contentType = 'text/html',
         private readonly string $encoding = 'UTF-8',
-    ) {
-    }
+    ) {}
 
     public function format(DataStream $body, ResponseInterface $response): ResponseInterface
     {

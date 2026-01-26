@@ -15,8 +15,7 @@ final class HtmlDataResponseFactory implements DataResponseFactoryInterface
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly HtmlDataResponseFormatter $formatter,
-    ) {
-    }
+    ) {}
 
     public function createResponse(
         mixed $data = null,
