@@ -6,7 +6,6 @@ namespace Yiisoft\DataResponse\Modern\DataStream;
 
 use Psr\Http\Message\StreamInterface;
 use Yiisoft\DataResponse\Modern\DataStream\Formatter\StringDataFormatter;
-use Yiisoft\DataResponse\Modern\StringStream;
 
 use const SEEK_SET;
 
