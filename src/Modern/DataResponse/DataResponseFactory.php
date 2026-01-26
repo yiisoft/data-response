@@ -7,12 +7,15 @@ namespace Yiisoft\DataResponse\Modern\DataResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
+use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
 use Yiisoft\Http\Status;
 
 final class DataResponseFactory implements DataResponseFactoryInterface
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
+        private readonly FormatterInterface $defaultFormatter = new PlainTextFormatter(),
     ) {}
 
     public function createResponse(
@@ -22,6 +25,6 @@ final class DataResponseFactory implements DataResponseFactoryInterface
     ): ResponseInterface {
         return $this->responseFactory
             ->createResponse($code, $reasonPhrase)
-            ->withBody(new DataStream($data));
+            ->withBody(new DataStream($data, $this->defaultFormatter));
     }
 }
