@@ -7,15 +7,15 @@ namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Stringable;
-use Yiisoft\DataResponse\Modern\DataResponse\Formatter\PlainTextDataResponseFormatter;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
+use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
 use Yiisoft\Http\Status;
 
 final class PlainTextResponseFactory
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly PlainTextDataResponseFormatter $formatter,
+        private readonly PlainTextFormatter $formatter,
     ) {}
 
     public function createResponse(
@@ -23,9 +23,10 @@ final class PlainTextResponseFactory
         int $code = Status::OK,
         string $reasonPhrase = '',
     ): ResponseInterface {
-        return $this->formatter->format(
-            new DataStream($data),
-            $this->responseFactory->createResponse($code, $reasonPhrase),
-        );
+        $body = new DataStream($data, $this->formatter);
+        $response = $this->responseFactory
+            ->createResponse($code, $reasonPhrase)
+            ->withBody($body);
+        return $this->formatter->formatResponse($response);
     }
 }

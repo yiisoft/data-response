@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\DataResponse\Modern\Formatter;
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+
+interface FormatterInterface
+{
+    public function formatData(mixed $data): StreamInterface|string;
+
+    public function formatResponse(ResponseInterface $response): ResponseInterface;
+}

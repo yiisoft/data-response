@@ -6,15 +6,14 @@ namespace Yiisoft\DataResponse\Modern\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\DataResponse\Modern\DataStream\DataStream;
-use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
+use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 
-final class PlainTextDataResponseMiddleware implements MiddlewareInterface
+final class DataResponseMiddleware
 {
     public function __construct(
-        private readonly PlainTextFormatter $formatter = new PlainTextFormatter(),
+        private readonly FormatterInterface $formatter,
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

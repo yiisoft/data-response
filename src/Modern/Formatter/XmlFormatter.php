@@ -2,40 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataStream\Formatter;
+namespace Yiisoft\DataResponse\Modern\Formatter;
 
 use DOMDocument;
 use DOMElement;
 use DOMException;
 use DOMText;
+use Psr\Http\Message\ResponseInterface;
 use Traversable;
-use Yiisoft\DataResponse\Modern\DataStream\DataFormatterInterface;
+use Yiisoft\Http\Header;
 use Yiisoft\Strings\NumericHelper;
 
-use function is_array;
 use function is_float;
+use function is_array;
 use function is_int;
 use function is_object;
 
-/**
- * Formats data as XML string.
- */
-final class XmlDataFormatter implements DataFormatterInterface
+final class XmlFormatter implements FormatterInterface
 {
     private const DEFAULT_ITEM_TAG_NAME = 'item';
 
-    /**
-     * @param string $encoding The encoding for the XML document.
-     * @param string $version The XML version.
-     * @param string $rootTag The name of the root element. If an empty value is set, the root tag should not be added.
-     */
     public function __construct(
         private readonly string $encoding = 'UTF-8',
         private readonly string $version = '1.0',
         private readonly string $rootTag = 'response',
+        private readonly string $contentType = 'application/xml',
     ) {}
 
-    public function format(mixed $data): string
+    public function formatData(mixed $data): string
     {
         if (empty($data)) {
             return '';
@@ -52,6 +46,11 @@ final class XmlDataFormatter implements DataFormatterInterface
         }
 
         return (string) $dom->saveXML();
+    }
+
+    public function formatResponse(ResponseInterface $response): ResponseInterface
+    {
+        return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");
     }
 
     /**

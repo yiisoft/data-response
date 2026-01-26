@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\DataResponse\Modern\Formatter;
+
+use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use Stringable;
+use Yiisoft\Http\Header;
+
+use function is_scalar;
+use function sprintf;
+
+final class PlainTextFormatter implements FormatterInterface
+{
+    public function __construct(
+        private readonly string $contentType = 'text/plain',
+        private readonly string $encoding = 'UTF-8',
+    ) {}
+
+    public function formatData(mixed $data): string
+    {
+        if ($data === null) {
+            return '';
+        }
+
+        if (!is_scalar($data) && !$data instanceof Stringable) {
+            throw new RuntimeException(
+                sprintf(
+                    'Data must be either a scalar value, null, or a stringable object. %s given.',
+                    get_debug_type($data),
+                ),
+            );
+        }
+
+        return (string) $data;
+    }
+
+    public function formatResponse(ResponseInterface $response): ResponseInterface
+    {
+        return $response->withHeader(Header::CONTENT_TYPE, "$this->contentType; charset=$this->encoding");
+    }
+}

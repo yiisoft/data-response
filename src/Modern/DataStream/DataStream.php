@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Modern\DataStream;
 
 use Psr\Http\Message\StreamInterface;
-use Yiisoft\DataResponse\Modern\DataStream\Formatter\StringDataFormatter;
+use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
 
 use const SEEK_SET;
 
@@ -21,11 +22,11 @@ final class DataStream implements StreamInterface
 
     /**
      * @param mixed $data The raw data to be formatted.
-     * @param DataFormatterInterface $formatter The formatter to use.
+     * @param FormatterInterface $formatter The formatter to use.
      */
     public function __construct(
         private mixed $data,
-        private DataFormatterInterface $formatter = new StringDataFormatter(),
+        private FormatterInterface $formatter = new PlainTextFormatter(),
     ) {}
 
     public function __toString(): string
@@ -36,9 +37,9 @@ final class DataStream implements StreamInterface
     /**
      * Changes the formatter and resets the stream state.
      *
-     * @param DataFormatterInterface $formatter The new formatter to use.
+     * @param FormatterInterface $formatter The new formatter to use.
      */
-    public function changeFormatter(DataFormatterInterface $formatter): void
+    public function changeFormatter(FormatterInterface $formatter): void
     {
         $this->formatter = $formatter;
         $this->resetState();
@@ -134,7 +135,7 @@ final class DataStream implements StreamInterface
             return $this->formatted;
         }
 
-        $content = $this->formatter->format($this->data);
+        $content = $this->formatter->formatData($this->data);
 
         $this->formatted = $content instanceof StreamInterface
             ? $content
