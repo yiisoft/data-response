@@ -22,7 +22,7 @@ final class JsonResponseFactory
         int $code = Status::OK,
         string $reasonPhrase = '',
     ): ResponseInterface {
-        $body = new DataStream($data, $this->formatter);
+        $body = (new DataStream($data, $this->formatter))->getFormatted();
         $response = $this->responseFactory
             ->createResponse($code, $reasonPhrase)
             ->withBody($body);

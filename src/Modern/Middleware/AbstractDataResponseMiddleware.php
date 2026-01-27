@@ -18,10 +18,13 @@ abstract class AbstractDataResponseMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
+
         $body = $response->getBody();
         if ($body instanceof DataStream) {
             $body->changeFormatter($this->formatter);
+            return $this->formatter->formatResponse($response);
         }
-        return $this->formatter->formatResponse($response);
+
+        return $response;
     }
 }

@@ -129,7 +129,7 @@ final class DataStream implements StreamInterface
     /**
      * Gets or creates the inner stream by formatting the data.
      */
-    private function getFormatted(): StreamInterface
+    public function getFormatted(): StreamInterface
     {
         if ($this->formatted !== null) {
             return $this->formatted;
