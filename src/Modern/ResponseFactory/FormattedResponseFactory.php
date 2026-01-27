@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
-use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
+use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 
-final class PlainTextResponseFactory extends AbstractFormattedResponseFactory
+final class FormattedResponseFactory extends AbstractFormattedResponseFactory
 {
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        PlainTextFormatter $formatter,
+        FormatterInterface $formatter,
     ) {
         $this->responseFactory = $responseFactory;
         $this->formatter = $formatter;

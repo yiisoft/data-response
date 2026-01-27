@@ -5,27 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\DataResponse\Modern\Formatter\XmlFormatter;
-use Yiisoft\Http\Status;
 
-final class XmlResponseFactory
+final class XmlResponseFactory extends AbstractFormattedResponseFactory
 {
     public function __construct(
-        private readonly ResponseFactoryInterface $responseFactory,
-        private readonly XmlFormatter $formatter,
-    ) {}
-
-    public function createResponse(
-        mixed $data = null,
-        int $code = Status::OK,
-        string $reasonPhrase = '',
-    ): ResponseInterface {
-        $body = (new DataStream($data, $this->formatter))->getFormatted();
-        $response = $this->responseFactory
-            ->createResponse($code, $reasonPhrase)
-            ->withBody($body);
-        return $this->formatter->formatResponse($response);
+        ResponseFactoryInterface $responseFactory,
+        XmlFormatter $formatter,
+    ) {
+        $this->responseFactory = $responseFactory;
+        $this->formatter = $formatter;
     }
 }

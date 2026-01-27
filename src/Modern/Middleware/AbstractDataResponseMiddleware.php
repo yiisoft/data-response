@@ -15,7 +15,7 @@ abstract class AbstractDataResponseMiddleware implements MiddlewareInterface
 {
     protected readonly FormatterInterface $formatter;
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    final public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
 
