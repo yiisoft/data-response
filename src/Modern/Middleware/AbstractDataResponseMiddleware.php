@@ -20,14 +20,11 @@ abstract class AbstractDataResponseMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         $body = $response->getBody();
-        if ($body instanceof DataStream) {
-            return $this->formatter
-                ->formatResponse($response)
-                ->withBody(
-                    $body->format($this->formatter),
-                );
+        if (!$body instanceof DataStream || $body->hasFormatter()) {
+            return $response;
         }
 
-        return $response;
+        $body->changeFormatter($this->formatter);
+        return $this->formatter->formatResponse($response);
     }
 }

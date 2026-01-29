@@ -6,7 +6,7 @@ namespace Yiisoft\DataResponse\Modern\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataStream\LazyFormattingStream;
+use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 use Yiisoft\Http\Status;
 
@@ -20,7 +20,7 @@ abstract class AbstractFormattedResponseFactory implements FormattedResponseFact
         int $code = Status::OK,
         string $reasonPhrase = '',
     ): ResponseInterface {
-        $body = new LazyFormattingStream($data, $this->formatter);
+        $body = new DataStream($data, $this->formatter);
         $response = $this->responseFactory
             ->createResponse($code, $reasonPhrase)
             ->withBody($body);

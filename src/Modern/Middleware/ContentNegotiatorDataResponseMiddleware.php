@@ -38,18 +38,15 @@ final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterfa
 
         $response = $handler->handle($request);
         $body = $response->getBody();
-        if (!$body instanceof DataStream) {
+        if (!$body instanceof DataStream || $body->hasFormatter()) {
             return $response;
         }
 
         foreach ($accepted as $accept) {
             foreach ($this->formatters as $contentType => $formatter) {
                 if (str_contains($accept, $contentType)) {
-                    return $formatter
-                        ->formatResponse($response)
-                        ->withBody(
-                            $body->format($formatter),
-                        );
+                    $body->changeFormatter($formatter);
+                    return $formatter->formatResponse($response);
                 }
             }
         }
@@ -58,11 +55,8 @@ final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterfa
             return $response;
         }
 
-        return $this->fallbackFormatter
-            ->formatResponse($response)
-            ->withBody(
-                $body->format($this->fallbackFormatter),
-            );
+        $body->changeFormatter($this->fallbackFormatter);
+        return $this->fallbackFormatter->formatResponse($response);
     }
 
     private function checkFormatters(array $formatters): void

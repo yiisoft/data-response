@@ -18,25 +18,33 @@ use const SEEK_SET;
  */
 final class DataStream implements StreamInterface
 {
-    private ?StreamInterface $prepared = null;
+    private ?StreamInterface $formatted = null;
 
     /**
      * @param mixed $data The raw data to be formatted.
-     * @param FormatterInterface $formatter The formatter to use.
+     * @param FormatterInterface|null $formatter The formatter to use.
+     * @param FormatterInterface $fallbackFormatter The fallback formatter to use when formatter is not set.
      */
     public function __construct(
         private mixed $data,
-        private FormatterInterface $formatter = new PlainTextFormatter(),
+        private ?FormatterInterface $formatter = null,
+        private readonly FormatterInterface $fallbackFormatter = new PlainTextFormatter(),
     ) {}
 
     public function __toString(): string
     {
-        return (string) $this->getPrepared();
+        return (string) $this->getFormatted();
     }
 
-    public function format(FormatterInterface $formatter): StreamInterface
+    public function hasFormatter(): bool
     {
-        return new LazyFormattingStream($this->data, $formatter);
+        return $this->formatter !== null;
+    }
+
+    public function changeFormatter(FormatterInterface $formatter): void
+    {
+        $this->formatter = $formatter;
+        $this->resetState();
     }
 
     /**
@@ -52,86 +60,88 @@ final class DataStream implements StreamInterface
 
     public function close(): void
     {
-        $this->getPrepared()->close();
+        $this->getFormatted()->close();
     }
 
     public function detach()
     {
-        return $this->getPrepared()->detach();
+        return $this->getFormatted()->detach();
     }
 
     public function getSize(): ?int
     {
-        return $this->getPrepared()->getSize();
+        return $this->getFormatted()->getSize();
     }
 
     public function tell(): int
     {
-        return $this->getPrepared()->tell();
+        return $this->getFormatted()->tell();
     }
 
     public function eof(): bool
     {
-        return $this->getPrepared()->eof();
+        return $this->getFormatted()->eof();
     }
 
     public function isSeekable(): bool
     {
-        return $this->getPrepared()->isSeekable();
+        return $this->getFormatted()->isSeekable();
     }
 
     public function seek(int $offset, int $whence = SEEK_SET): void
     {
-        $this->getPrepared()->seek($offset, $whence);
+        $this->getFormatted()->seek($offset, $whence);
     }
 
     public function rewind(): void
     {
-        $this->getPrepared()->rewind();
+        $this->getFormatted()->rewind();
     }
 
     public function isWritable(): bool
     {
-        return $this->getPrepared()->isWritable();
+        return $this->getFormatted()->isWritable();
     }
 
     public function write(string $string): int
     {
-        return $this->getPrepared()->write($string);
+        return $this->getFormatted()->write($string);
     }
 
     public function isReadable(): bool
     {
-        return $this->getPrepared()->isReadable();
+        return $this->getFormatted()->isReadable();
     }
 
     public function read(int $length): string
     {
-        return $this->getPrepared()->read($length);
+        return $this->getFormatted()->read($length);
     }
 
     public function getContents(): string
     {
-        return $this->getPrepared()->getContents();
+        return $this->getFormatted()->getContents();
     }
 
     public function getMetadata(?string $key = null)
     {
-        return $this->getPrepared()->getMetadata($key);
+        return $this->getFormatted()->getMetadata($key);
     }
 
-    public function getPrepared(): StreamInterface
+    private function getFormatted(): StreamInterface
     {
-        if ($this->prepared !== null) {
-            return $this->prepared;
+        if ($this->formatted !== null) {
+            return $this->formatted;
         }
 
-        $this->prepared = new LazyFormattingStream(
-            $this->data,
-            $this->formatter,
-        );
+        $formatter = $this->formatter ?? $this->fallbackFormatter;
+        $content = $formatter->formatData($this->data);
 
-        return $this->prepared;
+        $this->formatted = $content instanceof StreamInterface
+            ? $content
+            : new StringStream($content);
+
+        return $this->formatted;
     }
 
     /**
@@ -139,9 +149,9 @@ final class DataStream implements StreamInterface
      */
     private function resetState(): void
     {
-        if ($this->prepared !== null) {
-            $this->prepared->close();
-            $this->prepared = null;
+        if ($this->formatted !== null) {
+            $this->formatted->close();
+            $this->formatted = null;
         }
     }
 }
