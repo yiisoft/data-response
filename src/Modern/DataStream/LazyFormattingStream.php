@@ -8,6 +8,8 @@ use Psr\Http\Message\StreamInterface;
 use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
 
+use const SEEK_SET;
+
 /**
  * @internal
  */
@@ -113,4 +115,3 @@ final class LazyFormattingStream implements StreamInterface
         return $this->formatted;
     }
 }
-
