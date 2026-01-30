@@ -15,7 +15,8 @@ final class DataResponseFactory implements DataResponseFactoryInterface
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly FormatterInterface $defaultFormatter = new PlainTextFormatter(),
+        private readonly ?FormatterInterface $formatter = null,
+        private readonly FormatterInterface $fallbackFormatter = new PlainTextFormatter(),
     ) {}
 
     public function createResponse(
@@ -23,8 +24,9 @@ final class DataResponseFactory implements DataResponseFactoryInterface
         int $code = Status::OK,
         string $reasonPhrase = '',
     ): ResponseInterface {
+        $body = new DataStream($data, $this->formatter, $this->fallbackFormatter);
         return $this->responseFactory
             ->createResponse($code, $reasonPhrase)
-            ->withBody(new DataStream($data, $this->defaultFormatter));
+            ->withBody($body);
     }
 }
