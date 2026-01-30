@@ -10,7 +10,7 @@ use Yiisoft\DataResponse\Modern\DataStream\DataStream;
 use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 use Yiisoft\Http\Status;
 
-abstract class AbstractFormattedResponseFactory implements FormattedResponseFactoryInterface
+abstract class AbstractFormattedResponseFactory implements DataResponseFactoryInterface
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,

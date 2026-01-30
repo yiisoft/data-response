@@ -17,12 +17,12 @@ use function sprintf;
 final class ContentNegotiatorResponseFactory
 {
     /**
-     * @param array<string, FormattedResponseFactoryInterface> $factories
-     * @param FormattedResponseFactoryInterface $fallbackFactory
+     * @param array<string, DataResponseFactoryInterface> $factories
+     * @param DataResponseFactoryInterface $fallbackFactory
      */
     public function __construct(
         private readonly array $factories,
-        private readonly FormattedResponseFactoryInterface $fallbackFactory,
+        private readonly DataResponseFactoryInterface $fallbackFactory,
     ) {
         $this->checkFormatters($factories);
     }
@@ -60,11 +60,11 @@ final class ContentNegotiatorResponseFactory
                 );
             }
 
-            if (!($formatter instanceof FormattedResponseFactoryInterface)) {
+            if (!($formatter instanceof DataResponseFactoryInterface)) {
                 throw new RuntimeException(
                     sprintf(
                         'Invalid formatter. A "%s" instance is expected, "%s" is received.',
-                        FormattedResponseFactoryInterface::class,
+                        DataResponseFactoryInterface::class,
                         get_debug_type($formatter),
                     ),
                 );
