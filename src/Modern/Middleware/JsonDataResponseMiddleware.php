@@ -10,6 +10,6 @@ final class JsonDataResponseMiddleware extends AbstractDataResponseMiddleware
 {
     public function __construct(JsonFormatter $formatter = new JsonFormatter())
     {
-        $this->formatter = $formatter;
+        parent::__construct($formatter);
     }
 }

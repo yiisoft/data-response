@@ -10,6 +10,6 @@ final class PlainTextDataResponseMiddleware extends AbstractDataResponseMiddlewa
 {
     public function __construct(PlainTextFormatter $formatter = new PlainTextFormatter())
     {
-        $this->formatter = $formatter;
+        parent::__construct($formatter);
     }
 }

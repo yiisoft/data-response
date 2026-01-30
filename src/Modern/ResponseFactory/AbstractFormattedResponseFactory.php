@@ -12,8 +12,10 @@ use Yiisoft\Http\Status;
 
 abstract class AbstractFormattedResponseFactory implements FormattedResponseFactoryInterface
 {
-    protected ResponseFactoryInterface $responseFactory;
-    protected FormatterInterface $formatter;
+    public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly FormatterInterface $formatter,
+    ) {}
 
     final public function createResponse(
         mixed $data = null,

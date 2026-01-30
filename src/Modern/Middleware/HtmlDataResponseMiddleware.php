@@ -10,6 +10,6 @@ final class HtmlDataResponseMiddleware extends AbstractDataResponseMiddleware
 {
     public function __construct(HtmlFormatter $formatter = new HtmlFormatter())
     {
-        $this->formatter = $formatter;
+        parent::__construct($formatter);
     }
 }

@@ -13,7 +13,6 @@ final class JsonResponseFactory extends AbstractFormattedResponseFactory
         ResponseFactoryInterface $responseFactory,
         JsonFormatter $formatter,
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->formatter = $formatter;
+        parent::__construct($responseFactory, $formatter);
     }
 }

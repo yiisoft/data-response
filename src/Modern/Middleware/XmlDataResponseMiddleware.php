@@ -10,6 +10,6 @@ final class XmlDataResponseMiddleware extends AbstractDataResponseMiddleware
 {
     public function __construct(XmlFormatter $formatter = new XmlFormatter())
     {
-        $this->formatter = $formatter;
+        parent::__construct($formatter);
     }
 }

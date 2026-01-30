@@ -13,7 +13,9 @@ use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
 
 abstract class AbstractDataResponseMiddleware implements MiddlewareInterface
 {
-    protected readonly FormatterInterface $formatter;
+    public function __construct(
+        private readonly FormatterInterface $formatter,
+    ) {}
 
     final public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

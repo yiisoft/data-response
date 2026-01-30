@@ -13,7 +13,6 @@ final class HtmlResponseFactory extends AbstractFormattedResponseFactory
         ResponseFactoryInterface $responseFactory,
         HtmlFormatter $formatter,
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->formatter = $formatter;
+        parent::__construct($responseFactory, $formatter);
     }
 }

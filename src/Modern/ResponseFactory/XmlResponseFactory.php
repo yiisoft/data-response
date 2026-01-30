@@ -13,7 +13,6 @@ final class XmlResponseFactory extends AbstractFormattedResponseFactory
         ResponseFactoryInterface $responseFactory,
         XmlFormatter $formatter,
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->formatter = $formatter;
+        parent::__construct($responseFactory, $formatter);
     }
 }

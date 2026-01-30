@@ -13,7 +13,6 @@ final class PlainTextResponseFactory extends AbstractFormattedResponseFactory
         ResponseFactoryInterface $responseFactory,
         PlainTextFormatter $formatter,
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->formatter = $formatter;
+        parent::__construct($responseFactory, $formatter);
     }
 }
