@@ -6,7 +6,7 @@ namespace Yiisoft\DataResponse\Modern\DataStream;
 
 use Psr\Http\Message\StreamInterface;
 use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
-use Yiisoft\DataResponse\Modern\Formatter\PlainTextFormatter;
+use Yiisoft\DataResponse\Modern\Formatter\HtmlFormatter;
 
 use const SEEK_SET;
 
@@ -28,7 +28,7 @@ final class DataStream implements StreamInterface
     public function __construct(
         private mixed $data,
         private ?FormatterInterface $formatter = null,
-        private readonly FormatterInterface $fallbackFormatter = new PlainTextFormatter(),
+        private readonly FormatterInterface $fallbackFormatter = new HtmlFormatter(),
     ) {}
 
     public function __toString(): string
