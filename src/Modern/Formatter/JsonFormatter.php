@@ -25,10 +25,6 @@ final class JsonFormatter implements FormatterInterface
      */
     public function formatData(mixed $data): string
     {
-        if ($data === null) {
-            return '';
-        }
-
         return Json::encode($data, $this->options);
     }
 
