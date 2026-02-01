@@ -3,6 +3,7 @@
 ## 2.1.3 under development
 
 - Enh #106: Explicitly import classes, functions, and constants in "use" section (@mspirkov)
+- Enh #108: Remove unnecessary files from Composer package (@mspirkov)
 
 ## 2.1.2 December 18, 2025
 
