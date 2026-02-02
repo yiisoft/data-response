@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Formatter;
+namespace Yiisoft\DataResponse\Formatter;
 
 use DOMDocument;
 use DOMElement;
@@ -13,8 +13,8 @@ use Traversable;
 use Yiisoft\Http\Header;
 use Yiisoft\Strings\NumericHelper;
 
-use function is_float;
 use function is_array;
+use function is_float;
 use function is_int;
 use function is_object;
 

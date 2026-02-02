@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\ResponseFactory;
+namespace Yiisoft\DataResponse\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
-use Yiisoft\DataResponse\Modern\Formatter\JsonFormatter;
+use Yiisoft\DataResponse\Formatter\PlainTextFormatter;
 
-final class JsonResponseFactory extends AbstractFormattedResponseFactory
+final class PlainTextResponseFactory extends AbstractFormattedResponseFactory
 {
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        JsonFormatter $formatter,
+        PlainTextFormatter $formatter,
     ) {
         parent::__construct($responseFactory, $formatter);
     }

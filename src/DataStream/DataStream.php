@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataStream;
+namespace Yiisoft\DataResponse\DataStream;
 
 use Psr\Http\Message\StreamInterface;
-use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
-use Yiisoft\DataResponse\Modern\Formatter\HtmlFormatter;
+use Yiisoft\DataResponse\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 
 use const SEEK_SET;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Formatter;
+namespace Yiisoft\DataResponse\Formatter;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Middleware;
+namespace Yiisoft\DataResponse\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
-use Yiisoft\DataResponse\Modern\DataStream\DataStream;
-use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\DataStream\DataStream;
+use Yiisoft\DataResponse\Formatter\FormatterInterface;
 use Yiisoft\Http\HeaderValueHelper;
 
 use function gettype;

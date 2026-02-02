@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\DataStream;
+namespace Yiisoft\DataResponse\DataStream;
 
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;

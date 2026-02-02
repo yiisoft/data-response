@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\ResponseFactory;
+namespace Yiisoft\DataResponse\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataStream\DataStream;
-use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
-use Yiisoft\DataResponse\Modern\Formatter\HtmlFormatter;
+use Yiisoft\DataResponse\DataStream\DataStream;
+use Yiisoft\DataResponse\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 use Yiisoft\Http\Status;
 
 final class DataResponseFactory implements DataResponseFactoryInterface

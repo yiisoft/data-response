@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 /**
- * XmlFormatDataInterface provides methods used when formatting objects {@see XmlDataResponseFormatter} as XML data.
+ * XmlFormatDataInterface provides methods used when formatting objects {@see XmlFormatter} as XML data.
  */
 interface XmlDataInterface
 {

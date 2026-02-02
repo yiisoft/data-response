@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\ResponseFactory;
+namespace Yiisoft\DataResponse\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\DataResponse\Modern\DataStream\DataStream;
-use Yiisoft\DataResponse\Modern\Formatter\FormatterInterface;
+use Yiisoft\DataResponse\DataStream\DataStream;
+use Yiisoft\DataResponse\Formatter\FormatterInterface;
 use Yiisoft\Http\Status;
 
 abstract class AbstractFormattedResponseFactory implements DataResponseFactoryInterface

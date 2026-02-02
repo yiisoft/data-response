@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\Middleware;
+namespace Yiisoft\DataResponse\Middleware;
 
-use Yiisoft\DataResponse\Modern\Formatter\HtmlFormatter;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 
 final class HtmlDataResponseMiddleware extends AbstractDataResponseMiddleware
 {

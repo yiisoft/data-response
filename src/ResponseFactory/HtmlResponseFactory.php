@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\DataResponse\Modern\ResponseFactory;
+namespace Yiisoft\DataResponse\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
-use Yiisoft\DataResponse\Modern\Formatter\XmlFormatter;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 
-final class XmlResponseFactory extends AbstractFormattedResponseFactory
+final class HtmlResponseFactory extends AbstractFormattedResponseFactory
 {
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        XmlFormatter $formatter,
+        HtmlFormatter $formatter,
     ) {
         parent::__construct($responseFactory, $formatter);
     }
