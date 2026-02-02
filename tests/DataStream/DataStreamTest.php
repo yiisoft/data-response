@@ -6,9 +6,7 @@ namespace DataStream;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\DataResponse\DataStream\DataStream;
-use Yiisoft\DataResponse\Formatter\FormatterInterface;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
-use Yiisoft\DataResponse\Formatter\PlainTextFormatter;
 
 final class DataStreamTest extends TestCase
 {
@@ -32,7 +30,7 @@ final class DataStreamTest extends TestCase
     {
         $stream = new DataStream(
             'test',
-            fallbackFormatter: new JsonFormatter()
+            fallbackFormatter: new JsonFormatter(),
         );
 
         $this->assertFalse($stream->hasFormatter());
