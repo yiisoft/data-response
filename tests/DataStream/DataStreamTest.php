@@ -12,6 +12,9 @@ use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\Tests\Support\StubFormatter;
 use Yiisoft\Test\Support\HttpMessage\StringStream;
 
+use const SEEK_CUR;
+use const SEEK_END;
+
 final class DataStreamTest extends TestCase
 {
     public function testBase(): void
@@ -34,7 +37,7 @@ final class DataStreamTest extends TestCase
     {
         $stream = new DataStream(
             'test',
-            fallbackFormatter: new JsonFormatter()
+            fallbackFormatter: new JsonFormatter(),
         );
 
         $this->assertFalse($stream->hasFormatter());

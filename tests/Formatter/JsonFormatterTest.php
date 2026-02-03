@@ -8,7 +8,6 @@ use HttpSoft\Message\Response;
 use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\Http\Header;
 
@@ -102,7 +101,7 @@ final class JsonFormatterTest extends TestCase
         $formatter = new JsonFormatter();
 
         $response = $formatter->formatResponse(
-            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain')
+            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain'),
         );
 
         $this->assertSame('application/json; charset=UTF-8', $response->getHeaderLine(Header::CONTENT_TYPE));

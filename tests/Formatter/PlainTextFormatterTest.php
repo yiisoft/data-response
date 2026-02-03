@@ -26,7 +26,7 @@ final class PlainTextFormatterTest extends TestCase
         yield 'bool false' => ['', false];
         yield 'stringable object' => [
             'stringable content',
-            new class () implements Stringable {
+            new class implements Stringable {
                 public function __toString(): string
                 {
                     return 'stringable content';
@@ -94,7 +94,7 @@ final class PlainTextFormatterTest extends TestCase
         $formatter = new PlainTextFormatter();
 
         $response = $formatter->formatResponse(
-            (new Response())->withHeader(Header::CONTENT_TYPE, 'application/json')
+            (new Response())->withHeader(Header::CONTENT_TYPE, 'application/json'),
         );
 
         $this->assertSame('text/plain; charset=UTF-8', $response->getHeaderLine(Header::CONTENT_TYPE));

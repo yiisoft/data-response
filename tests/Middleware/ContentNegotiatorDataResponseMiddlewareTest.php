@@ -142,7 +142,7 @@ final class ContentNegotiatorDataResponseMiddlewareTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Invalid formatter. A "Yiisoft\DataResponse\Formatter\FormatterInterface" instance is expected, "stdClass" is received.'
+            'Invalid formatter. A "Yiisoft\DataResponse\Formatter\FormatterInterface" instance is expected, "stdClass" is received.',
         );
         new ContentNegotiatorDataResponseMiddleware($formatters);
     }

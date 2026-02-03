@@ -26,7 +26,7 @@ final class HtmlFormatterTest extends TestCase
         yield 'bool false' => ['', false];
         yield 'stringable object' => [
             'stringable content',
-            new class () implements Stringable {
+            new class implements Stringable {
                 public function __toString(): string
                 {
                     return 'stringable content';
@@ -94,7 +94,7 @@ final class HtmlFormatterTest extends TestCase
         $formatter = new HtmlFormatter();
 
         $response = $formatter->formatResponse(
-            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain')
+            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain'),
         );
 
         $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine(Header::CONTENT_TYPE));
