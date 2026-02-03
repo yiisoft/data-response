@@ -9,6 +9,8 @@ use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
 /**
  * FormatDataResponseAsXml adds an XML formatter {@see XmlDataResponseFormatter} instance to the
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ *
+ * @deprecated Use {@see XmlDataResponseMiddleware} instead.
  */
 final class FormatDataResponseAsXml extends FormatDataResponse
 {

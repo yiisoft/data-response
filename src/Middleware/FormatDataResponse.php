@@ -14,6 +14,8 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
 /**
  * FormatDataResponse adds a formatter {@see DataResponseFormatterInterface} instance to the
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ *
+ * @deprecated Use {@see DataResponseMiddleware} instead.
  */
 class FormatDataResponse implements MiddlewareInterface
 {

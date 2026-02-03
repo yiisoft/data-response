@@ -9,6 +9,8 @@ use Yiisoft\Http\Header;
 
 /**
  * ResponseContentTrait provides methods for manipulating the response content.
+ *
+ * @deprecated
  */
 trait ResponseContentTrait
 {

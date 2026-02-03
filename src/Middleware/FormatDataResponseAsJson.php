@@ -9,6 +9,8 @@ use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 /**
  * FormatDataResponseAsJson adds a JSON formatter {@see JsonDataResponseFormatter} instance to the
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ *
+ * @deprecated Use {@see JsonDataResponseMiddleware} instead.
  */
 final class FormatDataResponseAsJson extends FormatDataResponse
 {

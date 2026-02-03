@@ -16,6 +16,8 @@ use const JSON_UNESCAPED_UNICODE;
 
 /**
  * `JsonDataResponseFormatter` formats the response data as JSON.
+ *
+ * @deprecated Use {@see DataStream} with {@see JsonFormatter} instead.
  */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {

@@ -9,6 +9,8 @@ use Yiisoft\DataResponse\Formatter\PlainTextDataResponseFormatter;
 /**
  * `FormatDataResponseAsPlainText` adds a plain text formatter {@see PlainTextDataResponseFormatter} instance to the
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ *
+ * @deprecated Use {@see PlainTextDataResponseMiddleware} instead.
  */
 final class FormatDataResponseAsPlainText extends FormatDataResponse
 {

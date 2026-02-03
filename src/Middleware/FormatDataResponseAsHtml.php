@@ -9,6 +9,8 @@ use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 /**
  * FormatDataResponseAsHtml adds an HTML formatter {@see HtmlDataResponseFormatter} instance to the
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
+ *
+ * @deprecated Use {@see HtmlDataResponseMiddleware} instead.
  */
 final class FormatDataResponseAsHtml extends FormatDataResponse
 {

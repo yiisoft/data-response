@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
 
 use function ftruncate;
@@ -24,6 +25,8 @@ use function sprintf;
  *
  * For example, `['name' => 'Dmitriy']` to be formatted as JSON using
  * {@see JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
+ *
+ * @deprecated Use {@see DataStream} instead.
  */
 final class DataResponse implements ResponseInterface
 {

@@ -8,6 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * DataResponseFormatterInterface is the interface that should be implemented by data response formatters.
+ *
+ * @deprecated Use {@see \Yiisoft\DataResponse\Formatter\FormatterInterface} instead.
  */
 interface DataResponseFormatterInterface
 {

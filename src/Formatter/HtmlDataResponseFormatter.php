@@ -9,6 +9,7 @@ use RuntimeException;
 use Stringable;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
+use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\ResponseContentTrait;
 
 use function is_scalar;
@@ -16,6 +17,8 @@ use function sprintf;
 
 /**
  * `HtmlDataResponseFormatter` formats the response data as HTML.
+ *
+ * @deprecated Use {@see DataStream} with {@see HtmlFormatter} instead.
  */
 final class HtmlDataResponseFormatter implements DataResponseFormatterInterface
 {

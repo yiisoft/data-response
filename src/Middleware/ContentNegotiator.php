@@ -21,6 +21,8 @@ use function sprintf;
  * ContentNegotiator supports response format negotiation.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
+ *
+ * @deprecated Use {@see ContentNegotiatorDataResponseMiddleware} instead.
  */
 final class ContentNegotiator implements MiddlewareInterface
 {
