@@ -114,7 +114,7 @@ final class ContentNegotiatorResponseFactoryTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Invalid formatter. A "Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface" instance is expected, "stdClass" is received.'
+            'Invalid formatter. A "Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface" instance is expected, "stdClass" is received.',
         );
         new ContentNegotiatorResponseFactory($factories, $fallbackFactory);
     }

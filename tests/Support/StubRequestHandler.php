@@ -12,8 +12,7 @@ final class StubRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly ResponseInterface $response,
-    ) {
-    }
+    ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

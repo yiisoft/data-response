@@ -95,7 +95,7 @@ final class XmlFormatterTest extends TestCase
         ];
         yield 'XmlDataInterface' => [
             self::xml('<response><custom id="1" type="test"><name>value</name></custom></response>'),
-            new class () implements XmlDataInterface {
+            new class implements XmlDataInterface {
                 public function xmlTagName(): string
                 {
                     return 'custom';
@@ -116,7 +116,7 @@ final class XmlFormatterTest extends TestCase
             self::xml('<response><items><inner><value>nested</value></inner></items></response>'),
             [
                 'items' => [
-                    new class () implements XmlDataInterface {
+                    new class implements XmlDataInterface {
                         public function xmlTagName(): string
                         {
                             return 'inner';
@@ -155,7 +155,7 @@ final class XmlFormatterTest extends TestCase
 
         $this->assertSame(
             self::xml('<data><key>value</key></data>'),
-            $result
+            $result,
         );
     }
 
@@ -167,7 +167,7 @@ final class XmlFormatterTest extends TestCase
 
         $this->assertSame(
             self::xml('<key>value</key>'),
-            $result
+            $result,
         );
     }
 
@@ -179,7 +179,7 @@ final class XmlFormatterTest extends TestCase
 
         $this->assertSame(
             self::xml('<response><key>value</key></response>', '1.1'),
-            $result
+            $result,
         );
     }
 
@@ -191,7 +191,7 @@ final class XmlFormatterTest extends TestCase
 
         $this->assertSame(
             self::xml('<response><key>value</key></response>', encoding: 'ISO-8859-1'),
-            $result
+            $result,
         );
     }
 
@@ -227,7 +227,7 @@ final class XmlFormatterTest extends TestCase
         $formatter = new XmlFormatter();
 
         $response = $formatter->formatResponse(
-            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain')
+            (new Response())->withHeader(Header::CONTENT_TYPE, 'text/plain'),
         );
 
         $this->assertSame('application/xml; charset=UTF-8', $response->getHeaderLine(Header::CONTENT_TYPE));
