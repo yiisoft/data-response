@@ -160,10 +160,8 @@ final class XmlFormatter implements FormatterInterface
         }
 
         try {
-            if (!$element = $dom->createElement($tagName)) {
-                throw new DOMException();
-            }
-            return $element;
+            /** @var DOMElement */
+            return $dom->createElement($tagName);
         } catch (DOMException) {
             return $dom->createElement(self::DEFAULT_ITEM_TAG_NAME);
         }
