@@ -10,6 +10,8 @@ use Yiisoft\Http\Status;
  * `DataResponseFactoryInterface` is the interface that should be implemented by data response factory classes.
  *
  * @deprecated Use {@see \Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface} instead.
+ *
+ * @psalm-suppress DeprecatedClass
  */
 interface DataResponseFactoryInterface
 {

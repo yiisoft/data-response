@@ -24,6 +24,8 @@ use function is_object;
  * `XmlDataResponseFormatter` formats the response data as XML.
  *
  * @deprecated Use {@see DataStream} with {@see XmlFormatter} instead.
+ *
+ * @psalm-suppress DeprecatedTrait, DeprecatedInterface
  */
 final class XmlDataResponseFormatter implements DataResponseFormatterInterface
 {

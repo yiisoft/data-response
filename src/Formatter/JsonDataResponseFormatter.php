@@ -18,6 +18,8 @@ use const JSON_UNESCAPED_UNICODE;
  * `JsonDataResponseFormatter` formats the response data as JSON.
  *
  * @deprecated Use {@see DataStream} with {@see JsonFormatter} instead.
+ *
+ * @psalm-suppress DeprecatedTrait, DeprecatedInterface
  */
 final class JsonDataResponseFormatter implements DataResponseFormatterInterface
 {

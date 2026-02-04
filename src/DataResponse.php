@@ -27,6 +27,8 @@ use function sprintf;
  * {@see JsonDataResponseFormatter} when {@see DataResponse::getBody()} is called.
  *
  * @deprecated Use {@see DataStream} instead.
+ *
+ * @psalm-suppress DeprecatedInterface
  */
 final class DataResponse implements ResponseInterface
 {

@@ -18,6 +18,8 @@ use function sprintf;
  * `PlainTextDataResponseFormatter` formats the response data as plain text.
  *
  * @deprecated Use {@see DataStream} with {@see PlainTextFormatter} instead.
+ *
+ * @psalm-suppress DeprecatedTrait, DeprecatedInterface
  */
 final class PlainTextDataResponseFormatter implements DataResponseFormatterInterface
 {

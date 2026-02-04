@@ -11,6 +11,8 @@ use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
  *
  * @deprecated Use {@see XmlDataResponseMiddleware} instead.
+ *
+ * @psalm-suppress DeprecatedClass
  */
 final class FormatDataResponseAsXml extends FormatDataResponse
 {

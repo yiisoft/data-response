@@ -11,6 +11,8 @@ use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
  *
  * @deprecated Use {@see JsonDataResponseMiddleware} instead.
+ *
+ * @psalm-suppress DeprecatedClass
  */
 final class FormatDataResponseAsJson extends FormatDataResponse
 {

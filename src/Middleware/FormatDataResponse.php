@@ -16,6 +16,8 @@ use Yiisoft\DataResponse\DataResponseFormatterInterface;
  * instance of the data response {@see DataResponse}, if the formatter was not added earlier.
  *
  * @deprecated Use {@see DataResponseMiddleware} instead.
+ *
+ * @psalm-suppress DeprecatedInterface
  */
 class FormatDataResponse implements MiddlewareInterface
 {
