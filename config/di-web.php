@@ -31,16 +31,16 @@ return [
         ],
     ],
     DataResponseFactoryInterface::class => DataResponseFactory::class,
-    ContentNegotiatorDataResponseMiddleware::class =>
-        static function (ContainerInterface $container): ContentNegotiatorDataResponseMiddleware {
+    ContentNegotiatorDataResponseMiddleware::class
+        => static function (ContainerInterface $container): ContentNegotiatorDataResponseMiddleware {
             return new ContentNegotiatorDataResponseMiddleware([
                 'text/html' => $container->get(HtmlFormatter::class),
                 'application/xml' => $container->get(XmlFormatter::class),
                 'application/json' => $container->get(JsonFormatter::class),
             ]);
         },
-    ContentNegotiatorResponseFactory::class =>
-        static function (ContainerInterface $container): ContentNegotiatorResponseFactory {
+    ContentNegotiatorResponseFactory::class
+        => static function (ContainerInterface $container): ContentNegotiatorResponseFactory {
             /** @var HtmlResponseFactory $html */
             $html = $container->get(HtmlResponseFactory::class);
             return new ContentNegotiatorResponseFactory(
