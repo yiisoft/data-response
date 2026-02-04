@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Tests\Formatter;
 
 use HttpSoft\Message\Response;
-use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\DataResponse\Formatter\DataEncodingException;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\Http\Header;
 
@@ -47,7 +47,7 @@ final class JsonFormatterTest extends TestCase
         $formatter = new JsonFormatter();
         $resource = fopen('php://memory', 'r');
 
-        $this->expectException(JsonException::class);
+        $this->expectException(DataEncodingException::class);
         $formatter->formatData($resource);
     }
 

@@ -7,9 +7,9 @@ namespace Yiisoft\DataResponse\Tests\Formatter;
 use HttpSoft\Message\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use stdClass;
 use Stringable;
+use Yiisoft\DataResponse\Formatter\DataEncodingException;
 use Yiisoft\DataResponse\Formatter\PlainTextFormatter;
 use Yiisoft\Http\Header;
 
@@ -57,7 +57,7 @@ final class PlainTextFormatterTest extends TestCase
     {
         $formatter = new PlainTextFormatter();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(DataEncodingException::class);
         $this->expectExceptionMessage('Data must be either a scalar value, null, or a stringable object.');
         $formatter->formatData($data);
     }

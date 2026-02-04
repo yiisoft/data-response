@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\Formatter;
 
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Stringable;
 use Yiisoft\Http\Header;
 
@@ -26,7 +25,7 @@ final class HtmlFormatter implements FormatterInterface
         }
 
         if (!is_scalar($data) && !$data instanceof Stringable) {
-            throw new RuntimeException(
+            throw new DataEncodingException(
                 sprintf(
                     'Data must be either a scalar value, null, or a stringable object. %s given.',
                     get_debug_type($data),

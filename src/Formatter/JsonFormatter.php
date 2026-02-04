@@ -20,12 +20,13 @@ final class JsonFormatter implements FormatterInterface
         private readonly int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
     ) {}
 
-    /**
-     * @throws JsonException
-     */
     public function formatData(mixed $data): string
     {
-        return Json::encode($data, $this->options);
+        try {
+            return Json::encode($data, $this->options);
+        } catch (JsonException $e) {
+            throw new DataEncodingException($e->getMessage(), previous: $e);
+        }
     }
 
     public function formatResponse(ResponseInterface $response): ResponseInterface
