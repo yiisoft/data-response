@@ -2,6 +2,19 @@
 
 ## 2.1.3 under development
 
+- New #107: Add `DataStream` (@vjik)
+- New #107: Add `FormatterInterface` and implementations: `HtmlFormatter`, `JsonFormatter`, `PlainTextFormatter`,
+  `XmlFormatter` (@vjik)
+- New #107: Add `DataResponseFactoryInterface` and implementations: `DataResponseFactory`, `FormattedResponseFactory`,
+  `HtmlResponseFactory`, `JsonResponseFactory`, `PlainTextResponseFactory`, `XmlResponseFactory` (@vjik)
+- New #107: Add middlewares: `XmlDataResponseMiddleware`, `HtmlDataResponseMiddleware`, `JsonDataResponseMiddleware`,
+  `PlainTextDataResponseMiddleware` and `DataResponseMiddleware` (@vjik)
+- New #107: Add `ContentNegotiatorResponseFactory` and `ContentNegotiatorDataResponseMiddleware` (@vjik)
+- Chg #107: Deprecate `DataResponse`, `DataResponseFactory`, `DataResponseFactoryInterface`,
+  `DataResponseFormatterInterface`, `ResponseContentTrait`, `HtmlDataResponseFormatter`,
+  `JsonDataResponseFormatter`, `PlainTextDataResponseFormatter`, `XmlDataResponseFormatter`, `ContentNegotiator`,
+  `FormatDataResponse`, `FormatDataResponseAsHtml`, `FormatDataResponseAsJson`, `FormatDataResponseAsPlainText`,
+  `FormatDataResponseAsXml` (@vjik)
 - Enh #106: Explicitly import classes, functions, and constants in "use" section (@mspirkov)
 - Enh #108: Remove unnecessary files from Composer package (@mspirkov)
 
