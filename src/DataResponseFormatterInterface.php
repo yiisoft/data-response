@@ -11,6 +11,8 @@ use Yiisoft\DataResponse\Formatter\FormatterInterface;
  * DataResponseFormatterInterface is the interface that should be implemented by data response formatters.
  *
  * @deprecated Use {@see FormatterInterface} instead.
+ *
+ * @psalm-suppress DeprecatedClass
  */
 interface DataResponseFormatterInterface
 {
