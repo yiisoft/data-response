@@ -36,11 +36,21 @@ final class DataStream implements StreamInterface
         return (string) $this->getFormatted();
     }
 
+    /**
+     * Checks whether a formatter has been set.
+     *
+     * @return bool Whether a formatter is set.
+     */
     public function hasFormatter(): bool
     {
         return $this->formatter !== null;
     }
 
+    /**
+     * Changes the formatter.
+     *
+     * @param FormatterInterface $formatter The new formatter.
+     */
     public function changeFormatter(FormatterInterface $formatter): void
     {
         $this->formatter = $formatter;
@@ -48,7 +58,7 @@ final class DataStream implements StreamInterface
     }
 
     /**
-     * Changes the data and resets the stream state.
+     * Changes the data.
      *
      * @param mixed $data The new data.
      */
@@ -144,9 +154,6 @@ final class DataStream implements StreamInterface
         return $this->formatted;
     }
 
-    /**
-     * Resets the stream state.
-     */
     private function resetState(): void
     {
         if ($this->formatted !== null) {

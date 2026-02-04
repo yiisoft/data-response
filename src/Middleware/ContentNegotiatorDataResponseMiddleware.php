@@ -17,11 +17,16 @@ use function gettype;
 use function is_string;
 use function sprintf;
 
+/**
+ * Middleware that selects a formatter for {@see DataStream} responses based on the request's `Accept` header
+ * and sets appropriate response headers.
+ */
 final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterface
 {
     /**
-     * @param array<string, FormatterInterface> $formatters
-     * @param FormatterInterface|null $fallbackFormatter
+     * @param array<string, FormatterInterface> $formatters Map of content types to formatters.
+     * For example: `['application/json' => new JsonFormatter(), 'application/xml' => new XmlFormatter()]`.
+     * @param FormatterInterface|null $fallbackFormatter Formatter to use when no match is found.
      */
     public function __construct(
         private readonly array $formatters = [],

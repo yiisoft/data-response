@@ -11,8 +11,17 @@ use Yiisoft\Http\Header;
 use function is_scalar;
 use function sprintf;
 
+/**
+ * Formatter that converts data to plain text and sets appropriate response headers.
+ *
+ * Supports scalar values, null, and objects implementing {@see Stringable}.
+ */
 final class PlainTextFormatter implements FormatterInterface
 {
+    /**
+     * @param string $contentType The content type for the response.
+     * @param string $encoding The character encoding for the response.
+     */
     public function __construct(
         private readonly string $contentType = 'text/plain',
         private readonly string $encoding = 'UTF-8',

@@ -11,8 +11,18 @@ use Yiisoft\DataResponse\Formatter\FormatterInterface;
 use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 use Yiisoft\Http\Status;
 
+/**
+ * Factory that creates responses with {@see DataStream} body without applying a formatter.
+ *
+ * The formatter can be applied later using middleware. If no formatter is applied before reading the response body,
+ * the fallback formatter is used.
+ */
 final class DataResponseFactory implements DataResponseFactoryInterface
 {
+    /**
+     * @param ResponseFactoryInterface $responseFactory The PSR-17 response factory.
+     * @param FormatterInterface $fallbackFormatter The formatter to use when no formatter is applied.
+     */
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly FormatterInterface $fallbackFormatter = new HtmlFormatter(),

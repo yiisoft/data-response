@@ -10,8 +10,18 @@ use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\Formatter\FormatterInterface;
 use Yiisoft\Http\Status;
 
+/**
+ * Abstract factory class that creates responses with pre-formatted {@see DataStream} body
+ * and appropriate response headers.
+ *
+ * The formatter is applied immediately when creating the response.
+ */
 abstract class AbstractFormattedResponseFactory implements DataResponseFactoryInterface
 {
+    /**
+     * @param ResponseFactoryInterface $responseFactory The PSR-17 response factory.
+     * @param FormatterInterface $formatter The formatter to apply to the response.
+     */
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly FormatterInterface $formatter,

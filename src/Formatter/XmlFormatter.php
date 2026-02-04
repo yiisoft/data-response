@@ -18,10 +18,21 @@ use function is_float;
 use function is_int;
 use function is_object;
 
+/**
+ * Formatter that encodes data as XML and sets appropriate response headers.
+ *
+ * Supports arrays, traversable objects, and objects implementing {@see XmlDataInterface}.
+ */
 final class XmlFormatter implements FormatterInterface
 {
     private const DEFAULT_ITEM_TAG_NAME = 'item';
 
+    /**
+     * @param string $encoding The character encoding for the XML document and response.
+     * @param string $version The XML version.
+     * @param string $rootTag The root element tag name. If empty, no root element is added.
+     * @param string $contentType The content type for the response.
+     */
     public function __construct(
         private readonly string $encoding = 'UTF-8',
         private readonly string $version = '1.0',

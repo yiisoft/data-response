@@ -12,8 +12,16 @@ use Yiisoft\Json\Json;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 
+/**
+ * Formatter that encodes data as JSON and sets appropriate response headers.
+ */
 final class JsonFormatter implements FormatterInterface
 {
+    /**
+     * @param string $contentType The content type for the response.
+     * @param string $encoding The character encoding for the response.
+     * @param int $options The JSON encoding options.
+     */
     public function __construct(
         private readonly string $contentType = 'application/json',
         private readonly string $encoding = 'UTF-8',
