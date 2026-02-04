@@ -6,6 +6,4 @@ namespace Yiisoft\DataResponse\Formatter;
 
 use LogicException;
 
-final class DataEncodingException extends LogicException
-{
-}
+final class DataEncodingException extends LogicException {}
