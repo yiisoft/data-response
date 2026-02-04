@@ -20,9 +20,11 @@ use function sprintf;
 final class ContentNegotiatorResponseFactory
 {
     /**
-     * @param array<string, DataResponseFactoryInterface> $factories Map of content types to factories.
+     * @param DataResponseFactoryInterface[] $factories Map of content types to factories.
      * For example: `['application/json' => $jsonFactory, 'application/xml' => $xmlFactory]`.
      * @param DataResponseFactoryInterface $fallbackFactory Factory to use when no match is found.
+     *
+     * @psalm-param array<string, DataResponseFactoryInterface> $factories
      */
     public function __construct(
         private readonly array $factories,

@@ -24,9 +24,11 @@ use function sprintf;
 final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterface
 {
     /**
-     * @param array<string, FormatterInterface> $formatters Map of content types to formatters.
+     * @param FormatterInterface[] $formatters Map of content types to formatters.
      * For example: `['application/json' => new JsonFormatter(), 'application/xml' => new XmlFormatter()]`.
      * @param FormatterInterface|null $fallbackFormatter Formatter to use when no match is found.
+     *
+     * @psalm-param array<string, FormatterInterface> $formatters
      */
     public function __construct(
         private readonly array $formatters = [],
