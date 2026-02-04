@@ -32,99 +32,127 @@ composer require yiisoft/data-response
 
 ## General usage
 
-The package provides `DataResponseFactory` class that, given a [PSR-17](https://www.php-fig.org/psr/psr-17/)
-response factory, is able to create data response.
+### Response Factories
 
-Data response contains raw data to be processed later.
+The package provides response factories that create [PSR-7](https://www.php-fig.org/psr/psr-7/) responses
+with `DataStream` body. The data is formatted lazily when the response body is read.
 
 ```php
-use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\JsonResponseFactory;
+use Yiisoft\DataResponse\Formatter\JsonFormatter;
 
 /**
  * @var Psr\Http\Message\ResponseFactoryInterface $responseFactory
  */
 
-$factory = new DataResponseFactory($responseFactory);
-$dataResponse = $factory->createResponse('test');
-$dataResponse
-    ->getBody()
-    ->rewind();
+$factory = new JsonResponseFactory($responseFactory, new JsonFormatter());
+$response = $factory->createResponse(['key' => 'value']);
 
-echo $dataResponse
-    ->getBody()
-    ->getContents(); // "test"
+$response->getBody()->rewind();
+echo $response->getBody()->getContents(); // {"key":"value"}
+echo $response->getHeaderLine('Content-Type'); // application/json; charset=UTF-8
 ```
 
-### Formatters
+The following response factories are available:
 
-Formatter purpose is to format a data response. In the following example we format data as JSON.
-
-```php
-use Yiisoft\DataResponse\DataResponseFactory;
-use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
-
-/**
- * @var Psr\Http\Message\ResponseFactoryInterface $responseFactory
- */
-
-$factory = new DataResponseFactory($responseFactory);
-$dataResponse = $factory->createResponse('test');
-$dataResponse = $dataResponse->withResponseFormatter(new JsonDataResponseFormatter());
-$dataResponse
-    ->getBody()
-    ->rewind();
-
-echo $dataResponse->getHeader('Content-Type'); // ["application/json; charset=UTF-8"]
-echo $dataResponse
-    ->getBody()
-    ->getContents(); // "test"
-```
-
-The following formatters are available:
-
-- `HtmlDataResponseFormatter`
-- `JsonDataResponseFormatter`
-- `XmlDataResponseFormatter`
-- `PlainTextDataResponseFormatter`
+- `JsonResponseFactory` — creates responses with JSON-formatted body;
+- `XmlResponseFactory` — creates responses with XML-formatted body;
+- `HtmlResponseFactory` — creates responses with HTML-formatted body;
+- `PlainTextResponseFactory` — creates responses with plain text body;
+- `DataResponseFactory` — creates responses without a predefined formatter, use middleware to format.
 
 ### Middleware
 
-The package provides a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware that is able to format a data response.
+The package provides [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware that formats `DataStream` responses
+without a predefined formatter.
 
 ```php
-use Yiisoft\DataResponse\Middleware\FormatDataResponse;
-use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
+use Yiisoft\DataResponse\Middleware\JsonDataResponseMiddleware;
+use Yiisoft\DataResponse\Formatter\JsonFormatter;
 
-$middleware = (new FormatDataResponse(new JsonDataResponseFormatter()));
-//$middleware->process($request, $handler);
+$middleware = new JsonDataResponseMiddleware(new JsonFormatter());
 ```
 
-Also, the package provides [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware for content negotiation:
+The following middleware are available:
+
+- `HtmlDataResponseMiddleware`
+- `JsonDataResponseMiddleware`
+- `XmlDataResponseMiddleware`
+- `PlainTextDataResponseMiddleware`
+
+### Content Negotiation
+
+The package provides content negotiation via middleware and response factory.
+
+#### Middleware
+
+`ContentNegotiatorDataResponseMiddleware` selects a formatter based on the request's `Accept` header:
 
 ```php
-use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
-use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
-use Yiisoft\DataResponse\Formatter\JsonDataResponseFormatter;
-use Yiisoft\DataResponse\Middleware\ContentNegotiator;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
+use Yiisoft\DataResponse\Formatter\XmlFormatter;
+use Yiisoft\DataResponse\Formatter\JsonFormatter;
+use Yiisoft\DataResponse\Middleware\ContentNegotiatorDataResponseMiddleware;
 
-$middleware = new ContentNegotiator([
-    'text/html' => new HtmlDataResponseFormatter(),
-    'application/xml' => new XmlDataResponseFormatter(),
-    'application/json' => new JsonDataResponseFormatter(),
-]);
+$middleware = new ContentNegotiatorDataResponseMiddleware(
+    formatters: [
+        'text/html' => new HtmlFormatter(),
+        'application/xml' => new XmlFormatter(),
+        'application/json' => new JsonFormatter(),
+    ],
+    fallbackFormatter: new JsonFormatter(),
+);
 ```
 
-You can override middlewares with method `withContentFormatters()`:
+#### Response Factory
+
+`ContentNegotiatorResponseFactory` selects a response factory based on the request's `Accept` header:
 
 ```php
-$middleware->withContentFormatters([
-    'application/xml' => new XmlDataResponseFormatter(),
-    'application/json' => new JsonDataResponseFormatter(),
-]);
+use Yiisoft\DataResponse\ResponseFactory\ContentNegotiatorResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\JsonResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\XmlResponseFactory;
+
+/**
+ * @var JsonResponseFactory $jsonResponseFactory
+ * @var XmlResponseFactory $xmlResponseFactory
+ */
+
+$factory = new ContentNegotiatorResponseFactory(
+    factories: [
+        'application/json' => $jsonResponseFactory,
+        'application/xml' => $xmlResponseFactory,
+    ],
+    fallbackFactory: $jsonResponseFactory,
+);
+
+$response = $factory->createResponse($request, ['key' => 'value']);
+```
+
+### DataStream
+
+`DataStream` is a [PSR-7](https://www.php-fig.org/psr/psr-7/) stream that lazily formats data.
+It wraps raw data and a formatter, and performs formatting only when the stream is read.
+
+```php
+use Yiisoft\DataResponse\DataStream\DataStream;
+use Yiisoft\DataResponse\Formatter\JsonFormatter;
+
+$stream = new DataStream(['key' => 'value'], new JsonFormatter());
+
+echo (string) $stream; // {"key":"value"}
+```
+
+You can change the data or formatter dynamically:
+
+```php
+$stream->changeData(['new' => 'data']);
+$stream->changeFormatter(new XmlFormatter());
 ```
 
 ## Documentation
 
+- [Deprecated classes](docs/deprecated.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
