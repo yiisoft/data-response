@@ -32,7 +32,7 @@ final class ContentNegotiatorResponseFactory
         private readonly array $factories,
         private readonly DataResponseFactoryInterface|RequestHandlerInterface $fallback,
     ) {
-        $this->checkFormatters($factories);
+        $this->checkFactories($factories);
     }
 
     /**
@@ -70,24 +70,24 @@ final class ContentNegotiatorResponseFactory
         return $this->fallback->createResponse($data, $code, $reasonPhrase);
     }
 
-    private function checkFormatters(array $formatters): void
+    private function checkFactories(array $factories): void
     {
-        foreach ($formatters as $contentType => $formatter) {
+        foreach ($factories as $contentType => $factory) {
             if (!is_string($contentType)) {
                 throw new RuntimeException(
                     sprintf(
-                        'Invalid formatter content type. A string is expected, "%s" is received.',
+                        'Invalid factory content type. A string is expected, "%s" is received.',
                         gettype($contentType),
                     ),
                 );
             }
 
-            if (!($formatter instanceof DataResponseFactoryInterface)) {
+            if (!($factory instanceof DataResponseFactoryInterface)) {
                 throw new RuntimeException(
                     sprintf(
-                        'Invalid formatter. A "%s" instance is expected, "%s" is received.',
+                        'Invalid factory. A "%s" instance is expected, "%s" is received.',
                         DataResponseFactoryInterface::class,
-                        get_debug_type($formatter),
+                        get_debug_type($factory),
                     ),
                 );
             }

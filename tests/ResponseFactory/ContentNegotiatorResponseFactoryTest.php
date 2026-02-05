@@ -102,7 +102,7 @@ final class ContentNegotiatorResponseFactoryTest extends TestCase
         $fallbackFactory = new PlainTextResponseFactory($responseFactory, new PlainTextFormatter());
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Invalid formatter content type. A string is expected, "integer" is received.');
+        $this->expectExceptionMessage('Invalid factory content type. A string is expected, "integer" is received.');
         new ContentNegotiatorResponseFactory($factories, $fallbackFactory);
     }
 
@@ -116,7 +116,7 @@ final class ContentNegotiatorResponseFactoryTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Invalid formatter. A "Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface" instance is expected, "stdClass" is received.',
+            'Invalid factory. A "Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface" instance is expected, "stdClass" is received.',
         );
         new ContentNegotiatorResponseFactory($factories, $fallbackFactory);
     }
