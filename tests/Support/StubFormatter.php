@@ -11,7 +11,7 @@ use Yiisoft\DataResponse\Formatter\FormatterInterface;
 final class StubFormatter implements FormatterInterface
 {
     public function __construct(
-        private readonly StreamInterface|string $formattedData = '',
+        private readonly StreamInterface $formattedData,
     ) {}
 
     public function formatData(mixed $data): StreamInterface
