@@ -12,6 +12,7 @@ use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\Formatter\XmlFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
 use Yiisoft\DataResponse\Middleware\ContentNegotiatorDataResponseMiddleware;
+use Yiisoft\DataResponse\NotAcceptableRequestHandler;
 use Yiisoft\DataResponse\ResponseFactory\ContentNegotiatorResponseFactory;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactory;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
@@ -33,23 +34,24 @@ return [
     DataResponseFactoryInterface::class => DataResponseFactory::class,
     ContentNegotiatorDataResponseMiddleware::class
         => static function (ContainerInterface $container): ContentNegotiatorDataResponseMiddleware {
-            return new ContentNegotiatorDataResponseMiddleware([
-                'text/html' => $container->get(HtmlFormatter::class),
-                'application/xml' => $container->get(XmlFormatter::class),
-                'application/json' => $container->get(JsonFormatter::class),
-            ]);
+            return new ContentNegotiatorDataResponseMiddleware(
+                [
+                    'text/html' => $container->get(HtmlFormatter::class),
+                    'application/xml' => $container->get(XmlFormatter::class),
+                    'application/json' => $container->get(JsonFormatter::class),
+                ],
+                fallback: $container->get(NotAcceptableRequestHandler::class),
+            );
         },
     ContentNegotiatorResponseFactory::class
         => static function (ContainerInterface $container): ContentNegotiatorResponseFactory {
-            /** @var HtmlResponseFactory $html */
-            $html = $container->get(HtmlResponseFactory::class);
             return new ContentNegotiatorResponseFactory(
                 [
-                    'text/html' => $html,
+                    'text/html' => $container->get(HtmlResponseFactory::class),
                     'application/xml' => $container->get(XmlResponseFactory::class),
                     'application/json' => $container->get(JsonResponseFactory::class),
                 ],
-                $html,
+                $container->get(NotAcceptableRequestHandler::class),
             );
         },
 ];

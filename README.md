@@ -100,9 +100,12 @@ $middleware = new ContentNegotiatorDataResponseMiddleware(
         'application/xml' => new XmlFormatter(),
         'application/json' => new JsonFormatter(),
     ],
-    fallbackFormatter: new JsonFormatter(),
+    fallback: new JsonFormatter(),
 );
 ```
+
+The `fallback` parameter also accepts a `RequestHandlerInterface`, for example `NotAcceptableRequestHandler`
+to return a 406 response when no formatter matches.
 
 #### Response Factory
 
@@ -123,11 +126,14 @@ $factory = new ContentNegotiatorResponseFactory(
         'application/json' => $jsonResponseFactory,
         'application/xml' => $xmlResponseFactory,
     ],
-    fallbackFactory: $jsonResponseFactory,
+    fallback: $jsonResponseFactory,
 );
 
 $response = $factory->createResponse($request, ['key' => 'value']);
 ```
+
+The `fallback` parameter also accepts a `RequestHandlerInterface`, for example `NotAcceptableRequestHandler`
+to return a 406 response when no factory matches.
 
 ### DataStream
 
