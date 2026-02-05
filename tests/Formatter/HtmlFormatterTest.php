@@ -58,7 +58,9 @@ final class HtmlFormatterTest extends TestCase
         $formatter = new HtmlFormatter();
 
         $this->expectException(DataEncodingException::class);
-        $this->expectExceptionMessage('Data must be either a scalar value, null, or a stringable object.');
+        $this->expectExceptionMessage(
+            'Data must be either a scalar value, null, or a stringable object. ' . get_debug_type($data) . ' given.'
+        );
         $formatter->formatData($data);
     }
 
