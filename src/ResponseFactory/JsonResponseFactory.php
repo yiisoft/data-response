@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse\ResponseFactory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
+use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 
 /**

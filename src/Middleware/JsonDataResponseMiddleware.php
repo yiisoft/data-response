@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Middleware;
 
+use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 
 /**
