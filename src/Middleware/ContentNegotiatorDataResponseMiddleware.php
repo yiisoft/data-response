@@ -26,13 +26,14 @@ final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterfa
     /**
      * @param FormatterInterface[] $formatters Map of content types to formatters.
      * For example: `['application/json' => new JsonFormatter(), 'application/xml' => new XmlFormatter()]`.
-     * @param FormatterInterface|null $fallbackFormatter Formatter to use when no match is found.
+     * @param FormatterInterface|RequestHandlerInterface|null $fallback Formatter or request handler
+     * to use when no match is found. If `null`, the response is returned unmodified.
      *
      * @psalm-param array<string, FormatterInterface> $formatters
      */
     public function __construct(
         private readonly array $formatters = [],
-        private readonly ?FormatterInterface $fallbackFormatter = null,
+        private readonly FormatterInterface|RequestHandlerInterface|null $fallback = null,
     ) {
         $this->checkFormatters($formatters);
     }
@@ -58,12 +59,16 @@ final class ContentNegotiatorDataResponseMiddleware implements MiddlewareInterfa
             }
         }
 
-        if ($this->fallbackFormatter === null) {
+        if ($this->fallback === null) {
             return $response;
         }
 
-        $body->changeFormatter($this->fallbackFormatter);
-        return $this->fallbackFormatter->formatResponse($response);
+        if ($this->fallback instanceof RequestHandlerInterface) {
+            return $this->fallback->handle($request);
+        }
+
+        $body->changeFormatter($this->fallback);
+        return $this->fallback->formatResponse($response);
     }
 
     private function checkFormatters(array $formatters): void

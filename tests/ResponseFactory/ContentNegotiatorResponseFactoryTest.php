@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\ResponseFactory;
 
+use HttpSoft\Message\Response;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+use Yiisoft\DataResponse\Tests\Support\StubRequestHandler;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\Formatter\PlainTextFormatter;
 use Yiisoft\DataResponse\Formatter\XmlFormatter;
@@ -117,5 +119,22 @@ final class ContentNegotiatorResponseFactoryTest extends TestCase
             'Invalid formatter. A "Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface" instance is expected, "stdClass" is received.',
         );
         new ContentNegotiatorResponseFactory($factories, $fallbackFactory);
+    }
+
+    public function testCreateResponseWithNoMatchingAcceptHeaderUsesRequestHandlerFallback(): void
+    {
+        $responseFactory = new ResponseFactory();
+        $fallbackResponse = (new Response())->withStatus(406);
+        $factory = new ContentNegotiatorResponseFactory(
+            [
+                'application/json' => new JsonResponseFactory($responseFactory, new JsonFormatter()),
+            ],
+            new StubRequestHandler($fallbackResponse),
+        );
+
+        $request = (new ServerRequest())->withHeader(Header::ACCEPT, 'text/html');
+        $response = $factory->createResponse($request, 'test content');
+
+        $this->assertSame($fallbackResponse, $response);
     }
 }

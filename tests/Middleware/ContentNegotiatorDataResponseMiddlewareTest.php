@@ -146,4 +146,22 @@ final class ContentNegotiatorDataResponseMiddlewareTest extends TestCase
         );
         new ContentNegotiatorDataResponseMiddleware($formatters);
     }
+
+    public function testProcessWithNoMatchingAcceptHeaderUsesRequestHandlerFallback(): void
+    {
+        $dataStream = new DataStream(['key' => 'value']);
+        $response = (new Response())->withBody($dataStream);
+        $fallbackResponse = (new Response())->withStatus(406);
+        $middleware = new ContentNegotiatorDataResponseMiddleware(
+            ['application/json' => new JsonFormatter()],
+            new StubRequestHandler($fallbackResponse),
+        );
+
+        $result = $middleware->process(
+            (new ServerRequest())->withHeader(Header::ACCEPT, 'text/html'),
+            new StubRequestHandler($response),
+        );
+
+        $this->assertSame($fallbackResponse, $result);
+    }
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\ResponseFactory;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 use Yiisoft\Http\HeaderValueHelper;
 use Yiisoft\Http\Status;
@@ -22,13 +23,14 @@ final class ContentNegotiatorResponseFactory
     /**
      * @param DataResponseFactoryInterface[] $factories Map of content types to factories.
      * For example: `['application/json' => $jsonFactory, 'application/xml' => $xmlFactory]`.
-     * @param DataResponseFactoryInterface $fallbackFactory Factory to use when no match is found.
+     * @param DataResponseFactoryInterface|RequestHandlerInterface $fallback Factory or request handler
+     * to use when no match is found.
      *
      * @psalm-param array<string, DataResponseFactoryInterface> $factories
      */
     public function __construct(
         private readonly array $factories,
-        private readonly DataResponseFactoryInterface $fallbackFactory,
+        private readonly DataResponseFactoryInterface|RequestHandlerInterface $fallback,
     ) {
         $this->checkFormatters($factories);
     }
@@ -36,7 +38,7 @@ final class ContentNegotiatorResponseFactory
     /**
      * Creates an HTTP response using a factory selected based on the request's `Accept` header.
      *
-     * @param RequestInterface $request The request to extract the `Accept` header from.
+     * @param ServerRequestInterface $request The request to extract the `Accept` header from.
      * @param mixed $data The response data to be included in the response body.
      * @param int $code The HTTP status code for the response.
      * @param string $reasonPhrase The reason phrase associated with the status code.
@@ -44,7 +46,7 @@ final class ContentNegotiatorResponseFactory
      * @return ResponseInterface The created HTTP response.
      */
     public function createResponse(
-        RequestInterface $request,
+        ServerRequestInterface $request,
         mixed $data = null,
         int $code = Status::OK,
         string $reasonPhrase = '',
@@ -61,7 +63,11 @@ final class ContentNegotiatorResponseFactory
             }
         }
 
-        return $this->fallbackFactory->createResponse($data, $code, $reasonPhrase);
+        if ($this->fallback instanceof RequestHandlerInterface) {
+            return $this->fallback->handle($request);
+        }
+
+        return $this->fallback->createResponse($data, $code, $reasonPhrase);
     }
 
     private function checkFormatters(array $formatters): void
