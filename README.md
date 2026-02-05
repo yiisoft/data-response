@@ -143,15 +143,13 @@ It wraps raw data and a formatter, and performs formatting only when the stream 
 ```php
 use Yiisoft\DataResponse\DataStream\DataStream;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
+use Yiisoft\DataResponse\Formatter\XmlFormatter;
 
 $stream = new DataStream(['key' => 'value'], new JsonFormatter());
 
 echo (string) $stream; // {"key":"value"}
-```
 
-You can change the data or formatter dynamically:
-
-```php
+// You can change the data or formatter dynamically
 $stream->changeData(['new' => 'data']);
 $stream->changeFormatter(new XmlFormatter());
 ```
