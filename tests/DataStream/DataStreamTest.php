@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DataStream;
+namespace Yiisoft\DataResponse\Tests\DataStream;
 
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
