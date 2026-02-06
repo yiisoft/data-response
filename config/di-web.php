@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
 use Yiisoft\DataResponse\DataResponseFactory as DeprecatedDataResponseFactory;
 use Yiisoft\DataResponse\DataResponseFactoryInterface as DeprecatedDataResponseFactoryInterface;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
@@ -52,6 +51,6 @@ return [
                 'application/json' => JsonResponseFactory::class,
             ]),
             'fallback' => Reference::to(NotAcceptableRequestHandler::class),
-        ]
+        ],
     ],
 ];
