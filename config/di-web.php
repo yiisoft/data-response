@@ -20,6 +20,8 @@ use Yiisoft\DataResponse\ResponseFactory\HtmlResponseFactory;
 use Yiisoft\DataResponse\ResponseFactory\JsonResponseFactory;
 use Yiisoft\DataResponse\ResponseFactory\XmlResponseFactory;
 use Yiisoft\Definitions\DynamicReferencesArray;
+use Yiisoft\Definitions\Reference;
+use Yiisoft\Definitions\ReferencesArray;
 
 /* @var $params array */
 
@@ -32,26 +34,24 @@ return [
         ],
     ],
     DataResponseFactoryInterface::class => DataResponseFactory::class,
-    ContentNegotiatorDataResponseMiddleware::class
-        => static function (ContainerInterface $container): ContentNegotiatorDataResponseMiddleware {
-            return new ContentNegotiatorDataResponseMiddleware(
-                [
-                    'text/html' => $container->get(HtmlFormatter::class),
-                    'application/xml' => $container->get(XmlFormatter::class),
-                    'application/json' => $container->get(JsonFormatter::class),
-                ],
-                fallback: $container->get(NotAcceptableRequestHandler::class),
-            );
-        },
-    ContentNegotiatorResponseFactory::class
-        => static function (ContainerInterface $container): ContentNegotiatorResponseFactory {
-            return new ContentNegotiatorResponseFactory(
-                [
-                    'text/html' => $container->get(HtmlResponseFactory::class),
-                    'application/xml' => $container->get(XmlResponseFactory::class),
-                    'application/json' => $container->get(JsonResponseFactory::class),
-                ],
-                $container->get(NotAcceptableRequestHandler::class),
-            );
-        },
+    ContentNegotiatorDataResponseMiddleware::class => [
+        '__construct()' => [
+            'formatters' => ReferencesArray::from([
+                'text/html' => HtmlFormatter::class,
+                'application/xml' => XmlFormatter::class,
+                'application/json' => JsonFormatter::class,
+            ]),
+            'fallback' => Reference::to(NotAcceptableRequestHandler::class),
+        ],
+    ],
+    ContentNegotiatorResponseFactory::class => [
+        '__construct()' => [
+            'factories' => DynamicReferencesArray::from([
+                'text/html' => HtmlResponseFactory::class,
+                'application/xml' => XmlResponseFactory::class,
+                'application/json' => JsonResponseFactory::class,
+            ]),
+            'fallback' => Reference::to(NotAcceptableRequestHandler::class),
+        ]
+    ],
 ];
