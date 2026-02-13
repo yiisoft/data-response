@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\DataStream;
 
+use LogicException;
 use Psr\Http\Message\StreamInterface;
 use Yiisoft\DataResponse\Formatter\FormatterInterface;
-use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 
 use const SEEK_SET;
 
@@ -15,6 +15,8 @@ use const SEEK_SET;
  *
  * This stream wraps formatted content (string or stream) and provides
  * methods to change the data or formatter dynamically.
+ *
+ * A formatter must be set before reading the stream, otherwise a {@see LogicException} will be thrown.
  */
 final class DataStream implements StreamInterface
 {
@@ -23,12 +25,10 @@ final class DataStream implements StreamInterface
     /**
      * @param mixed $data The raw data to be formatted.
      * @param FormatterInterface|null $formatter The formatter to use.
-     * @param FormatterInterface $fallbackFormatter The fallback formatter to use when formatter is not set.
      */
     public function __construct(
         private mixed $data,
         private ?FormatterInterface $formatter = null,
-        private readonly FormatterInterface $fallbackFormatter = new HtmlFormatter(),
     ) {}
 
     public function __toString(): string
@@ -144,8 +144,11 @@ final class DataStream implements StreamInterface
             return $this->formatted;
         }
 
-        $formatter = $this->formatter ?? $this->fallbackFormatter;
-        $content = $formatter->formatData($this->data);
+        if ($this->formatter === null) {
+            throw new LogicException('Formatter is not set.');
+        }
+
+        $content = $this->formatter->formatData($this->data);
 
         $this->formatted = $content instanceof StreamInterface
             ? $content

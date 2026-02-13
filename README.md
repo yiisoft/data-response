@@ -139,6 +139,8 @@ to return a 406 response when no factory matches.
 
 `DataStream` is a [PSR-7](https://www.php-fig.org/psr/psr-7/) stream that lazily formats data.
 It wraps raw data and a formatter, and performs formatting only when the stream is read.
+A formatter is optional at construction time, but must be set before reading the stream,
+otherwise a `LogicException` will be thrown.
 
 ```php
 use Yiisoft\DataResponse\DataStream\DataStream;

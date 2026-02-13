@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\DataResponse\Tests\DataStream;
 
+use LogicException;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Yiisoft\DataResponse\DataStream\DataStream;
+use Yiisoft\DataResponse\Formatter\HtmlFormatter;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\Tests\Support\StubFormatter;
 use Yiisoft\Test\Support\HttpMessage\StringStream;
@@ -21,8 +23,16 @@ final class DataStreamTest extends TestCase
     {
         $stream = new DataStream('test data');
 
-        $this->assertSame('test data', (string) $stream);
         $this->assertFalse($stream->hasFormatter());
+    }
+
+    public function testGetFormattedWithoutFormatter(): void
+    {
+        $stream = new DataStream('test');
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Formatter is not set.');
+        (string) $stream;
     }
 
     public function testFormatter(): void
@@ -33,21 +43,10 @@ final class DataStreamTest extends TestCase
         $this->assertSame('"test"', (string) $stream);
     }
 
-    public function testFallbackFormatter(): void
-    {
-        $stream = new DataStream(
-            'test',
-            fallbackFormatter: new JsonFormatter(),
-        );
-
-        $this->assertFalse($stream->hasFormatter());
-        $this->assertSame('"test"', (string) $stream);
-    }
-
     public function testChangeFormatter(): void
     {
         $formatter = new JsonFormatter();
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $stream->changeFormatter($formatter);
 
@@ -69,7 +68,7 @@ final class DataStreamTest extends TestCase
 
     public function testChangeData(): void
     {
-        $stream = new DataStream('hello');
+        $stream = new DataStream('hello', new HtmlFormatter());
 
         $stream->changeData('world');
 
@@ -257,7 +256,7 @@ final class DataStreamTest extends TestCase
 
     public function testStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->assertSame('test', (string) $stream);
         $this->assertSame('test', $stream->getContents());
@@ -279,7 +278,7 @@ final class DataStreamTest extends TestCase
 
     public function testTellInClosedStreamWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->close();
 
         $this->expectException(RuntimeException::class);
@@ -289,7 +288,7 @@ final class DataStreamTest extends TestCase
 
     public function testSeekInClosedStreamWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->close();
 
         $this->expectException(RuntimeException::class);
@@ -299,7 +298,7 @@ final class DataStreamTest extends TestCase
 
     public function testRewindInClosedStreamWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->close();
 
         $this->expectException(RuntimeException::class);
@@ -309,7 +308,7 @@ final class DataStreamTest extends TestCase
 
     public function testReadInClosedStreamWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->close();
 
         $this->expectException(RuntimeException::class);
@@ -319,7 +318,7 @@ final class DataStreamTest extends TestCase
 
     public function testDetachWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $result = $stream->detach();
 
@@ -332,7 +331,7 @@ final class DataStreamTest extends TestCase
 
     public function testTellWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->assertSame(0, $stream->tell());
 
@@ -345,7 +344,7 @@ final class DataStreamTest extends TestCase
 
     public function testSeekSetWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $stream->seek(2);
         $result = $stream->read(2);
@@ -355,7 +354,7 @@ final class DataStreamTest extends TestCase
 
     public function testSeekCurWithStringData(): void
     {
-        $stream = new DataStream('abcdef');
+        $stream = new DataStream('abcdef', new HtmlFormatter());
         $stream->read(1);
 
         $stream->seek(2, SEEK_CUR);
@@ -366,7 +365,7 @@ final class DataStreamTest extends TestCase
 
     public function testSeekEndWithStringData(): void
     {
-        $stream = new DataStream('abcdefg');
+        $stream = new DataStream('abcdefg', new HtmlFormatter());
 
         $stream->seek(-3, SEEK_END);
         $result = $stream->read(3);
@@ -376,7 +375,7 @@ final class DataStreamTest extends TestCase
 
     public function testInvalidWhenceWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid whence value.');
@@ -387,7 +386,7 @@ final class DataStreamTest extends TestCase
     #[TestWith([100])]
     public function testInvalidOffsetWithStringData(int $value): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid seek position.');
@@ -396,7 +395,7 @@ final class DataStreamTest extends TestCase
 
     public function testGetMetadataInClosedStreamWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->close();
 
         $this->assertSame([], $stream->getMetadata());
@@ -405,7 +404,7 @@ final class DataStreamTest extends TestCase
 
     public function testWriteWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Stream is not writable.');
@@ -414,7 +413,7 @@ final class DataStreamTest extends TestCase
 
     public function testReadNegativeValueWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Length must be non-negative.');
@@ -423,7 +422,7 @@ final class DataStreamTest extends TestCase
 
     public function testReadOverValueWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->getContents();
 
         $result = $stream->read(2);
@@ -433,7 +432,7 @@ final class DataStreamTest extends TestCase
 
     public function testRewindWithStringData(): void
     {
-        $stream = new DataStream('test');
+        $stream = new DataStream('test', new HtmlFormatter());
         $stream->getContents();
 
         $stream->rewind();

@@ -7,7 +7,6 @@ namespace Yiisoft\DataResponse\Tests\ResponseFactory;
 use HttpSoft\Message\ResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\DataResponse\DataStream\DataStream;
-use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactory;
 use Yiisoft\Http\Status;
 
@@ -32,7 +31,6 @@ final class DataResponseFactoryTest extends TestCase
 
         $body = $response->getBody();
         $this->assertInstanceOf(DataStream::class, $body);
-        $this->assertSame('hello', (string) $body);
     }
 
     public function testCreateResponseWithCustomStatusCode(): void
@@ -54,12 +52,4 @@ final class DataResponseFactoryTest extends TestCase
         $this->assertSame('Custom Reason', $response->getReasonPhrase());
     }
 
-    public function testCreateResponseWithCustomFallbackFormatter(): void
-    {
-        $factory = new DataResponseFactory(new ResponseFactory(), new JsonFormatter());
-
-        $response = $factory->createResponse(['key' => 'value']);
-
-        $this->assertSame('{"key":"value"}', (string) $response->getBody());
-    }
 }
