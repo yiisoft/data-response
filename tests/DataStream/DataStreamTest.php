@@ -303,7 +303,7 @@ final class DataStreamTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Stream is closed.');
-        $stream->seek(0);
+        $stream->rewind();
     }
 
     public function testReadInClosedStreamWithStringData(): void
