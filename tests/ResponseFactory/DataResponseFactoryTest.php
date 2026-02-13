@@ -51,5 +51,4 @@ final class DataResponseFactoryTest extends TestCase
         $this->assertSame(Status::BAD_REQUEST, $response->getStatusCode());
         $this->assertSame('Custom Reason', $response->getReasonPhrase());
     }
-
 }
