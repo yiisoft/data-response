@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\DataResponse;
 
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\DataResponse\Formatter\FormatterInterface;
 
 /**
  * DataResponseFormatterInterface is the interface that should be implemented by data response formatters.
+ *
+ * @deprecated Use {@see FormatterInterface} instead.
+ *
+ * @psalm-suppress DeprecatedClass
  */
 interface DataResponseFormatterInterface
 {

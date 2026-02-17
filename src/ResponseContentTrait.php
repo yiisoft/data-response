@@ -9,6 +9,8 @@ use Yiisoft\Http\Header;
 
 /**
  * ResponseContentTrait provides methods for manipulating the response content.
+ *
+ * @deprecated
  */
 trait ResponseContentTrait
 {
@@ -16,6 +18,8 @@ trait ResponseContentTrait
      * Returns a new instance with the specified content type.
      *
      * @param string $contentType The content type. For example, "text/html".
+     *
+     * @psalm-suppress DeprecatedClass
      */
     public function withContentType(string $contentType): self
     {
@@ -28,6 +32,8 @@ trait ResponseContentTrait
      * Returns a new instance with the specified encoding.
      *
      * @param string $encoding The encoding. For example, "UTF-8".
+     *
+     * @psalm-suppress DeprecatedClass
      */
     public function withEncoding(string $encoding): self
     {

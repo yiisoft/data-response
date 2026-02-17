@@ -10,6 +10,10 @@ use Yiisoft\Http\Status;
 
 /**
  * DataResponseFactory creates an instance of the data response {@see DataResponse}.
+ *
+ * @deprecated Use {@see ResponseFactory\DataResponseFactory} instead.
+ *
+ * @psalm-suppress DeprecatedInterface, DeprecatedClass
  */
 final class DataResponseFactory implements DataResponseFactoryInterface
 {

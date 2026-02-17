@@ -6,11 +6,15 @@ namespace Yiisoft\DataResponse\Tests;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Yiisoft\DataResponse\DataResponseFactory;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\DataResponseFactory as DeprecatedDataResponseFactory;
+use Yiisoft\DataResponse\DataResponseFactoryInterface as DeprecatedDataResponseFactoryInterface;
 use Yiisoft\DataResponse\DataResponseFormatterInterface;
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Middleware\ContentNegotiator;
+use Yiisoft\DataResponse\Middleware\ContentNegotiatorDataResponseMiddleware;
+use Yiisoft\DataResponse\ResponseFactory\ContentNegotiatorResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use PHPUnit\Framework\TestCase;
@@ -23,12 +27,25 @@ final class ConfigTest extends TestCase
     {
         $container = $this->createContainer('web');
 
-        $dataResponseFormatter = $container->get(DataResponseFormatterInterface::class);
         $dataResponseFactory = $container->get(DataResponseFactoryInterface::class);
+        $contentNegotiatorDataResponseMiddleware = $container->get(ContentNegotiatorDataResponseMiddleware::class);
+        $contentNegotiatorResponseFactory = $container->get(ContentNegotiatorResponseFactory::class);
+
+        $this->assertInstanceOf(DataResponseFactory::class, $dataResponseFactory);
+        $this->assertInstanceOf(ContentNegotiatorDataResponseMiddleware::class, $contentNegotiatorDataResponseMiddleware);
+        $this->assertInstanceOf(ContentNegotiatorResponseFactory::class, $contentNegotiatorResponseFactory);
+    }
+
+    public function testDiWebDeprecated(): void
+    {
+        $container = $this->createContainer('web');
+
+        $dataResponseFormatter = $container->get(DataResponseFormatterInterface::class);
+        $dataResponseFactory = $container->get(DeprecatedDataResponseFactoryInterface::class);
         $contentNegotiator = $container->get(ContentNegotiator::class);
 
         $this->assertInstanceOf(HtmlDataResponseFormatter::class, $dataResponseFormatter);
-        $this->assertInstanceOf(DataResponseFactory::class, $dataResponseFactory);
+        $this->assertInstanceOf(DeprecatedDataResponseFactory::class, $dataResponseFactory);
         $this->assertInstanceOf(ContentNegotiator::class, $contentNegotiator);
     }
 
