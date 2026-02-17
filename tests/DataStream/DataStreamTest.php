@@ -24,6 +24,8 @@ final class DataStreamTest extends TestCase
         $stream = new DataStream('test data');
 
         $this->assertFalse($stream->hasFormatter());
+        $this->assertNull($stream->getFormatter());
+        $this->assertSame('test data', $stream->getData());
     }
 
     public function testGetFormattedWithoutFormatter(): void
@@ -37,9 +39,11 @@ final class DataStreamTest extends TestCase
 
     public function testFormatter(): void
     {
-        $stream = new DataStream('test', new JsonFormatter());
+        $formatter = new JsonFormatter();
+        $stream = new DataStream('test', $formatter);
 
         $this->assertTrue($stream->hasFormatter());
+        $this->assertSame($formatter, $stream->getFormatter());
         $this->assertSame('"test"', (string) $stream);
     }
 
@@ -51,6 +55,7 @@ final class DataStreamTest extends TestCase
         $stream->changeFormatter($formatter);
 
         $this->assertTrue($stream->hasFormatter());
+        $this->assertSame($formatter, $stream->getFormatter());
         $this->assertSame('"test"', (string) $stream);
     }
 
@@ -73,6 +78,7 @@ final class DataStreamTest extends TestCase
         $stream->changeData('world');
 
         $this->assertSame('world', (string) $stream);
+        $this->assertSame('world', $stream->getData());
     }
 
     public function testCloseStreamOnChangeData(): void
