@@ -2,7 +2,7 @@
 
 ## 2.1.3 under development
 
-- New #107: Add `DataStream` (@vjik)
+- New #107, #110: Add `DataStream` (@vjik)
 - New #107: Add `FormatterInterface` and implementations: `HtmlFormatter`, `JsonFormatter`, `PlainTextFormatter`,
   `XmlFormatter` (@vjik)
 - New #107: Add `DataResponseFactoryInterface` and implementations: `DataResponseFactory`, `FormattedResponseFactory`,

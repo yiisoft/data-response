@@ -47,6 +47,16 @@ final class DataStream implements StreamInterface
     }
 
     /**
+     * Returns the formatter.
+     *
+     * @return FormatterInterface|null The formatter or `null` if not set.
+     */
+    public function getFormatter(): ?FormatterInterface
+    {
+        return $this->formatter;
+    }
+
+    /**
      * Changes the formatter.
      *
      * @param FormatterInterface $formatter The new formatter.
@@ -55,6 +65,16 @@ final class DataStream implements StreamInterface
     {
         $this->formatter = $formatter;
         $this->resetState();
+    }
+
+    /**
+     * Returns the raw data.
+     *
+     * @return mixed The raw data.
+     */
+    public function getData(): mixed
+    {
+        return $this->data;
     }
 
     /**
