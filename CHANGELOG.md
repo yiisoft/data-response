@@ -1,5 +1,9 @@
 # Yii Data Response Change Log
 
+## 2.2.1 under development
+
+- no changes in this release.
+
 ## 2.2.0 February 23, 2026
 
 - New #107, #110: Add `DataStream` (@vjik)
