@@ -1,6 +1,6 @@
 # Yii Data Response Change Log
 
-## 2.1.3 under development
+## 2.2.0 February 23, 2026
 
 - New #107, #110: Add `DataStream` (@vjik)
 - New #107: Add `FormatterInterface` and implementations: `HtmlFormatter`, `JsonFormatter`, `PlainTextFormatter`,
