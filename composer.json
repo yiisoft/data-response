@@ -39,12 +39,12 @@
         "yiisoft/strings": "^2.0"
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.92.5",
         "httpsoft/http-message": "^1.1.6",
         "phpunit/phpunit": "^10.5.52",
         "rector/rector": "^2.1.4",
         "roave/infection-static-analysis-plugin": "^1.35",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "vimeo/psalm": "^5.26.1 || ^6.8.0",
         "yiisoft/di": "^1.4",
         "yiisoft/test-support": "^3.2"
@@ -60,11 +60,6 @@
         }
     },
     "extra": {
-        "bamarni-bin": {
-            "bin-links": true,
-            "forward-command": true,
-            "target-directory": "tools"
-        },
         "config-plugin-options": {
             "source-directory": "config"
         },
@@ -76,13 +71,12 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "bamarni/composer-bin-plugin": true,
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true
         }
     },
     "scripts": {
-        "require-checker": "composer-require-checker",
+        "dependency-analyser": "composer-dependency-analyser",
         "test": "phpunit --testdox"
     }
 }
