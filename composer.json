@@ -34,6 +34,7 @@
         "psr/http-message": "^1.0 || ^2.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
+        "yiisoft/definitions": "^3.4",
         "yiisoft/http": "^1.2",
         "yiisoft/json": "^1.0",
         "yiisoft/strings": "^2.0"
@@ -45,6 +46,7 @@
         "phpunit/phpunit": "^10.5.52",
         "rector/rector": "^2.1.4",
         "roave/infection-static-analysis-plugin": "^1.35",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "vimeo/psalm": "^5.26.1 || ^6.8.0",
         "yiisoft/di": "^1.4",
         "yiisoft/test-support": "^3.2"
@@ -82,7 +84,7 @@
         }
     },
     "scripts": {
-        "require-checker": "composer-require-checker",
+        "dependency-analyser": "composer-dependency-analyser",
         "test": "phpunit --testdox"
     }
 }
