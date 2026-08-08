@@ -6,7 +6,7 @@ namespace Yiisoft\DataResponse\Tests\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use StdClass;
+use stdClass;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\Formatter\HtmlDataResponseFormatter;
 use Yiisoft\DataResponse\Formatter\XmlDataResponseFormatter;
@@ -81,7 +81,7 @@ final class ContentNegotiatorTest extends TestCase
         );
         new ContentNegotiator([
             'text/html' => new HtmlDataResponseFormatter(),
-            'application/xml' => new StdClass(),
+            'application/xml' => new stdClass(),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 
 return (new Configuration())
@@ -10,4 +11,4 @@ return (new Configuration())
     ->addPathToScan(__DIR__ . '/config', isDev: false)
     ->addPathToScan(__DIR__ . '/src', isDev: false)
     ->addPathToScan(__DIR__ . '/tests', isDev: true)
-    ->ignoreUnknownClasses(['StdClass']);
+    ->ignoreErrorsOnPackageAndPath('yiisoft/definitions', __DIR__ . '/config', [ErrorType::SHADOW_DEPENDENCY]);
