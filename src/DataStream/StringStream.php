@@ -157,9 +157,7 @@ final class StringStream implements StreamInterface
 
     private function getContentSize(): int
     {
-        if ($this->size === null) {
-            $this->size = strlen($this->content);
-        }
+        $this->size ??= strlen($this->content);
 
         return $this->size;
     }
